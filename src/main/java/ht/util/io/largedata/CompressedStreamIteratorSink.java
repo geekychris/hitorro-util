@@ -1,0 +1,66 @@
+package ht.util.io.largedata;
+
+import ht.util.basefile.fs.BaseFile;
+import ht.util.core.Log;
+import ht.util.io.largedata.compressedstreams.FSOutputStream;
+import ht.util.io.largedata.iterator.OutputIteratorSink;
+
+import java.io.IOException;
+import java.util.Iterator;
+
+/**
+ * <p/>
+ * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 31, 2005 Time: 10:19:29 AM
+ */
+public class CompressedStreamIteratorSink<T extends CompressedStreamIO> implements OutputIteratorSink<T> {
+    private FSOutputStream m_os;
+    private Iterator<T> m_iter;
+    private BaseFileAccessingObjectFactory factory;
+    private BaseFile f;
+
+
+    public void setFile(BaseFile file) throws IOException {
+        m_os = new FSOutputStream(file);
+        f = file;
+    }
+
+    public void setOutput(java.io.OutputStream os, boolean shouldCloseOnCompletion) {
+        // Not implemented
+        Log.util.error("setOutput is not supported in CompressedStreamIteratorSink");
+    }
+
+    public void setFactory(BaseFileAccessingObjectFactory fact) {
+        factory = fact;
+    }
+
+    public void setIterator(Iterator<T> iter) {
+        m_iter = iter;
+    }
+
+    public int sink() throws IOException {
+        int count = 0;
+        CompressedStreamIO cio = null;
+        while (m_iter.hasNext()) {
+            cio = m_iter.next();
+            if (cio == null) {
+                Log.util.error("CompressedStreamIO object null!!!");
+            } else {
+                cio.write(m_os);
+                if (factory != null) {
+                    factory.returnObject(cio);
+                }
+            }
+            count++;
+        }
+        if (cio != null) {
+            // if we dont have a cio we must of never processed a row anyway!
+            // must do this to mark the stream with a null terminator.
+            cio.close(m_os);
+        }
+        // this should NOT be in an else as not all CIO's will close the file!
+        m_os.close();
+
+        return count;
+    }
+}
+

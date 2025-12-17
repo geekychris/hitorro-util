@@ -1,0 +1,80 @@
+package ht.util.servicecounters;
+
+import ht.util.core.thread.RestartableService;
+import ht.util.core.thread.RestartableServiceDaemon;
+import ht.util.servicecounters.registers.DoubleDivideRegister;
+import ht.util.servicecounters.registers.DoubleRegister;
+import ht.util.servicecounters.registers.LongImplementableRegister;
+import ht.util.servicecounters.registers.LongRegister;
+import ht.util.startupframework.phases.ServiceDefinition;
+
+/**
+ *
+ */
+@ServiceDefinition(dependentService = {},
+        shortName = "counters",
+        description = "Counters service",
+        debugCommands = {PrintCounters.class},
+        typeManagedClasses = {},
+        uiDirectories = {},
+        dependentServiceInterfaces = {})
+public class CounterService {
+    public static LongRegister tick;
+    public static DoubleRegister tickD;
+    public static DoubleDivideRegister tickDiv;
+    public static LongImplementableRegister currentTime;
+    private static CounterService service;
+    private RestartableService m_rs;
+    private CounterClock m_counterClock = new CounterClock(CounterContext.getContext());
+    private CounterSet testSet = new CounterSet("test");
+
+    public static final CounterService getService() {
+        return service;
+    }
+
+    public CounterContext getCounterContext() {
+        return CounterContext.getContext();
+    }
+
+    public CounterClock getClock() {
+        return m_counterClock;
+    }
+
+    public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
+        service = this;
+        m_rs = new RestartableService("CounterService", "Counters", 100, m_counterClock, true);
+        RestartableServiceDaemon.addService(m_rs);
+        tick = testSet.getLongRegister("tick", "Test Tick");
+
+        tickD = testSet.getDoubleRegister("tickd", "Test Tick as double");
+        tickDiv = testSet.getDoubleDivideRegister("tickdivision", "Test Tick as double", tick, tickD);
+        /*currentTime = new LongImplementableRegister(testSet, "currentTime", "demonstrates implementable register")
+        {
+            public long getAsLong ()
+            {
+                return System.currentTimeMillis();
+            }
+
+            public String apply ()
+            {
+                return foo();
+            }
+
+            public String foo ()
+            {
+                return UnitTimeContext.getUnitTimeContext().executeTest(new DoubleArraySum()).toString();
+            }
+        };*/
+        testSet.finishInit(CounterContext.getContext());
+
+        return null;
+    }
+
+    public String start(boolean dbInit) {
+        return null;
+    }
+
+    public String deInit() {
+        return null;
+    }
+}

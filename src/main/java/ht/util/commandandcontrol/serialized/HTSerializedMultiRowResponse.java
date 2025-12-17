@@ -1,0 +1,140 @@
+package ht.util.commandandcontrol.serialized;
+
+import ht.util.commandandcontrol.*;
+import ht.util.core.Console;
+import ht.util.core.string.StringUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Copyright (c) 2003 - present HiTorro All rights reserved.
+ * <p/>
+ * User: chris
+ */
+class HTSerializedMultiRowResponse extends MultiRowResponse {
+    private HTSerializedResponse resp;
+    private String names[];
+    private List<Object> objects[];
+
+    HTSerializedMultiRowResponse(int columns, HTSerializedResponse response, ResponseShape shape) {
+        super(columns, shape);
+        names = new String[shape.getHeaderShort().length];
+        objects = new List[shape.getHeaderShort().length];
+        resp = response;
+    }
+
+    public void addTuple(int offset, Object... elems) {
+        addTupleArray(offset, elems);
+    }
+
+    public void addTupleArray(int offset, Object elems[]) {
+        List<Object> list = getList(offset, true);
+        ResponseTuple rt = new ResponseTuple();
+        String names[] = new String[elems.length];
+        GroupTuple gt = shape.getGroups()[offset];
+        rt.setTupleName(gt.getShortName());
+        for (int i = 0; i < elems.length; i++) {
+            names[i] = shape.getHeaderShort()[offset + i];
+        }
+        rt.setNames(names);
+
+        rt.setValues(StringUtil.objectArrayToString(elems, ""));
+        list.add(rt);
+
+    }
+
+    private List<Object> getList(int offset, boolean tuple) {
+        List<Object> list = objects[offset];
+        if (list == null) {
+            list = new ArrayList<Object>();
+            objects[offset] = list;
+            if (tuple) {
+                names[offset] = shape.getGroups()[offset].getShortName();
+            } else {
+                names[offset] = shape.getHeaderShort()[offset];
+            }
+
+        }
+        return list;
+    }
+
+    public void addThrowable(int column, Throwable t, int stackDepth, int startFrom) {
+        Console.println("addThrowable, %s", column);
+    }
+
+    public void clear() {
+        for (List l : objects) {
+            if (l != null) {
+                l.clear();
+            }
+        }
+    }
+
+    public boolean add(int index, Object o) {
+        List<Object> list = getList(index, false);
+        if (o == null) {
+            list.add("");
+        } else {
+            list.add(o.toString());
+        }
+        return true;
+    }
+
+    /**
+     * Process the contents of this multi row response into a normal response object.
+     *
+     * @param response
+     */
+    public void addToResponse(Response response) {
+        Row r = new Row();
+        int rowCount = getRowCount();
+        String n[] = new String[rowCount];
+        getNames(n);
+
+        r.setNames(n);
+        Object ro[][] = new Object[rowCount][];
+        getRow(ro);
+        r.setFromTuples(ro);
+        resp.addToResponse(r);
+    }
+
+    private int getRowCount() {
+        int count = 0;
+        for (List l : objects) {
+            if (l != null && l.size() > 0) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void getNames(String n[]) {
+        int count = 0;
+        for (int i = 0; i < objects.length; i++) {
+            List l = objects[i];
+            if (l != null && l.size() > 0) {
+                n[count] = this.names[i];
+                count++;
+            }
+        }
+    }
+
+    private void getRow(Object n[][]) {
+        int count = 0;
+        for (int i = 0; i < objects.length; i++) {
+            List l = objects[i];
+            if (l != null) {
+                int size = l.size();
+                if (size > 0) {
+                    n[count] = new Object[size];
+                    for (int j = 0; j < size; j++) {
+                        n[count][j] = l.get(j);
+                    }
+                    count++;
+                }
+            }
+        }
+    }
+
+}

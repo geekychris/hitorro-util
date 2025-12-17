@@ -1,0 +1,83 @@
+package ht.util.io.resourcecache;
+
+import ht.util.core.events.LocalEventHub;
+import ht.util.core.string.StringUtil;
+
+/**
+ * <p/>
+ * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 22, 2005 Time: 4:40:55 PM
+ * <p/>
+ * Defines the resource we wish to poll periodically to see if there is a newer version on another node.
+ */
+public class ResourceToPoll {
+    private int checkEveryNMinutes;
+    private long lastChecked = -1;
+    private String resource;
+    private String queryString;
+    private String eventTopic;
+    private String eventSubTopic;
+
+    //DFIndex.ResourceName, DFIndex.VersionQuery, 1, DFIndexSingletonCacheEventKey, Cache.FlushCache
+
+    public ResourceToPoll(String res, String q, int check, String topic, String subTopic) {
+        resource = res;
+        queryString = q;
+        checkEveryNMinutes = check;
+        eventTopic = topic;
+        eventSubTopic = subTopic;
+    }
+
+    public void sendEvent() {
+        if (!StringUtil.nullOrEmptyOrBlankString(getEventTopic())) {
+            LocalEventHub.get().event(eventTopic, eventSubTopic, null);
+        }
+    }
+
+    public int getCheckEveryNMinutes() {
+        return checkEveryNMinutes;
+    }
+
+    public void setCheckEveryNMinutes(int checkEveryNMinutes) {
+        this.checkEveryNMinutes = checkEveryNMinutes;
+    }
+
+    public long getLastChecked() {
+        return lastChecked;
+    }
+
+    public void setLastChecked(long lastChecked) {
+        this.lastChecked = lastChecked;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
+
+    public String getQueryString() {
+        return queryString;
+    }
+
+    public void setQueryString(String queryString) {
+        this.queryString = queryString;
+    }
+
+    public String getEventTopic() {
+        return eventTopic;
+    }
+
+    public void setEventTopic(String eventTopic) {
+        this.eventTopic = eventTopic;
+    }
+
+    public String getEventSubTopic() {
+        return eventSubTopic;
+    }
+
+    public void setEventSubTopic(String eventSubTopic) {
+        this.eventSubTopic = eventSubTopic;
+    }
+}

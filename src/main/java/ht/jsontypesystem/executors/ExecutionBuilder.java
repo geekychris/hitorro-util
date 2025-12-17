@@ -1,0 +1,83 @@
+package ht.jsontypesystem.executors;
+
+import ht.jsontypesystem.Field;
+import ht.jsontypesystem.Group;
+import ht.jsontypesystem.Type;
+import ht.jsontypesystem.TypeVisitor;
+import ht.util.json.keys.propaccess.Propaccess;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
+
+public class ExecutionBuilder<E extends ExecutorAction> implements TypeVisitor<ExecutionBuilder> {
+    ExecutionRow row;
+    private Map<Field, ExecutionNode> executors = new HashMap();
+    private ExecutorFactory<E> factory;
+    private ExecutionNode<E> root = new ExecutionNode(null);
+    private ExecutionNode<E> curr = root;
+    private Stack<ExecutionNode> execStack = new Stack();
+
+    public ExecutionBuilder(ExecutorFactory<E> factory) {
+        this.factory = factory;
+    }
+
+    public ExecutionNode getExecutor() {
+        return root;
+    }
+
+    public int finalizeNode() {
+        return root.finalizeNode();
+    }
+
+    @Override
+    public void enterType(final Type type, final Propaccess path) {
+
+    }
+
+    @Override
+    public void leaveType(final Type type, final Propaccess path) {
+
+    }
+
+    @Override
+    public void enterGroup(final Field field, Group group, final Propaccess path) {
+        E action = factory.getNew(field, group, path);
+        curr.addAction(action);
+    }
+
+    @Override
+    public void leaveGroup(final Field field, Group group, final Propaccess path) {
+
+    }
+
+    @Override
+    public boolean enterField(final Field field, final Propaccess path) {
+        boolean visit = true;
+        execStack.push(curr);
+        row = curr.addField(field);
+        curr = executors.get(field);
+        if (curr == null) {
+            curr = new ExecutionNode<>(field);
+            executors.put(field, curr);
+        } else {
+            visit = false;
+        }
+        row.setNode(curr);
+        return visit;
+    }
+
+    public ExecutionRow getTempRow() {
+        return row;
+    }
+
+    public ExecutionNode getCurrentNode() {
+        return curr;
+    }
+
+    @Override
+    public void leaveField(final Field type, final Propaccess path) {
+        curr.setNotShell();
+        curr = execStack.pop();
+    }
+}

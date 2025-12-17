@@ -1,0 +1,42 @@
+package ht.jsontypesystem;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import ht.util.json.keys.BooleanProperty;
+import ht.util.json.keys.CollectionProperty;
+import ht.util.json.keys.StringProperty;
+import ht.util.json.keys.propaccess.Propaccess;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
+public class Group extends BaseT {
+    public static final StringProperty methodKey = new StringProperty("method", "", null);
+    public static final BooleanProperty defaultKey = new BooleanProperty("isdefault", "", false);
+    public static final StringProperty tagKey = new StringProperty("", "", null);
+    public static final CollectionProperty<String> tagsKey = new CollectionProperty("tags", "", new ArrayList(), tagKey);
+
+    private List<String> tags;
+
+    @Override
+    public boolean init(final JsonNode node) {
+        super.init(node);
+        tags = tagsKey.apply(node);
+        return true;
+    }
+
+    public String getMethod() {
+        return methodKey.apply(node);
+    }
+
+    public boolean isDefault() {
+        return defaultKey.apply(node);
+    }
+
+    public void visit(TypeVisitor visitor, Predicate<BaseT> filter, Propaccess path) {
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+}

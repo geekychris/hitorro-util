@@ -1,0 +1,92 @@
+package ht.util.statemachine;
+
+import ht.util.excelaccess.POICSVReader;
+import ht.util.io.csv.csvconsumer.CSVConsumer;
+import ht.util.statemachine.csvconsumers.EdgeConsumer;
+import ht.util.statemachine.csvconsumers.GroupConsumer;
+import ht.util.statemachine.csvconsumers.ParametersConsumer;
+import ht.util.statemachine.csvconsumers.StateConsumer;
+
+import java.io.File;
+import java.io.IOException;
+
+/**
+ * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 9, 2007 Time: 9:28:42 AM
+ */
+public class StateMachineUtil {
+    private static final String SheetGroups = "groups";
+    private static final String SheetStates = "states";
+    private static final String SheetEdges = "edges";
+    private static final String SheetParameters = "parameters";
+
+
+    /**
+     * @param file or directory containing the pages.  We expect the following pages:
+     *             <p/>
+     *             groups - groups that a state can belong to as a way to allow us to categorize the state states -
+     *             state or vertex of the graph. statetransitions - edges of the graph
+     * @return
+     */
+    public static MooreStateMachine initStateRegistry(File file) {
+        MooreStateMachine registry = new MooreStateMachine();
+        init(registry, file);
+        return registry;
+    }
+
+
+    /**
+     * @param registry of the states
+     * @param file     or directory of state diagram
+     */
+    private static void init(MooreStateMachine registry, File file) {
+        initGroups(registry, file);
+        initState(registry, file);
+        initStateTransitions(registry, file);
+        initParameters(registry, file);
+    }
+
+
+    private static boolean initGroups(MooreStateMachine registry, File groupState) {
+        boolean result = metaInit(new GroupConsumer(registry), SheetGroups, groupState, true);
+        registry.finalizeGroups();
+        return result;
+    }
+
+
+    private static boolean metaInit(CSVConsumer consumer, String page, File file, boolean isRequired) {
+        POICSVReader reader = new POICSVReader(consumer);
+        try {
+            boolean foundPage = reader.read(file, page);
+
+            if (!foundPage && isRequired) {
+                Log.statemachine.error("Unable to read statemachine file %s, required page %s", file, page);
+            }
+
+            return foundPage;
+        } catch (IOException ioe) {
+            if (isRequired) {
+                Log.statemachine.error("Unable to read state file %s for page %s with error %s %e",
+                        file, page, ioe, ioe);
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+
+    private static boolean initState(MooreStateMachine registry, File states) {
+        return metaInit(new StateConsumer(registry), SheetStates, states, true);
+    }
+
+
+    private static boolean initStateTransitions(MooreStateMachine registry, File stateTransitions) {
+        return metaInit(new EdgeConsumer(registry), SheetEdges, stateTransitions, true);
+    }
+
+
+    private static boolean initParameters(MooreStateMachine registry, File state) {
+        return metaInit(new ParametersConsumer(registry, state), SheetParameters, state, false);
+    }
+
+}

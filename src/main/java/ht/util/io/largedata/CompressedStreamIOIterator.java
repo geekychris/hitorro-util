@@ -1,0 +1,125 @@
+package ht.util.io.largedata;
+
+import ht.util.basefile.fs.BaseFile;
+import ht.util.core.Log;
+import ht.util.core.iterator.AbstractIterator;
+import ht.util.core.string.Fmt;
+import ht.util.io.largedata.compressedstreams.CInputStream;
+import ht.util.io.largedata.compressedstreams.FSInputStream;
+import ht.util.io.largedata.compressedstreams.InputInputStream;
+
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+
+/**
+ * <p/>
+ * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 27, 2005 Time: 2:03:25 PM Read an
+ * encoded log file one row at a time till you hit the null terminator.
+ */
+public class CompressedStreamIOIterator<T extends CompressedStreamIO> extends AbstractIterator<T> {
+    private CInputStream blockInputStream;
+    private BaseFileAccessingObjectFactory<T> factory;
+    private T line;
+    private String source;
+    private boolean open;
+    private int count = 0;
+
+    private CompressedStreamIOIterator() {
+
+    }
+
+    public CompressedStreamIOIterator(File f, BaseFileAccessingObjectFactory<T> fac) throws IOException {
+        factory = fac;
+        setFile(f);
+    }
+
+    public CompressedStreamIOIterator(BaseFile f, BaseFileAccessingObjectFactory<T> fac) throws IOException {
+        factory = fac;
+        setStream(f.getCInputStream());
+    }
+
+    public CompressedStreamIOIterator(InputStream is, BaseFileAccessingObjectFactory<T> fac) throws IOException {
+        factory = fac;
+        setStream(is);
+    }
+
+    public String toString() {
+        return Fmt.S("CSIOT :%s count:%s, open:%s", source, count, open);
+    }
+
+    private void setFile(File f) throws IOException {
+        blockInputStream = new FSInputStream(f);
+        source = f.getAbsolutePath();
+        open = true;
+        line = aux();
+    }
+
+    private void setStream(CInputStream is) throws IOException {
+        //XXX This is not correct we must know where the end of stream is?
+        // we start out with -1 and it will eventually get set to the correct length when we hit eof.
+        blockInputStream = is;
+        source = is.toString();
+        open = true;
+        line = aux();
+    }
+
+    private void setStream(InputStream is) throws IOException {
+        //XXX This is not correct we must know where the end of stream is?
+        // we start out with -1 and it will eventually get set to the correct length when we hit eof.
+        blockInputStream = new InputInputStream(new DataInputStream(is), -1);
+        source = is.toString();
+        open = true;
+        line = aux();
+    }
+
+    public void close() throws Exception {
+        if (blockInputStream != null) {
+            blockInputStream.close();
+        }
+        blockInputStream = null;
+    }
+
+    public boolean hasNext() {
+        return line != null;
+    }
+
+    public T next() {
+        if (line == null) {
+            return null;
+        }
+        T l = line;
+        try {
+            line = aux();
+            if (line == null) {
+                open = false;
+                try {
+                    close();
+                } catch (Exception e) {
+                    Log.util.error("Unable to close %s %e", e, e);
+                }
+            }
+        } catch (IOException e) {
+            Log.util.error("Exception reading %s %s %e", source, e, e);
+        }
+        return l;
+    }
+
+    private T aux() throws IOException {
+        if (open == false) {
+            // ensure we dont read past end of file.
+            return null;
+        }
+        T line = factory.getObject();
+        count++;
+        if (line.read(blockInputStream)) {
+            return line;
+        }
+        return null;
+    }
+
+    public void remove() {
+        // NA
+    }
+}

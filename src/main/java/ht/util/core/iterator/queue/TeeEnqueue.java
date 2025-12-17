@@ -1,0 +1,110 @@
+package ht.util.core.iterator.queue;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+public class TeeEnqueue<E> extends AbstractEnqueue<E> {
+    protected AbstractEnqueue<E> a;
+    protected AbstractEnqueue<E> b;
+
+    public TeeEnqueue(AbstractEnqueue<E> a, AbstractEnqueue<E> b) {
+        this.a = a;
+        this.b = b;
+    }
+
+    @Override
+    public boolean init(final JsonNode node) {
+        return true;
+    }
+
+    @Override
+    public boolean add(final E e) {
+        return a.add(e) | b.add(e);
+    }
+
+    @Override
+    public void close() throws IOException {
+        a.close();
+        b.close();
+    }
+
+    @Override
+    public boolean offer(final E e) {
+        return a.offer(e) | b.offer(e);
+    }
+
+    @Override
+    public void put(final E e) throws InterruptedException {
+        a.put(e);
+        b.put(e);
+    }
+
+    @Override
+    public boolean offer(final E e, final long timeout, final TimeUnit unit) throws InterruptedException {
+        return a.offer(e, timeout, unit) | b.offer(e, timeout, unit);
+    }
+
+    @Override
+    public void clear() {
+        a.clear();
+        b.clear();
+    }
+
+    public int size() {
+        return a.size() + b.size();
+    }
+
+    @Override
+    public AbstractDequeue<E> dequeue() {
+        return a.dequeue();
+    }
+
+    public int remainingCapacity() {
+        return a.remainingCapacity() + b.remainingCapacity();
+    }
+
+    @Override
+    public Object getNotifier() {
+        return a.getNotifier();
+    }
+
+    @Override
+    public void setNotifier(final Object notifier) {
+        a.setNotifier(notifier);
+        b.setNotifier(notifier);
+    }
+
+    @Override
+    public boolean getQueueCanceled() {
+        return a.getQueueCanceled() | b.getQueueCanceled();
+    }
+
+    @Override
+    public void setQueueCanceled(final boolean flag) {
+        a.setQueueCanceled(flag);
+        b.setQueueCanceled(flag);
+    }
+
+    @Override
+    public void setQueueComplete() {
+        a.setQueueComplete();
+        b.setQueueComplete();
+    }
+
+    @Override
+    public boolean getQueueComplete() {
+        return a.getQueueComplete() | b.getQueueComplete();
+    }
+
+    @Override
+    public E remove(final Object o) {
+        E e = a.remove(o);
+        if (e == null) {
+            e = b.remove(o);
+        }
+        return e;
+    }
+
+}

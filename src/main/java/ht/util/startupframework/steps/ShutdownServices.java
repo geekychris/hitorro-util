@@ -1,0 +1,43 @@
+package ht.util.startupframework.steps;
+
+import ht.util.core.Log;
+import ht.util.core.error.ErrorCode;
+import ht.util.core.string.StringUtil;
+import ht.util.startupframework.ServiceContext;
+import ht.util.startupframework.ServiceWrapper;
+
+import java.util.List;
+
+/**
+ * We are done with the process, lets walk backwards through the set of services and ask them to cleanly shut down.
+ */
+public class ShutdownServices implements ServiceStep {
+    public static final String EventName = "ShutdownServices";
+
+    @Override
+    public String getPostStepEvent() {
+        return EventName;
+    }
+
+    @Override
+    public String getPhaseName() {
+        return "ShutdownServices";
+    }
+
+    @Override
+    public ErrorCode execute(final boolean initDb) {
+        Log.servicecontext.info("Deinitializing services");
+        List<ServiceWrapper> swList = ServiceContext.getSC().getServices();
+        for (int i = swList.size() - 1; i >= 0; i--) {
+            ServiceWrapper module = swList.get(i);
+            if (module.isInitialized()) {
+                String text = module.deInit();
+                if (!StringUtil.nullOrEmptyString(text)) {
+                    return new ErrorCode(60, "Unable to deInitialize module %s with error %s",
+                            new Object[]{module.getShortName(), text});
+                }
+            }
+        }
+        return null;
+    }
+}

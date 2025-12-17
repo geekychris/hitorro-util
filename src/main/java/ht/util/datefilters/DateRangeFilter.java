@@ -1,0 +1,55 @@
+package ht.util.datefilters;
+
+import ht.util.core.UTCDateUtil;
+
+import java.util.Date;
+
+/**
+ * Used to determine if a date provided is within a specified Range User: chris
+ */
+public class DateRangeFilter implements DateRangeFilterIntf {
+    private int startDate[];
+    private int endDate[];
+
+    public DateRangeFilter(Date start, Date end) {
+        init(start, end);
+    }
+
+    public DateRangeFilter(int[] start, int[] end) {
+        startDate = start;
+        endDate = end;
+    }
+
+    public int inRange(int[] parts, int depthIn) {
+        int low = compare(parts, startDate, depthIn);
+        if (low <= 0) {
+            return low;
+        }
+
+        int high = compare(parts, endDate, depthIn);
+        if (high > 0) {
+            return 1;
+        }
+        return 0;
+    }
+
+    private int compare(int ymdparts[], int compareToMe[], int depthIn) {
+        int depth = Math.min(depthIn, ymdparts.length);
+        depth = Math.min(depth, compareToMe.length);
+        for (int i = 0; i < depth; i++) {
+            if (ymdparts[i] < compareToMe[i]) {
+                return -1;
+            }
+            if (ymdparts[i] > compareToMe[i]) {
+                return 1;
+            }
+
+        }
+        return 0;
+    }
+
+    private void init(Date start, Date end) {
+        startDate = UTCDateUtil.getYMDAsInArray(start);
+        endDate = UTCDateUtil.getYMDAsInArray(end);
+    }
+}

@@ -1,0 +1,103 @@
+package ht.util.io.csv.query;
+
+import gnu.trove.map.hash.TObjectIntHashMap;
+import ht.jsontypesystem.JVS;
+import ht.util.basefile.fs.BaseFile;
+import ht.util.core.iterator.CloseableIterator;
+import ht.util.core.iterator.Mapper;
+import ht.util.core.iterator.mappers.BaseMapper;
+import ht.util.core.opers.HTPredicate;
+import ht.util.core.string.StringUtil;
+import ht.util.io.csv.ArrayArrayMappingIterator;
+import ht.util.io.csv.CSVIteratorImpl;
+import ht.util.io.csv.ColumnTableMeta;
+import ht.util.json.keys.propaccess.PropaccessError;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ *
+ */
+public class CSVQuery {
+    private String cols[];
+    private BaseFile sourceFile;
+    private CSVTableMeta meta;
+    private ColumnTableMeta columnTableMeta;
+    private Map<String, BaseMapper> mapAlternatives = new HashMap();
+    private HTPredicate<String[]> where = null;
+    private TObjectIntHashMap<String> fieldIntMap = new TObjectIntHashMap<String>();
+
+    public static CSVQuery selectFromMeta(BaseFile sourceFile, CSVTableMeta meta, String... cols) {
+        CSVQuery q = new CSVQuery();
+        q.cols = cols;
+        q.sourceFile = sourceFile;
+        q.meta = meta;
+        for (int i = 0; i < cols.length; i++) {
+            q.fieldIntMap.put(cols[i].toLowerCase(), i);
+        }
+        return q;
+    }
+
+    public int getColumnCount() {
+        return fieldIntMap.size();
+    }
+
+    public ColumnTableMeta getColumnTableMeta() {
+        return columnTableMeta;
+    }
+
+    public CSVTableMeta getCSVTableMeta() {
+        return this.meta;
+    }
+
+    public int getIndexOf(String field) {
+        return fieldIntMap.get(field.toLowerCase());
+    }
+
+    /**
+     * Use an alternative me for a field if you dont like the primitive one or the one defined by the meta layer.
+     *
+     * @param field
+     * @param mapper
+     */
+    public CSVQuery setFieldMapping(String field, BaseMapper mapper) {
+        mapAlternatives.put(field.toLowerCase(), mapper);
+        return this;
+    }
+
+    public CSVQuery where(HTPredicate<String[]> where) {
+        this.where = where;
+        return this;
+    }
+
+    public CloseableIterator<Object[]> execute() throws IOException {
+        CSVIteratorImpl impl = new CSVIteratorImpl(sourceFile, "UTF-8");
+        JVS jvs = new JVS();
+        int indices[] = new int[cols.length];
+        Mapper<String, Object> mappers[] = new Mapper[cols.length];
+        columnTableMeta = impl.getMeta();
+        for (int i = 0; i < cols.length; i++) {
+            indices[i] = columnTableMeta.getColumnInt(cols[i]);
+            BaseMapper bm = mapAlternatives.get(cols[i].toLowerCase());
+            if (bm != null) {
+                mappers[i] = bm;
+            } else {
+                mappers[i] = meta.get(indices[i]).getMapper();
+            }
+        }
+        if (where != null) {
+
+            try {
+                jvs.set("cols", StringUtil.mergeWithJoinToken(impl.getColumnNames(), ","));
+            } catch (PropaccessError propaccessError) {
+                return null;
+            }
+            where.initFromMap(jvs.getJsonNode());
+        }
+
+        ArrayArrayMappingIterator iter = new ArrayArrayMappingIterator(impl, mappers, indices);
+        return iter;
+    }
+}

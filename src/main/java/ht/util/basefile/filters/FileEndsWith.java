@@ -1,0 +1,56 @@
+package ht.util.basefile.filters;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import ht.util.basefile.fs.BaseFile;
+import ht.util.basefile.fs.CompressionType;
+import ht.util.core.HTAssert;
+import ht.util.core.string.StringUtil;
+
+/**
+ *
+ */
+public class FileEndsWith extends FileFilterBase {
+    private String endsWith;
+    private boolean ignoreCase;
+    private boolean ignoreCompressionPiece = false;
+
+    /**
+     * "special edition" that will first remove the .gz extension from the string if exists.
+     *
+     * @param endsWith
+     * @param ignoreCase
+     * @param ignoreCompressionPiece
+     */
+    public FileEndsWith(String endsWith, boolean ignoreCase, boolean ignoreCompressionPiece) {
+        this.endsWith = endsWith;
+        this.ignoreCase = ignoreCase;
+        this.ignoreCompressionPiece = true;
+    }
+
+    public FileEndsWith(String endsWith, boolean ignoreCase) {
+        this.endsWith = endsWith;
+        this.ignoreCase = ignoreCase;
+    }
+
+    public boolean initFromMap(final JsonNode map) {
+        // MUST IMPLEMENT
+        HTAssert.assertThat(false, "FileExtension.initFromMap not implemented");
+        return false;
+    }
+
+    public void initForPass() {
+
+    }
+
+    public boolean test(BaseFile baseFile) {
+        String name = baseFile.getName();
+        if (ignoreCompressionPiece) {
+            CompressionType ct = CompressionType.getFilterByFileName(name);
+            if (ct != CompressionType.none) {
+                String nameSansCompressionExtensio = ct.getNameSansCompression(name);
+                return StringUtil.endsWithIgnoringCase(nameSansCompressionExtensio, endsWith, ignoreCase);
+            }
+        }
+        return StringUtil.endsWithIgnoringCase(name, endsWith, ignoreCase);
+    }
+}

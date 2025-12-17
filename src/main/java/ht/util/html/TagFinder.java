@@ -1,0 +1,404 @@
+package ht.util.html;
+
+import ht.util.core.string.StringUtil;
+
+import java.text.ParseException;
+import java.util.Map;
+import java.util.TreeMap;
+
+/**
+ * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 5, 2005 Time: 6:21:02 PM
+ * <p/>
+ * Simple iterator that scans a buffer to a max character position looking for things that look like:
+ * <p/>
+ * <html     ...........> For each next, we scan forward looking for the next.  No object instantiation is done in this
+ * code.
+ * <p/>
+ * Currently this code does not take account of escapes....so the tags could be inside text boxes and it wouldnt care.
+ */
+public class TagFinder {
+    private String m_buffer;
+    private int m_curr;
+    private int m_maxPos;
+    private int m_open;
+    private int m_close;
+    // given <!DOCTYPE ....> the entity name length would be 8 (we scan for the space)
+    private int m_entityNameLength;
+    private int m_attrNameStart;
+    private int m_attrNameLength;
+    private int m_attributeValueStart;
+    private int m_attributeValueEnd;
+    private int m_attrStart;
+
+    public void set(String buffer, int maxPos) {
+        m_buffer = buffer;
+        m_curr = 0;
+        // dont want to roll off the end of the world.
+        m_maxPos = Math.min(maxPos, buffer.length() - 1);
+        m_open = 0;
+        m_close = -1;
+    }
+
+    /**
+     * Advance to the next token. Stops at the max position and stops at the end of the buffer.
+     *
+     * @return
+     */
+    public boolean next() {
+        m_entityNameLength = 0;
+        m_open = m_buffer.indexOf("<", m_close + 1);
+        if (m_open == -1 || m_open > m_maxPos) {
+            return false;
+        }
+
+        for (int i = m_open; i < m_maxPos; i++) {
+            char c = m_buffer.charAt(i);
+            if (c == '>') {
+                m_close = i;
+                if (m_entityNameLength == 0) {
+                    m_entityNameLength = m_close - m_open - 1;
+                }
+                return true;
+            }
+            if (c == ' ' && m_entityNameLength == 0) {
+                m_entityNameLength = i - m_open - 1;
+            }
+        }
+        return false;
+    }
+
+    public void resetAttributeScan() {
+        m_attrStart = m_open + m_entityNameLength + 1;
+    }
+
+    /**
+     * Scan the current tag for an attribute by the given name, if so we prepare the markers for the boundaries of its
+     * value.
+     *
+     * @return true if the attribute is found.  At that point, you can pull out the attribute value using
+     * getAttributeValue
+     */
+    public boolean findAttribute(String attr) {
+        int start = m_open + m_entityNameLength + 1;
+        resetAttributeScan();
+
+        while (true) {
+            if (getNextAttribute()) {
+                if (StringUtil.subStringEqualsIgnoreCase(m_buffer, m_attrNameStart, m_attrNameLength, attr)) {
+                    return true;
+                }
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
+     * Get the attribute name, typically not called for performance reasons since it has to create a String object.
+     * Typically use case assumes you know what attribute your looking for, unless your just enumerating all the
+     * attributes of the entity.
+     *
+     * @return
+     */
+    public String getAttributeName() {
+        return m_buffer.substring(m_attrNameStart, m_attrNameStart + m_attrNameLength);
+    }
+
+    /**
+     * Gets the attributes value or empty string if the attribute has no value
+     *
+     * @return
+     */
+    public String getAttributeValue() {
+        if (m_attributeValueStart == -1) {
+            return "";
+        }
+        return m_buffer.substring(m_attributeValueStart, m_attributeValueEnd);
+    }
+
+    /**
+     * Stolen from the KeyValueUtil
+     *
+     * @return
+     * @throws ParseException
+     */
+    public boolean getNextAttribute() {
+        this.m_attributeValueStart = 0;
+        this.m_attributeValueEnd = 0;
+        this.m_attrNameStart = 0;
+        m_attrNameLength = 0;
+        boolean inQuotes = false;
+        int state = 0;
+        // 0=whitespace
+        // 1=key
+        // 2= whitespacebefore equals
+        // 3=whitspacefollowing equals
+        // 4 = value
+        char c = ' ';
+        String key = null;
+        for (int i = m_attrStart + 1; i < m_close; i++) {
+            c = m_buffer.charAt(i);
+            switch (state) {
+                case 0:
+                    // processing white space potentially
+                    if (c != ' ') {
+                        // tis not white space enter next state
+                        state = 1;
+                        // just put this char as its part of the key
+                        if (m_attrNameStart == 0) {
+                            m_attrNameStart = i;
+                        }
+
+                    }
+                    break;
+                case 1:
+                    // in key
+                    if (c == ' ') {
+                        // have hit white space end of key
+                        // now look for equals
+                        state = 2;
+                        this.m_attrNameLength = i - m_attrNameStart;
+                    } else if (c == '=') {
+                        // now look for white space following key
+                        this.m_attrNameLength = i - m_attrNameStart;
+                        state = 3;
+                    } else {
+
+                    }
+                    break;
+                case 2:
+                    // in
+                    if (c == ' ') {
+                        // do nothing
+                    } else if (c == '=') {
+                        // have hit equals following key
+                        this.m_attrNameLength = i - m_attrNameStart;
+                        // now look for white space following key
+                        state = 3;
+                    } else {
+                        // case where there is no value
+                        state = 1;
+                        this.m_attributeValueStart = -1;
+                        this.m_attributeValueEnd = -1;
+                        if (m_attrNameLength == 0) {
+                            this.m_attrNameLength = i - m_attrNameStart;
+                        }
+                        m_attrStart = i - 1;
+                        return true;
+                    }
+
+                    break;
+                case 3:
+                    // start of value
+                    if (c == ' ') {
+                        // do nothing
+                    } else {
+                        // found char
+                        state = 4;
+                        if (c == '\'' || c == '\"') {
+                            inQuotes = true;
+                        } else {
+                            this.m_attributeValueStart = i;
+                        }
+
+                    }
+                    break;
+                case 4:
+                    // processing value
+                    if (c == '\'' || c == '\"') {
+                        inQuotes = !inQuotes;
+                    } else {
+                        if (!inQuotes) {
+                            if (c == ' ') {
+                                this.m_attributeValueEnd = i - 1;
+                                m_attrStart = i;
+                                return true;
+                            } else {
+                                if (m_attributeValueStart == 0) {
+                                    this.m_attributeValueStart = i;
+                                }
+                            }
+
+                        } else {
+                            if (m_attributeValueStart == 0) {
+                                this.m_attributeValueStart = i;
+                            }
+                        }
+                    }
+            }
+        }
+        m_attrStart = m_buffer.length();
+        // deal with end of array case
+        if (state == 1) {
+
+            state = 2;
+            this.m_attributeValueStart = -1;
+            this.m_attributeValueEnd = -1;
+
+            return true;
+        }
+        if (state == 4) {
+            if (inQuotes == false) {
+                m_attributeValueEnd = m_close - 1;
+                return true;
+            } else {
+                // XXX ERROR?
+                return false
+                        ;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Stolen from the KeyValueUtil
+     *
+     * @return
+     * @throws ParseException
+     */
+    public Map<String, String> getAttributes() {
+
+        TreeMap<String, String> props = new TreeMap<String, String>();
+        StringBuilder buff = new StringBuilder();
+        boolean inQuotes = false;
+        int state = 0;
+        // 0=whitespace
+        // 1=key
+        // 2= whitespacebefore equals
+        // 3=whitspacefollowing equals
+        // 4 = value
+        char c = ' ';
+        String key = null;
+        for (int i = m_open + this.m_entityNameLength + 1; i < m_close; i++) {
+            c = m_buffer.charAt(i);
+            switch (state) {
+                case 0:
+                    // processing white space potentially
+                    if (c != ' ') {
+                        // tis not white space enter next state
+                        state = 1;
+                        // for now I dont care about special chars.
+                        buff.append(c);
+                    }
+                    break;
+                case 1:
+                    // in key
+                    if (c == ' ') {
+                        // have hit white space end of key
+                        // now look for equals
+                        state = 2;
+                    } else if (c == '=') {
+                        // have hit equals followig key
+                        key = buff.toString();
+                        buff.setLength(0);
+                        // now look for white space following key
+                        state = 3;
+                    } else {
+                        // just put this char as its part of the key
+                        buff.append(c);
+                    }
+                    break;
+                case 2:
+                    // in
+                    if (c == ' ') {
+                        // do nothing
+                    } else if (c == '=') {
+                        // have hit equals following key
+                        key = buff.toString();
+                        buff.setLength(0);
+                        // now look for white space following key
+                        state = 3;
+                    } else {
+                        // something else, its malformed
+                        if (true) {
+                            state = 1;
+                            props.put(buff.toString(), "true");
+                            buff.setLength(0);
+                            buff.append(c);
+                        } else {
+                            return null;
+                        }
+                    }
+                    break;
+                case 3:
+                    if (c == ' ') {
+                        // do nothing
+                    } else {
+                        // found char
+                        state = 4;
+                        if (c == '\'' || c == '\"') {
+                            inQuotes = true;
+                        } else {
+                            buff.append(c);
+                        }
+                    }
+                    break;
+                case 4:
+                    // processing value
+                    if (c == '\'' || c == '\"') {
+                        inQuotes = !inQuotes;
+                    } else {
+                        if (inQuotes) {
+                            buff.append(c);
+                        } else {
+                            if (c == ' ') {
+                                // end, hit space not in quotes
+                                state = 0;
+                                props.put(key, buff.toString());
+                                buff.setLength(0);
+                            } else {
+                                buff.append(c);
+                            }
+                        }
+                    }
+            }
+
+        }
+        // deal with end of array case
+        if (state == 1) {
+            // could be we have a flag at the end of the line
+            if (true) {
+                state = 2;
+                props.put(buff.toString(), "true");
+                buff.setLength(0);
+                buff.append(c);
+            } else {
+                return null;
+            }
+        }
+        if (state == 4) {
+            if (inQuotes == false) {
+                props.put(key, buff.toString());
+                buff.setLength(0);
+            } else {
+                return null;
+            }
+        }
+
+        return props;
+    }
+
+    public int getTagStart() {
+        return m_open;
+    }
+
+    public int getTagStop() {
+        return m_close;
+    }
+
+    public boolean isTagEqualIgnoreCase(String tag) {
+        int start = m_open + 1;
+        return StringUtil.subStringEqualsIgnoreCase(m_buffer, start, m_entityNameLength, tag);
+    }
+
+    /**
+     * Get the elements tag name, not really expected to be called in bulk as it creates string objects.
+     *
+     * @return
+     */
+    public String getTag() {
+        int start = m_open + 1;
+        return m_buffer.substring(start, start + m_entityNameLength);
+    }
+}

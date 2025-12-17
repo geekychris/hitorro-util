@@ -1,0 +1,161 @@
+package ht.util.versioning;
+
+import ht.util.core.string.Fmt;
+import ht.util.core.string.StringUtil;
+import ht.util.io.StoreException;
+import ht.util.typesystem.HTObjectInputStream;
+import ht.util.typesystem.HTObjectOutputStream;
+import ht.util.typesystem.HTSerializable;
+import ht.util.typesystem.annotation.TypeClassMetaInfo;
+
+import java.io.IOException;
+
+/**
+ * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 5, 2006 Time: 3:22:41 PM
+ */
+@TypeClassMetaInfo(shortTypeName = "VN",
+        isView = false,
+        isPersisted = false,
+        schemaVersion = VersionNode.SerializationVersion)
+public class VersionNode implements HTSerializable, Comparable<VersionNode> {
+    public static final int SerializationVersion = 1;
+    private long m_major;
+    private long m_minor;
+    private long m_patch;
+    private long m_buildNumber;
+    private long[] m_version = new long[4];
+    private String m_stringName;
+
+    public VersionNode() {
+
+    }
+
+    public VersionNode(long major, long minor, long patch, long buildNumber) {
+        init(major, minor, patch, buildNumber);
+    }
+
+    public VersionNode(String schemaVersion) {
+        String parts[] = StringUtil.tokenizeFromSingleChar(schemaVersion, ".");
+        init(Long.parseLong(parts[0]),
+                Long.parseLong(parts[1]),
+                Long.parseLong(parts[2]),
+                Long.parseLong(parts[3]));
+    }
+
+    public boolean equals(Object o) {
+        if (o instanceof VersionNode) {
+            return ((VersionNode) o).m_stringName.equals(m_stringName);
+        }
+        return false;
+    }
+
+    public int hashCode() {
+        return m_stringName.hashCode();
+    }
+
+    public void init(long major, long minor, long patch, long buildNumber) {
+        m_major = major;
+        m_minor = minor;
+        m_patch = patch;
+        m_buildNumber = buildNumber;
+        initAux();
+        m_stringName = Fmt.S("%s.%s.%s.%s", Long.toString(major), Long.toString(minor), Long.toString(patch), Long.toString(buildNumber));
+    }
+
+    private void initAux() {
+        m_version[0] = m_major;
+        m_version[1] = m_minor;
+        m_version[2] = m_patch;
+        m_version[3] = m_buildNumber;
+    }
+
+    public String toString() {
+        return m_stringName;
+    }
+
+    public String getName() {
+        return m_stringName;
+    }
+
+    public long getMajor() {
+        return m_major;
+    }
+
+    public long getMinor() {
+        return m_minor;
+    }
+
+    public long getPatch() {
+        return m_patch;
+    }
+
+    public long getBuildNumber() {
+        return m_buildNumber;
+    }
+
+    public String getVersion() {
+        return Fmt.S("%s.%s.%s.%s", m_major, m_minor, m_patch, m_buildNumber);
+    }
+
+    public boolean meetsVersionCriteria(VersionPartComparitor[] comp) {
+        for (int i = 0; i < 4; i++) {
+            if (!comp[i].match(m_version[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void serialize(HTObjectOutputStream os) throws IOException, StoreException {
+        os.writeInt(SerializationVersion);
+        os.writeLong(m_major);
+        os.writeLong(m_minor);
+        os.writeLong(m_patch);
+        os.writeLong(m_buildNumber);
+        os.writeString(m_stringName);
+    }
+
+    public void deserialize(HTObjectInputStream os) throws IOException, ClassNotFoundException, StoreException {
+        int version = os.readInt();
+
+        m_major = os.readLong();
+        m_minor = os.readLong();
+        m_patch = os.readLong();
+        m_buildNumber = os.readLong();
+        m_stringName = os.readString();
+        initAux();
+    }
+
+    public int getSerializationVersion() {
+        return SerializationVersion;
+    }
+
+    public boolean isPersisted() {
+        return false;
+    }
+
+    public boolean hasGuid() {
+        return false;
+    }
+
+    public boolean hasSoftGuid() {
+        return false;
+    }
+
+    public int compareTo(VersionNode o) {
+        for (int i = 0; i < m_version.length; i++) {
+            long a = m_version[i];
+            long b = o.m_version[i];
+            if (a == b) {
+                continue;
+            }
+            if (a > b) {
+                return 1;
+            }
+            if (a < b) {
+                return -1;
+            }
+        }
+        return 0;
+    }
+}

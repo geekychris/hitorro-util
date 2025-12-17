@@ -1,0 +1,87 @@
+package ht.util.io.resourcecache.basefile;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import ht.util.basefile.fs.BaseFile;
+import ht.util.core.string.StringUtil;
+import ht.util.io.resourcecache.file.ResourceCache;
+import ht.util.json.keys.BasefileProperty;
+import ht.util.versioning.BaseFileDirectoryVersionNode;
+import ht.util.versioning.DirectoryVersionNode;
+
+import java.io.IOException;
+import java.util.Map;
+
+/**
+ *
+ */
+public class BaseFileResourcePropertyKey extends BasefileProperty {
+    private String m_resourceKey;
+    private String m_resourceQueryString;
+    private String m_resourceFileName;
+
+    /**
+     * @param resourceKey
+     * @param queryString
+     * @param resourceFileName - optional file name to append to the file path if retrieved from the cache
+     * @param key
+     * @param description
+     */
+    public BaseFileResourcePropertyKey(String resourceKey, String queryString, String resourceFileName,
+                                       String key, String description) {
+        super(key, description);
+
+        set(resourceKey, queryString, resourceFileName);
+    }
+
+    /**
+     * @param resourceKey
+     * @param queryString
+     * @param resourceFileName
+     * @param key
+     * @param description
+     * @param defaultValue
+     */
+    public BaseFileResourcePropertyKey(String resourceKey, String queryString, String resourceFileName,
+                                       String key, String description, String defaultValue) {
+        super(key, description, defaultValue);
+        set(resourceKey, queryString, resourceFileName);
+    }
+
+
+    private void set(String resourceKey, String queryString, String resourceFileName) {
+        m_resourceKey = resourceKey;
+        m_resourceQueryString = queryString;
+        m_resourceFileName = resourceFileName;
+    }
+
+    /**
+     * Determine if the resource is actually in resource cache or not.
+     *
+     * @param map
+     * @return
+     */
+    public boolean isInResourceCache(Map<String, String> map) {
+        ResourceCache resourceCache = ResourceCache.getCache();
+        DirectoryVersionNode dvn = resourceCache.getResource(this.m_resourceKey, this.m_resourceQueryString);
+        return dvn != null;
+    }
+
+    public BaseFile apply(JsonNode map) {
+        BaseFileResourceCache resourceCache = null;
+        try {
+            resourceCache = BaseFileResourceCache.getCache();
+        } catch (IOException e) {
+            return null;
+        }
+        BaseFileDirectoryVersionNode dvn = resourceCache.getResource(this.m_resourceKey, this.m_resourceQueryString);
+        if (dvn != null) {
+
+            BaseFile f = dvn.getDirectory();
+            if (StringUtil.nullOrEmptyOrBlankString(m_resourceFileName)) {
+                return f;
+            }
+            return f.getChild(m_resourceFileName);
+        }
+        return super.apply(map);
+    }
+}

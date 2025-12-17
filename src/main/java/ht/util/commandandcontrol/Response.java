@@ -1,0 +1,85 @@
+package ht.util.commandandcontrol;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+/**
+ * Basic response object for spewing out the response to a debug command.
+ *
+ * @author chris
+ */
+public abstract class Response {
+    protected ResponseShape shape;
+
+    protected HttpServletResponse httpResponse;
+
+    protected HttpServletRequest httpRequest;
+    protected RenderingContainer containers[];
+
+    public HttpServletRequest getHttpRequest() {
+        return httpRequest;
+    }
+
+    public void setHttpRequest(HttpServletRequest r) {
+        httpRequest = r;
+    }
+
+    public HttpServletResponse getHttpResponse() {
+        return httpResponse;
+    }
+
+    public void setHttpResponse(HttpServletResponse r) {
+        httpResponse = r;
+    }
+
+    public void setCommandSession(CommandSession sess) {
+        // do nothing / others may wish to pull session variables out
+    }
+
+    /**
+     * @param row
+     */
+    public abstract void addBannerRow(String row);
+
+    public void setRenderingRow(RenderingContainer... containers) {
+        this.containers = containers;
+    }
+
+    public abstract void addRow(Object... elements);
+
+    public abstract void addRowArray(Object elements[]);
+
+    public abstract void addInfo(InfoLevel level, String info);
+
+    /**
+     * unlike other messages, this one is not buffered and is output the the recipient.  Useful for updating the
+     * progress of a computation.
+     *
+     * @param info
+     */
+    public abstract void addStatusUpdateMessage(String info, int percentComplete);
+
+    public abstract void end();
+
+
+    public ResponseShape getShape() {
+        return shape;
+    }
+
+    public void setResponseShape(ResponseShape s) {
+        // here we put the header.
+        shape = s;
+    }
+
+    public MultiRowResponse getMultiRowResponse() {
+        if (shape == null) {
+            return null;
+        }
+        return new StandardMultiRowResponse(shape.m_headerShort.length, shape);
+    }
+
+    public void addMultiRowResponse(MultiRowResponse mrr) {
+        mrr.addToResponse(this);
+        mrr.clear();
+    }
+}

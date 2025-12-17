@@ -1,0 +1,5 @@
+This code is modified Lucene code.  Its a convenient way to read and write compressed streams of data (using delta compression and RLE).
+
+We may want to consider writing our own at some point.
+
+C

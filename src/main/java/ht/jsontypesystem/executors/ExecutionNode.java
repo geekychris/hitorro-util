@@ -1,0 +1,184 @@
+package ht.jsontypesystem.executors;
+
+import ht.jsontypesystem.Field;
+import ht.util.core.string.Fmt;
+import ht.util.json.keys.propaccess.IndexedPart;
+import ht.util.json.keys.propaccess.Part;
+import ht.util.json.keys.propaccess.Propaccess;
+import ht.util.json.keys.propaccess.PropaccessError;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExecutionNode<E extends ExecutorAction> {
+    static Part lang = new Part("lang");
+    private List<E> actionsTmp = new ArrayList();
+    private List<ExecutionRow<E>> execRowsTmp = new ArrayList<>();
+    private ExecutorAction actions[];
+    private ExecutionRow<E> execRows[];
+    private Field f;
+    private boolean shell = true;
+    private int finalizedCount = -1;
+    private boolean fetchLang;
+
+
+    public ExecutionNode(Field f) {
+        this.f = f;
+        if (f != null) {
+            fetchLang = f.getType().fetchLang();
+        }
+    }
+
+    public void project(ProjectionContext pc) throws PropaccessError {
+        Propaccess access = new Propaccess("");
+        project(pc, access, false, null);
+    }
+
+    protected String getLang(ProjectionContext pc, Propaccess path) {
+        path.append(lang);
+        try {
+            String l = pc.source.getString(path);
+            path.pop();
+            return l;
+        } catch (PropaccessError propaccessError) {
+
+        }
+        return null;
+    }
+
+    public void project(ProjectionContext pc, Propaccess pa, boolean isMulti, String lang) throws PropaccessError {
+        if (fetchLang) {
+            lang = getLang(pc, pa);
+        }
+        for (ExecutionRow row : execRows) {
+            projectRow(pc, row, pa, isMulti, lang);
+        }
+        if (actions != null) {
+            for (ExecutorAction action : actions) {
+                action.project(pc, pa, isMulti, lang);
+            }
+        }
+    }
+
+    public void projectRow(ProjectionContext pc, ExecutionRow row, Propaccess pa, boolean isMulti, String lang) throws PropaccessError {
+        Part part = row.getPart();
+        pa.append(part);
+        if (row.isVector()) {
+            isMulti = true;
+            int size = pc.source.getSize(pa);
+            for (int i = 0; i < size; i++) {
+                part.setIndex(i);
+                row.node.project(pc, pa, isMulti, lang);
+            }
+        } else {
+            row.node.project(pc, pa, isMulti, lang);
+        }
+
+        pa.pop();
+    }
+
+    public Field getField() {
+        return f;
+    }
+
+    public boolean getIsShell() {
+        return shell;
+    }
+
+    public void setNotShell() {
+        shell = false;
+    }
+
+    public ExecutorAction[] getActions() {
+        return actions;
+    }
+
+    public ExecutionRow[] getRows() {
+        return execRows;
+    }
+
+    public void addAction(E action) {
+        actionsTmp.add(action);
+    }
+
+    public ExecutionRow addField(Field f) {
+        ExecutionRow e = new ExecutionRow(f);
+        execRowsTmp.add(e);
+        return e;
+    }
+
+
+    public int finalizeNode() {
+        if (finalizedCount != -1) {
+            return finalizedCount;
+        }
+        pruneRows();
+
+        execRows = execRowsTmp.toArray(new ExecutionRow[execRowsTmp.size()]);
+        execRowsTmp = null;
+        actions = actionsTmp.toArray(new ExecutorAction[actionsTmp.size()]);
+        actionsTmp = null;
+        finalizedCount = actions.length + execRows.length;
+        return finalizedCount;
+    }
+
+    private void pruneRows() {
+        int i = execRowsTmp.size() - 1;
+        while (i >= 0) {
+            ExecutionRow<E> row = execRowsTmp.get(i);
+            int computed = row.finalizeNode();
+            if (computed == 0) {
+                // row not needed so prune it.
+                execRowsTmp.remove(i);
+            }
+            i--;
+        }
+    }
+}
+
+class ExecutionRow<E extends ExecutorAction> {
+    Field f;
+    ExecutionNode<E> node;
+    private Part part;
+    private boolean isVector;
+
+    public ExecutionRow(Field f) {
+        this.f = f;
+        if (f.isVector()) {
+            part = new IndexedPart(f.getName());
+        } else {
+            part = new Part(f.getName());
+        }
+        isVector = f.isVector();
+    }
+
+    public boolean isVector() {
+        return isVector;
+    }
+
+    public Part getPart() {
+        if (part.isIndexed()) {
+            return part.clone();
+        }
+        return part;
+    }
+
+    public void setNode(ExecutionNode<E> node) {
+        this.node = node;
+    }
+
+    public String toString() {
+        return Fmt.S("ExecRow: %s", f);
+    }
+
+    public ExecutionNode<E> getExecNode() {
+        return node;
+    }
+
+    public int finalizeNode() {
+        if (node == null) {
+            return 0;
+        }
+        return node.finalizeNode();
+    }
+}

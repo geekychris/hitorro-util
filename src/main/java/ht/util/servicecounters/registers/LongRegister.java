@@ -1,0 +1,84 @@
+package ht.util.servicecounters.registers;
+
+import ht.util.servicecounters.CounterContext;
+import ht.util.servicecounters.CounterSet;
+import ht.util.servicecounters.Register;
+
+/**
+ *
+ */
+public class LongRegister extends Register {
+    private volatile long[] registers;
+    private volatile long[] registersPrior;
+    private volatile long register;
+
+    public LongRegister(CounterSet cs, final String name, final String description) {
+        super(cs, name, description);
+        registers = new long[CounterContext.getContext().getRawRegisterCount()];
+        registersPrior = new long[CounterContext.getContext().getRawRegisterCount()];
+    }
+
+    public void tick() {
+        incrementBy(1);
+    }
+
+    public void clock(int depth) {
+        for (int i = 0; i <= depth; i++) {
+            registers[i + 1] += registers[i];
+            registersPrior[i] = registers[i];
+            registers[i] = 0;
+        }
+    }
+
+    public void incrementBy(long v) {
+        registers[0] += v;
+        register += v;
+    }
+
+    public void decrementBy(long v) {
+        registers[0] -= v;
+        register -= v;
+    }
+
+    public void setTo(long v) {
+        registers[0] = v;
+        register = v;
+    }
+
+    public long get() {
+        return register;
+    }
+
+    public double getAsDouble(boolean prior, int i) {
+        if (prior) {
+            return registersPrior[i];
+        }
+        return registers[i];
+    }
+
+    public long getAsLong(boolean prior, int i) {
+        if (prior) {
+            return registersPrior[i];
+        }
+        return registers[i];
+    }
+
+    public String getAsString(boolean prior, int i) {
+        if (prior) {
+            return Long.toString(registersPrior[i]);
+        }
+        return Long.toString(registers[i]);
+    }
+
+    public double getAsDouble() {
+        return register;
+    }
+
+    public long getAsLong() {
+        return register;
+    }
+
+    public String getValue() {
+        return Long.toString(register);
+    }
+}
