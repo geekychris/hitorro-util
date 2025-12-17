@@ -1,8 +1,24 @@
 /*
-    Copyright (c) 2003 - present HiTorro All rights reserved.
-
-*/
-
+ * Copyright (c) 2006-2025 Chris Collins
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package ht.util.core.params;
 
 import ht.util.core.Log;
@@ -15,9 +31,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
-/**
- *
- */
 public class Parameters {
     private Map _values;
     private ParameterMeta[] _meta;
@@ -410,28 +423,4 @@ public class Parameters {
     }
 }
 
-/*
-   An example of parameter metadata xml file:<br>
 
-   <parameters>
-       <parameter type="int" name="i1" required="true"/>
-       <parameter type="string" name="s1" required="true"/>
-       <parameter type="boolean" name="b1" required="true"/>
-       <parameter type="vector" name="v1" required="true">
-           <vectorcontent type="string"/>
-       </parameter>
-       <parameter type="object" name="o1" required="false">
-           <objectcontent classname="java.util.Random"/>
-       </parameter>
-       <parameter type="composite" name="system" required="true">
-           <parameter type="string" name="s2" required="false"/>
-           <parameter type="composite" name="logging" required="true">
-               <parameter type="boolean" name="b2" required="true"/>
-           </parameter>
-       </parameter>
-   </parameters>
-*/
-
-/*
-  An example of parameter data
-*/
