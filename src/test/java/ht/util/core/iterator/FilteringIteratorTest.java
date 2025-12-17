@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ht.util.core.iterator;
+package com.hitorro.util.core.iterator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             Predicate<Integer> isEven = i -> i % 2 == 0;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), isEven);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), isEven);
             
             List<Integer> result = collectToList(iter);
             
@@ -59,7 +59,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             Predicate<Integer> isOdd = i -> i % 2 != 0;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), isOdd);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), isOdd);
             
             List<Integer> result = collectToList(iter);
             
@@ -72,7 +72,7 @@ class FilteringIteratorTest {
             List<String> input = Arrays.asList("a", "ab", "abc", "abcd", "abcde");
             Predicate<String> longerThanTwo = s -> s.length() > 2;
             
-            FilteringIterator<String> iter = new FilteringIterator<>(input.iterator(), longerThanTwo);
+            com.hitorro.util.core.iterator.FilteringIterator<String> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), longerThanTwo);
             
             List<String> result = collectToList(iter);
             
@@ -85,7 +85,7 @@ class FilteringIteratorTest {
             List<String> input = Arrays.asList("apple", "banana", "apricot", "cherry", "avocado");
             Predicate<String> startsWithA = s -> s.startsWith("a");
             
-            FilteringIterator<String> iter = new FilteringIterator<>(input.iterator(), startsWithA);
+            com.hitorro.util.core.iterator.FilteringIterator<String> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), startsWithA);
             
             List<String> result = collectToList(iter);
             
@@ -103,7 +103,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList();
             Predicate<Integer> alwaysTrue = i -> true;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), alwaysTrue);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), alwaysTrue);
             
             assertThat(iter.hasNext()).isFalse();
         }
@@ -114,7 +114,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5);
             Predicate<Integer> alwaysFalse = i -> false;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), alwaysFalse);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), alwaysFalse);
             
             assertThat(iter.hasNext()).isFalse();
         }
@@ -125,7 +125,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5);
             Predicate<Integer> alwaysTrue = i -> true;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), alwaysTrue);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), alwaysTrue);
             
             List<Integer> result = collectToList(iter);
             
@@ -138,7 +138,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3);
             Predicate<Integer> equalsTwo = i -> i == 2;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), equalsTwo);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), equalsTwo);
             
             List<Integer> result = collectToList(iter);
             
@@ -151,7 +151,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(2, 4, 6, 8);
             Predicate<Integer> isEven = i -> i % 2 == 0;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), isEven);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), isEven);
             
             List<Integer> result = collectToList(iter);
             
@@ -170,7 +170,7 @@ class FilteringIteratorTest {
             Predicate<Integer> isEven = i -> i % 2 == 0;
             Predicate<Integer> greaterThanFive = i -> i > 5;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(
                     input.iterator(), 
                     isEven.and(greaterThanFive)
             );
@@ -187,7 +187,7 @@ class FilteringIteratorTest {
             Predicate<Integer> lessThanTwo = i -> i < 2;
             Predicate<Integer> greaterThanFour = i -> i > 4;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(
                     input.iterator(), 
                     lessThanTwo.or(greaterThanFour)
             );
@@ -203,7 +203,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5);
             Predicate<Integer> isEven = i -> i % 2 == 0;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(
                     input.iterator(), 
                     isEven.negate()
             );
@@ -225,7 +225,7 @@ class FilteringIteratorTest {
             );
             Predicate<Person> ageFilter = p -> p.age >= 30;
             
-            FilteringIterator<Person> iter = new FilteringIterator<>(input.iterator(), ageFilter);
+            com.hitorro.util.core.iterator.FilteringIterator<com.hitorro.util.core.iterator.FilteringIteratorTest.Person> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), ageFilter);
             
             List<Person> result = collectToList(iter);
             
@@ -246,7 +246,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5);
             Predicate<Integer> isEven = i -> i % 2 == 0;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), isEven);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), isEven);
             
             assertThat(iter.hasNext()).isTrue();
             assertThat(iter.hasNext()).isTrue();
@@ -262,7 +262,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5);
             Predicate<Integer> isOdd = i -> i % 2 != 0;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), isOdd);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), isOdd);
             
             List<Integer> result = new ArrayList<>();
             while (iter.hasNext()) {
@@ -278,7 +278,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(2, 4);
             Predicate<Integer> isEven = i -> i % 2 == 0;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), isEven);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), isEven);
             
             assertThat(iter.hasNext()).isTrue();
             iter.next();
@@ -293,7 +293,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5, 6);
             Predicate<Integer> isEven = i -> i % 2 == 0;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), isEven);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), isEven);
             
             assertThat(iter.hasNext()).isTrue();
             assertThat(iter.next()).isEqualTo(2);
@@ -315,13 +315,13 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
             
             // First filter: get even numbers
-            FilteringIterator<Integer> evenIter = new FilteringIterator<>(
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> evenIter = new com.hitorro.util.core.iterator.FilteringIterator<>(
                     input.iterator(), 
                     i -> i % 2 == 0
             );
             
             // Second filter: get numbers > 5
-            FilteringIterator<Integer> filteredIter = new FilteringIterator<>(
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> filteredIter = new com.hitorro.util.core.iterator.FilteringIterator<>(
                     evenIter, 
                     i -> i > 5
             );
@@ -348,7 +348,7 @@ class FilteringIteratorTest {
             );
             Predicate<String> isValidEmail = s -> s.contains("@") && s.contains(".");
             
-            FilteringIterator<String> iter = new FilteringIterator<>(input.iterator(), isValidEmail);
+            com.hitorro.util.core.iterator.FilteringIterator<String> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), isValidEmail);
             
             List<String> result = collectToList(iter);
             
@@ -365,7 +365,7 @@ class FilteringIteratorTest {
             List<Integer> input = Arrays.asList(-5, -2, 0, 3, -1, 7, 10, -8, 15);
             Predicate<Integer> isPositive = i -> i > 0;
             
-            FilteringIterator<Integer> iter = new FilteringIterator<>(input.iterator(), isPositive);
+            com.hitorro.util.core.iterator.FilteringIterator<Integer> iter = new com.hitorro.util.core.iterator.FilteringIterator<>(input.iterator(), isPositive);
             
             List<Integer> result = collectToList(iter);
             

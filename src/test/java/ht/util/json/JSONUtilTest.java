@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ht.util.json;
+package com.hitorro.util.json;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -46,28 +46,28 @@ class JSONUtilTest {
         @Test
         @DisplayName("Should detect null node")
         void shouldDetectNullNode() {
-            assertThat(JSONUtil.nullOrEmpty(null)).isTrue();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(null)).isTrue();
         }
 
         @Test
         @DisplayName("Should detect null JSON node")
         void shouldDetectNullJsonNode() {
             JsonNode node = JsonNodeFactory.instance.nullNode();
-            assertThat(JSONUtil.nullOrEmpty(node)).isTrue();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(node)).isTrue();
         }
 
         @Test
         @DisplayName("Should detect empty array")
         void shouldDetectEmptyArray() {
             ArrayNode emptyArray = JsonNodeFactory.instance.arrayNode();
-            assertThat(JSONUtil.nullOrEmpty(emptyArray)).isTrue();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(emptyArray)).isTrue();
         }
 
         @Test
         @DisplayName("Should detect empty object")
         void shouldDetectEmptyObject() {
             ObjectNode emptyObject = JsonNodeFactory.instance.objectNode();
-            assertThat(JSONUtil.nullOrEmpty(emptyObject)).isTrue();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(emptyObject)).isTrue();
         }
 
         @Test
@@ -75,7 +75,7 @@ class JSONUtilTest {
         void shouldNotDetectNonEmptyArrayAsEmpty() {
             ArrayNode array = JsonNodeFactory.instance.arrayNode();
             array.add("value");
-            assertThat(JSONUtil.nullOrEmpty(array)).isFalse();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(array)).isFalse();
         }
 
         @Test
@@ -83,21 +83,21 @@ class JSONUtilTest {
         void shouldNotDetectNonEmptyObjectAsEmpty() {
             ObjectNode object = JsonNodeFactory.instance.objectNode();
             object.put("key", "value");
-            assertThat(JSONUtil.nullOrEmpty(object)).isFalse();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(object)).isFalse();
         }
 
         @Test
         @DisplayName("Should not detect text node as empty")
         void shouldNotDetectTextNodeAsEmpty() {
             JsonNode textNode = JsonNodeFactory.instance.textNode("text");
-            assertThat(JSONUtil.nullOrEmpty(textNode)).isFalse();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(textNode)).isFalse();
         }
 
         @Test
         @DisplayName("Should not detect number node as empty")
         void shouldNotDetectNumberNodeAsEmpty() {
             JsonNode numberNode = JsonNodeFactory.instance.numberNode(42);
-            assertThat(JSONUtil.nullOrEmpty(numberNode)).isFalse();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(numberNode)).isFalse();
         }
     }
 
@@ -110,7 +110,7 @@ class JSONUtilTest {
         void shouldConvertListToJsonStringArray() {
             List<String> list = Arrays.asList("apple", "banana", "cherry");
 
-            ArrayNode result = JSONUtil.toJsonStringArray(list);
+            ArrayNode result = com.hitorro.util.json.JSONUtil.toJsonStringArray(list);
 
             assertThat(result.size()).isEqualTo(3);
             assertThat(result.get(0).asText()).isEqualTo("apple");
@@ -123,7 +123,7 @@ class JSONUtilTest {
         void shouldHandleEmptyList() {
             List<String> list = Arrays.asList();
 
-            ArrayNode result = JSONUtil.toJsonStringArray(list);
+            ArrayNode result = com.hitorro.util.json.JSONUtil.toJsonStringArray(list);
 
             assertThat(result.size()).isZero();
         }
@@ -133,7 +133,7 @@ class JSONUtilTest {
         void shouldConvertObjectsUsingToString() {
             List<Integer> list = Arrays.asList(1, 2, 3);
 
-            ArrayNode result = JSONUtil.toJsonStringArray(list);
+            ArrayNode result = com.hitorro.util.json.JSONUtil.toJsonStringArray(list);
 
             assertThat(result.size()).isEqualTo(3);
             assertThat(result.get(0).asText()).isEqualTo("1");
@@ -154,7 +154,7 @@ class JSONUtilTest {
             map.put("city", "New York");
             map.put("country", "USA");
 
-            ObjectNode result = JSONUtil.map2json(map);
+            ObjectNode result = com.hitorro.util.json.JSONUtil.map2json(map);
 
             assertThat(result.size()).isEqualTo(3);
             assertThat(result.get("name").asText()).isEqualTo("John");
@@ -167,7 +167,7 @@ class JSONUtilTest {
         void shouldHandleEmptyMap() {
             Map<String, String> map = new HashMap<>();
 
-            ObjectNode result = JSONUtil.map2json(map);
+            ObjectNode result = com.hitorro.util.json.JSONUtil.map2json(map);
 
             assertThat(result.size()).isZero();
         }
@@ -179,7 +179,7 @@ class JSONUtilTest {
             map.put("key1", "value1");
             map.put("key2", null);
 
-            ObjectNode result = JSONUtil.map2json(map);
+            ObjectNode result = com.hitorro.util.json.JSONUtil.map2json(map);
 
             assertThat(result.has("key1")).isTrue();
             assertThat(result.has("key2")).isTrue();
@@ -193,7 +193,7 @@ class JSONUtilTest {
             map.put("path", "/users/john/documents");
             map.put("message", "Hello, World!");
 
-            ObjectNode result = JSONUtil.map2json(map);
+            ObjectNode result = com.hitorro.util.json.JSONUtil.map2json(map);
 
             assertThat(result.get("email").asText()).isEqualTo("test@example.com");
             assertThat(result.get("path").asText()).isEqualTo("/users/john/documents");
@@ -212,7 +212,7 @@ class JSONUtilTest {
             object.put("first", "John");
             object.put("last", "Doe");
 
-            String result = JSONUtil.mergeValues(object, " ");
+            String result = com.hitorro.util.json.JSONUtil.mergeValues(object, " ");
 
             // Note: HashMap ordering may vary, so we check both possibilities
             assertThat(result).matches("(John Doe|Doe John)");
@@ -226,7 +226,7 @@ class JSONUtilTest {
             object.put("b", "2");
             object.put("c", "3");
 
-            String result = JSONUtil.mergeValues(object, ",");
+            String result = com.hitorro.util.json.JSONUtil.mergeValues(object, ",");
 
             assertThat(result).contains("1");
             assertThat(result).contains("2");
@@ -240,7 +240,7 @@ class JSONUtilTest {
             ObjectNode object = JsonNodeFactory.instance.objectNode();
             object.put("only", "value");
 
-            String result = JSONUtil.mergeValues(object, ";");
+            String result = com.hitorro.util.json.JSONUtil.mergeValues(object, ";");
 
             assertThat(result).isEqualTo("value");
         }
@@ -255,7 +255,7 @@ class JSONUtilTest {
         void shouldAddExceptionCallstackToJson() {
             Exception exception = new RuntimeException("Test exception");
 
-            JsonNode result = JSONUtil.addCallstack(exception);
+            JsonNode result = com.hitorro.util.json.JSONUtil.addCallstack(exception);
 
             assertThat(result.isArray()).isTrue();
             assertThat(result.size()).isGreaterThan(0);
@@ -266,7 +266,7 @@ class JSONUtilTest {
         void shouldIncludeStackTraceElements() {
             Exception exception = new RuntimeException("Test exception");
 
-            JsonNode result = JSONUtil.addCallstack(exception);
+            JsonNode result = com.hitorro.util.json.JSONUtil.addCallstack(exception);
 
             ArrayNode array = (ArrayNode) result;
             boolean foundTestClass = false;
@@ -287,7 +287,7 @@ class JSONUtilTest {
             Exception cause = new IllegalArgumentException("Root cause");
             Exception wrapper = new RuntimeException("Wrapper exception", cause);
 
-            JsonNode result = JSONUtil.addCallstackChain(wrapper);
+            JsonNode result = com.hitorro.util.json.JSONUtil.addCallstackChain(wrapper);
 
             assertThat(result).isNotNull();
             if (result != null) {
@@ -308,7 +308,7 @@ class JSONUtilTest {
                 largeArray.add(i);
             }
 
-            assertThat(JSONUtil.nullOrEmpty(largeArray)).isFalse();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(largeArray)).isFalse();
             assertThat(largeArray.size()).isEqualTo(10000);
         }
 
@@ -321,7 +321,7 @@ class JSONUtilTest {
             ObjectNode outer = JsonNodeFactory.instance.objectNode();
             outer.set("nested", nested);
 
-            assertThat(JSONUtil.nullOrEmpty(outer)).isFalse();
+            assertThat(com.hitorro.util.json.JSONUtil.nullOrEmpty(outer)).isFalse();
         }
 
         @Test
@@ -329,7 +329,7 @@ class JSONUtilTest {
         void shouldHandleMixedTypeArrays() {
             List<Object> mixed = Arrays.asList("string", 123, true);
 
-            ArrayNode result = JSONUtil.toJsonStringArray(mixed);
+            ArrayNode result = com.hitorro.util.json.JSONUtil.toJsonStringArray(mixed);
 
             assertThat(result.size()).isEqualTo(3);
             assertThat(result.get(0).asText()).isEqualTo("string");
@@ -344,7 +344,7 @@ class JSONUtilTest {
             map.put("greeting", "Hello 世界");
             map.put("emoji", "🎉");
 
-            ObjectNode result = JSONUtil.map2json(map);
+            ObjectNode result = com.hitorro.util.json.JSONUtil.map2json(map);
 
             assertThat(result.get("greeting").asText()).isEqualTo("Hello 世界");
             assertThat(result.get("emoji").asText()).isEqualTo("🎉");

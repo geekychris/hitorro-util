@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ht.util.io;
+package com.hitorro.util.io;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
@@ -43,14 +43,14 @@ class FileUtilTest {
         @Test
         @DisplayName("Should have default buffer size constant")
         void shouldHaveDefaultBufferSizeConstant() {
-            assertThat(FileUtil.DefaultFileReaderBufferSize).isEqualTo(1024);
+            assertThat(com.hitorro.util.io.FileUtil.DefaultFileReaderBufferSize).isEqualTo(1024);
         }
 
         @Test
         @DisplayName("Should have digit array for encoding")
         void shouldHaveDigitArrayForEncoding() {
             // Verify the Digits array is accessible and has expected format
-            assertThat(FileUtil.Digits).isNotNull();
+            assertThat(com.hitorro.util.io.FileUtil.Digits).isNotNull();
         }
     }
 
@@ -64,7 +64,7 @@ class FileUtilTest {
             Path testFile = tempDir.resolve("test.txt");
             Files.writeString(testFile, "Hello World");
 
-            InputStream is = FileUtil.fsInputStream.apply(testFile.toFile());
+            InputStream is = com.hitorro.util.io.FileUtil.fsInputStream.apply(testFile.toFile());
 
             assertThat(is).isNotNull();
             assertThat(is.available()).isGreaterThan(0);
@@ -82,7 +82,7 @@ class FileUtilTest {
                 gzos.write("Compressed content".getBytes());
             }
 
-            InputStream is = FileUtil.fsInputStream.apply(testFile.toFile());
+            InputStream is = com.hitorro.util.io.FileUtil.fsInputStream.apply(testFile.toFile());
 
             assertThat(is).isNotNull();
             is.close();
@@ -93,7 +93,7 @@ class FileUtilTest {
         void shouldReturnNullForNonExistentFile() {
             File nonExistent = new File(tempDir.toFile(), "does-not-exist.txt");
 
-            InputStream is = FileUtil.fsInputStream.apply(nonExistent);
+            InputStream is = com.hitorro.util.io.FileUtil.fsInputStream.apply(nonExistent);
 
             // Based on implementation, it should handle the error
             assertThat(is).isNull();
@@ -109,7 +109,7 @@ class FileUtilTest {
         void shouldCreateOutputStreamForFile() throws IOException {
             Path testFile = tempDir.resolve("output.txt");
 
-            OutputStream os = FileUtil.fsOutputStream.apply(testFile.toFile());
+            OutputStream os = com.hitorro.util.io.FileUtil.fsOutputStream.apply(testFile.toFile());
 
             assertThat(os).isNotNull();
             os.write("Test content".getBytes());
@@ -124,7 +124,7 @@ class FileUtilTest {
         void shouldCreateGzipOutputStream() throws IOException {
             Path testFile = tempDir.resolve("output.gz");
 
-            OutputStream os = FileUtil.fsOutputStream.apply(testFile.toFile());
+            OutputStream os = com.hitorro.util.io.FileUtil.fsOutputStream.apply(testFile.toFile());
 
             assertThat(os).isNotNull();
             os.write("Compressed".getBytes());
@@ -143,7 +143,7 @@ class FileUtilTest {
         void shouldConvertOutputStreamToWriter() throws IOException {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-            Writer writer = FileUtil.os2Utf8Writer.apply(baos);
+            Writer writer = com.hitorro.util.io.FileUtil.os2Utf8Writer.apply(baos);
 
             assertThat(writer).isNotNull();
             writer.write("Test");
@@ -158,7 +158,7 @@ class FileUtilTest {
         void shouldConvertOutputStreamToPrintWriter() throws IOException {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-            PrintWriter pw = FileUtil.os2Utf8PrintWriter.apply(baos);
+            PrintWriter pw = com.hitorro.util.io.FileUtil.os2Utf8PrintWriter.apply(baos);
 
             assertThat(pw).isNotNull();
             pw.println("Line 1");
@@ -175,7 +175,7 @@ class FileUtilTest {
         void shouldConvertOutputStreamToPrintStream() throws IOException {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-            PrintStream ps = FileUtil.os2Utf8PrintStream.apply(baos);
+            PrintStream ps = com.hitorro.util.io.FileUtil.os2Utf8PrintStream.apply(baos);
 
             assertThat(ps).isNotNull();
             ps.print("Stream output");
@@ -190,7 +190,7 @@ class FileUtilTest {
         void shouldConvertByteArrayToInputStream() throws IOException {
             byte[] data = "Test data".getBytes();
 
-            InputStream is = FileUtil.byteArray2InputStream.apply(data);
+            InputStream is = com.hitorro.util.io.FileUtil.byteArray2InputStream.apply(data);
 
             assertThat(is).isNotNull();
             assertThat(is.available()).isEqualTo(data.length);
@@ -207,7 +207,7 @@ class FileUtilTest {
             String content = "Hello UTF-8 世界";
             ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes("UTF-8"));
 
-            Reader reader = FileUtil.is2reader.apply(bais);
+            Reader reader = com.hitorro.util.io.FileUtil.is2reader.apply(bais);
 
             assertThat(reader).isNotNull();
 
@@ -231,7 +231,7 @@ class FileUtilTest {
         void shouldChainFileToWriterMapper() throws IOException {
             Path testFile = tempDir.resolve("chained.txt");
 
-            Writer writer = FileUtil.file2Utf8Writer.apply(testFile.toFile());
+            Writer writer = com.hitorro.util.io.FileUtil.file2Utf8Writer.apply(testFile.toFile());
 
             assertThat(writer).isNotNull();
             writer.write("Chained mapping");
@@ -251,7 +251,7 @@ class FileUtilTest {
             String jsonContent = "{\"key\":\"value\"}\n{\"key2\":\"value2\"}";
             StringReader reader = new StringReader(jsonContent);
 
-            var iter = FileUtil.readerJacksonJsonIter.apply(reader);
+            var iter = com.hitorro.util.io.FileUtil.readerJacksonJsonIter.apply(reader);
 
             assertThat((Object) iter).isNotNull();
             assertThat(iter.hasNext()).isTrue();
@@ -262,7 +262,7 @@ class FileUtilTest {
         void shouldHandleEmptyJsonContent() {
             StringReader reader = new StringReader("");
 
-            var iter = FileUtil.readerJacksonJsonIter.apply(reader);
+            var iter = com.hitorro.util.io.FileUtil.readerJacksonJsonIter.apply(reader);
 
             assertThat((Object) iter).isNotNull();
         }
@@ -279,12 +279,12 @@ class FileUtilTest {
             String content = "Test content for file operations";
 
             // Write
-            try (OutputStream os = FileUtil.fsOutputStream.apply(testFile.toFile())) {
+            try (OutputStream os = com.hitorro.util.io.FileUtil.fsOutputStream.apply(testFile.toFile())) {
                 os.write(content.getBytes());
             }
 
             // Read
-            try (InputStream is = FileUtil.fsInputStream.apply(testFile.toFile())) {
+            try (InputStream is = com.hitorro.util.io.FileUtil.fsInputStream.apply(testFile.toFile())) {
                 byte[] buffer = new byte[1024];
                 int read = is.read(buffer);
                 String readContent = new String(buffer, 0, read);
@@ -300,12 +300,12 @@ class FileUtilTest {
             byte[] binaryData = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05};
 
             // Write binary
-            try (OutputStream os = FileUtil.fsOutputStream.apply(testFile.toFile())) {
+            try (OutputStream os = com.hitorro.util.io.FileUtil.fsOutputStream.apply(testFile.toFile())) {
                 os.write(binaryData);
             }
 
             // Read binary
-            try (InputStream is = FileUtil.fsInputStream.apply(testFile.toFile())) {
+            try (InputStream is = com.hitorro.util.io.FileUtil.fsInputStream.apply(testFile.toFile())) {
                 byte[] read = new byte[binaryData.length];
                 is.read(read);
 
@@ -324,7 +324,7 @@ class FileUtilTest {
             Path emptyFile = tempDir.resolve("empty.txt");
             Files.writeString(emptyFile, "");
 
-            InputStream is = FileUtil.fsInputStream.apply(emptyFile.toFile());
+            InputStream is = com.hitorro.util.io.FileUtil.fsInputStream.apply(emptyFile.toFile());
 
             assertThat(is).isNotNull();
             assertThat(is.available()).isZero();
@@ -341,7 +341,7 @@ class FileUtilTest {
             }
 
             // Write large content
-            try (OutputStream os = FileUtil.fsOutputStream.apply(largeFile.toFile())) {
+            try (OutputStream os = com.hitorro.util.io.FileUtil.fsOutputStream.apply(largeFile.toFile())) {
                 os.write(largeContent.toString().getBytes());
             }
 
@@ -358,8 +358,8 @@ class FileUtilTest {
 
             Files.writeString(utf8File, utf8Content);
 
-            try (InputStream is = FileUtil.fsInputStream.apply(utf8File.toFile());
-                 Reader reader = FileUtil.is2reader.apply(is)) {
+            try (InputStream is = com.hitorro.util.io.FileUtil.fsInputStream.apply(utf8File.toFile());
+                 Reader reader = com.hitorro.util.io.FileUtil.is2reader.apply(is)) {
 
                 StringBuilder sb = new StringBuilder();
                 int ch;

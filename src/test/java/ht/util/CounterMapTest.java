@@ -33,11 +33,11 @@ import static org.assertj.core.api.Assertions.*;
 @DisplayName("CounterMap Tests")
 class CounterMapTest {
 
-    private CounterMap<String, String> counterMap;
+    private com.hitorro.util.CounterMap<String, String> counterMap;
 
     @BeforeEach
     void setUp() {
-        counterMap = new CounterMap<>();
+        counterMap = new com.hitorro.util.CounterMap<>();
     }
 
     @Nested
@@ -146,7 +146,7 @@ class CounterMapTest {
             counterMap.setCount("animal", "cat", 5.0);
             counterMap.setCount("animal", "dog", 3.0);
 
-            Counter<String> animalCounter = counterMap.getCounter("animal");
+            com.hitorro.util.Counter<String> animalCounter = counterMap.getCounter("animal");
 
             assertThat(animalCounter).isNotNull();
             assertThat(animalCounter.getCount("cat")).isEqualTo(5.0);
@@ -156,7 +156,7 @@ class CounterMapTest {
         @Test
         @DisplayName("Should create counter for non-existent key")
         void shouldCreateCounterForNonExistentKey() {
-            Counter<String> counter = counterMap.getCounter("newKey");
+            com.hitorro.util.Counter<String> counter = counterMap.getCounter("newKey");
 
             assertThat(counter).isNotNull();
             assertThat(counter.isEmpty()).isTrue();
@@ -165,8 +165,8 @@ class CounterMapTest {
         @Test
         @DisplayName("Should return same counter instance for repeated calls")
         void shouldReturnSameCounterInstanceForRepeatedCalls() {
-            Counter<String> counter1 = counterMap.getCounter("animal");
-            Counter<String> counter2 = counterMap.getCounter("animal");
+            com.hitorro.util.Counter<String> counter1 = counterMap.getCounter("animal");
+            com.hitorro.util.Counter<String> counter2 = counterMap.getCounter("animal");
 
             assertThat(counter1).isSameAs(counter2);
         }
@@ -238,7 +238,7 @@ class CounterMapTest {
             assertThat(counterMap.getCount("fast", "ADV")).isEqualTo(12.0);
 
             // Get distribution for "run"
-            Counter<String> runCounter = counterMap.getCounter("run");
+            com.hitorro.util.Counter<String> runCounter = counterMap.getCounter("run");
             assertThat(runCounter.totalCount()).isEqualTo(15.0);
         }
 

@@ -40,7 +40,7 @@ SOFTWARE.
 
 #### CounterTest
 - **Location**: `src/test/java/ht/util/CounterTest.java`
-- **Coverage**: `ht.util.Counter`
+- **Coverage**: `com.hitorro.util.Counter`
 - **Test Categories**:
   - Basic operations (initialization, set/get, clear)
   - Increment operations (single, collection, counter merging)
@@ -51,7 +51,7 @@ SOFTWARE.
 
 #### CounterMapTest
 - **Location**: `src/test/java/ht/util/CounterMapTest.java`
-- **Coverage**: `ht.util.CounterMap`
+- **Coverage**: `com.hitorro.util.CounterMap`
 - **Test Categories**:
   - Basic operations (initialization, set/get, clear)
   - Increment operations (new pairs, existing pairs, negative values)
@@ -63,7 +63,7 @@ SOFTWARE.
 
 #### StringUtilTest
 - **Location**: `src/test/java/ht/util/core/string/StringUtilTest.java`
-- **Coverage**: `ht.util.core.string.StringUtil`
+- **Coverage**: `com.hitorro.util.core.string.StringUtil`
 - **Test Categories**:
   - After operations (substring extraction)
   - Whitespace collapsing
@@ -77,11 +77,11 @@ SOFTWARE.
   - Last non-character search
 - **Total Tests**: 37 test methods organized in 10 nested classes
 
-### 2. Iterator/Streaming Utilities (`ht.util.core.iterator`)
+### 2. Iterator/Streaming Utilities (`com.hitorro.util.core.iterator`)
 
 #### MappingIteratorTest
 - **Location**: `src/test/java/ht/util/core/iterator/MappingIteratorTest.java`
-- **Coverage**: `ht.util.core.iterator.MappingIterator`
+- **Coverage**: `com.hitorro.util.core.iterator.MappingIterator`
 - **Test Categories**:
   - Basic mapping (type transformations)
   - Null handling (skipping nulls, all-null scenarios)
@@ -92,7 +92,7 @@ SOFTWARE.
 
 #### FilteringIteratorTest
 - **Location**: `src/test/java/ht/util/core/iterator/FilteringIteratorTest.java`
-- **Coverage**: `ht.util.core.iterator.FilteringIterator`
+- **Coverage**: `com.hitorro.util.core.iterator.FilteringIterator`
 - **Test Categories**:
   - Basic filtering (even/odd, length, prefix)
   - Edge cases (empty, match nothing, match everything)
@@ -102,11 +102,11 @@ SOFTWARE.
   - Real-world scenarios (email validation, positive numbers)
 - **Total Tests**: 20 test methods organized in 6 nested classes
 
-### 3. HTTP Utilities (`ht.util.io.net`)
+### 3. HTTP Utilities (`com.hitorro.util.io.net`)
 
 #### NetUtilTest
 - **Location**: `src/test/java/ht/util/io/net/NetUtilTest.java`
-- **Coverage**: `ht.util.io.net.NetUtil`
+- **Coverage**: `com.hitorro.util.io.net.NetUtil`
 - **Test Categories**:
   - POST request construction
   - URL reading validation
@@ -116,11 +116,11 @@ SOFTWARE.
 - **Note**: Integration tests are marked as `@Disabled` to avoid network dependencies
 - **Total Tests**: 14 test methods organized in 5 nested classes
 
-### 4. File System Utilities (`ht.util.io`)
+### 4. File System Utilities (`com.hitorro.util.io`)
 
 #### FileUtilTest
 - **Location**: `src/test/java/ht/util/io/FileUtilTest.java`
-- **Coverage**: `ht.util.io.FileUtil`
+- **Coverage**: `com.hitorro.util.io.FileUtil`
 - **Test Categories**:
   - Constants and defaults
   - File input stream operations (plain files, gzip)
@@ -133,11 +133,11 @@ SOFTWARE.
 - **Features**: Uses `@TempDir` for isolated file system testing
 - **Total Tests**: 19 test methods organized in 8 nested classes
 
-### 5. JSON Type System (`ht.util.json`, `ht.jsontypesystem`)
+### 5. JSON Type System (`com.hitorro.util.json`, `ht.jsontypesystem`)
 
 #### JSONUtilTest
 - **Location**: `src/test/java/ht/util/json/JSONUtilTest.java`
-- **Coverage**: `ht.util.json.JSONUtil`
+- **Coverage**: `com.hitorro.util.json.JSONUtil`
 - **Test Categories**:
   - Null or empty checks
   - Array conversions
@@ -265,11 +265,11 @@ mvn verify -P integration-tests
 6. **Property-Based Testing**: Add QuickCheck-style tests with jqwik
 
 ### Coverage Gaps to Address
-1. `ht.util.PriorityQueue` - needs dedicated test class
-2. `ht.util.core.ArrayUtil` - utility method tests
-3. `ht.util.core.http.HTTPClient` - comprehensive HTTP client tests
-4. `ht.util.io.csv.*` - CSV reader/writer tests
-5. `ht.util.basefile.*` - BaseFile abstraction tests
+1. `com.hitorro.util.PriorityQueue` - needs dedicated test class
+2. `com.hitorro.util.core.ArrayUtil` - utility method tests
+3. `com.hitorro.util.core.http.HTTPClient` - comprehensive HTTP client tests
+4. `com.hitorro.util.io.csv.*` - CSV reader/writer tests
+5. `com.hitorro.util.basefile.*` - BaseFile abstraction tests
 
 ## CI/CD Integration
 

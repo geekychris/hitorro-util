@@ -21,7 +21,6 @@
  */
 package ht.jsontypesystem;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.DisplayName;
@@ -44,7 +43,7 @@ class JVSTest {
             ObjectNode node = JsonNodeFactory.instance.objectNode();
             node.put("name", "test");
 
-            JVS jvs = new JVS(node);
+            com.hitorro.jsontypesystem.JVS jvs = new com.hitorro.jsontypesystem.JVS(node);
 
             assertThat(jvs).isNotNull();
         }
@@ -52,7 +51,7 @@ class JVSTest {
         @Test
         @DisplayName("Should create empty JVS")
         void shouldCreateEmptyJvs() {
-            JVS jvs = new JVS();
+            com.hitorro.jsontypesystem.JVS jvs = new com.hitorro.jsontypesystem.JVS();
 
             assertThat(jvs).isNotNull();
         }
@@ -62,7 +61,7 @@ class JVSTest {
         void shouldReadJvsFromJsonString() {
             String jsonString = "{\"key\":\"value\",\"number\":42}";
 
-            JVS jvs = JVS.read(jsonString);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonString);
 
             assertThat(jvs).isNotNull();
         }
@@ -72,7 +71,7 @@ class JVSTest {
         void shouldHandleSimpleJsonObjects() {
             String jsonString = "{\"name\":\"John\",\"age\":30}";
 
-            JVS jvs = JVS.read(jsonString);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonString);
 
             assertThat(jvs).isNotNull();
         }
@@ -85,28 +84,28 @@ class JVSTest {
         @Test
         @DisplayName("Should have type key property")
         void shouldHaveTypeKeyProperty() {
-            assertThat(JVS.typeKey).isNotNull();
-            assertThat(JVS.typeKey.getKey()).isEqualTo("type");
+            assertThat(com.hitorro.jsontypesystem.JVS.typeKey).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.typeKey.getKey()).isEqualTo("type");
         }
 
         @Test
         @DisplayName("Should have predefined property accessors")
         void shouldHavePredefinedPropertyAccessors() {
-            assertThat(JVS.didKey).isNotNull();
-            assertThat(JVS.idKey).isNotNull();
-            assertThat(JVS.createdKey).isNotNull();
-            assertThat(JVS.modifiedKey).isNotNull();
-            assertThat(JVS.titleKey).isNotNull();
-            assertThat(JVS.bodyKey).isNotNull();
-            assertThat(JVS.domainKey).isNotNull();
-            assertThat(JVS.docKey).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.didKey).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.idKey).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.createdKey).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.modifiedKey).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.titleKey).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.bodyKey).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.domainKey).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.docKey).isNotNull();
         }
 
         @Test
         @DisplayName("Should have variable delimiters")
         void shouldHaveVariableDelimiters() {
-            assertThat(JVS.VariableStart).isEqualTo("${");
-            assertThat(JVS.VariableEnd).isEqualTo("}");
+            assertThat(com.hitorro.jsontypesystem.JVS.VariableStart).isEqualTo("${");
+            assertThat(com.hitorro.jsontypesystem.JVS.VariableEnd).isEqualTo("}");
         }
     }
 
@@ -117,22 +116,22 @@ class JVSTest {
         @Test
         @DisplayName("Should have identity comparator")
         void shouldHaveIdentityComparator() {
-            assertThat(JVS.identityComparator).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.identityComparator).isNotNull();
         }
 
         @Test
         @DisplayName("Should have key generator function")
         void shouldHaveKeyGeneratorFunction() {
-            assertThat(JVS.keyGenerator).isNotNull();
+            assertThat(com.hitorro.jsontypesystem.JVS.keyGenerator).isNotNull();
         }
 
         @Test
         @DisplayName("Identity comparator should compare JVS objects by ID")
         void identityComparatorShouldCompareJvsObjectsById() {
-            JVS jvs1 = JVS.read("{\"id\":{\"id\":\"id1\"}}");
-            JVS jvs2 = JVS.read("{\"id\":{\"id\":\"id2\"}}");
+            com.hitorro.jsontypesystem.JVS jvs1 = com.hitorro.jsontypesystem.JVS.read("{\"id\":{\"id\":\"id1\"}}");
+            com.hitorro.jsontypesystem.JVS jvs2 = com.hitorro.jsontypesystem.JVS.read("{\"id\":{\"id\":\"id2\"}}");
 
-            int result = JVS.identityComparator.compare(jvs1, jvs2);
+            int result = com.hitorro.jsontypesystem.JVS.identityComparator.compare(jvs1, jvs2);
 
             // Should compare lexicographically
             assertThat(result).isNotZero();
@@ -162,7 +161,7 @@ class JVSTest {
                 }
                 """;
 
-            JVS jvs = JVS.read(complexJson);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(complexJson);
 
             assertThat(jvs).isNotNull();
         }
@@ -172,7 +171,7 @@ class JVSTest {
         void shouldHandleArraysInJson() {
             String jsonWithArray = "{\"items\":[1,2,3,4,5]}";
 
-            JVS jvs = JVS.read(jsonWithArray);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonWithArray);
 
             assertThat(jvs).isNotNull();
         }
@@ -182,7 +181,7 @@ class JVSTest {
         void shouldHandleBooleanValues() {
             String jsonWithBooleans = "{\"active\":true,\"deleted\":false}";
 
-            JVS jvs = JVS.read(jsonWithBooleans);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonWithBooleans);
 
             assertThat(jvs).isNotNull();
         }
@@ -192,7 +191,7 @@ class JVSTest {
         void shouldHandleNullValues() {
             String jsonWithNull = "{\"field\":null,\"other\":\"value\"}";
 
-            JVS jvs = JVS.read(jsonWithNull);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonWithNull);
 
             assertThat(jvs).isNotNull();
         }
@@ -207,7 +206,7 @@ class JVSTest {
         void shouldHandleEmptyJsonObject() {
             String emptyJson = "{}";
 
-            JVS jvs = JVS.read(emptyJson);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(emptyJson);
 
             assertThat(jvs).isNotNull();
         }
@@ -222,7 +221,7 @@ class JVSTest {
             }
             largeJson.append("}");
 
-            JVS jvs = JVS.read(largeJson.toString());
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(largeJson.toString());
 
             assertThat(jvs).isNotNull();
         }
@@ -232,7 +231,7 @@ class JVSTest {
         void shouldHandleSpecialCharactersInStrings() {
             String specialCharsJson = "{\"text\":\"Hello\\nWorld\\t!\",\"quote\":\"He said \\\"Hi\\\"\"}";
 
-            JVS jvs = JVS.read(specialCharsJson);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(specialCharsJson);
 
             assertThat(jvs).isNotNull();
         }
@@ -242,7 +241,7 @@ class JVSTest {
         void shouldHandleUnicodeCharacters() {
             String unicodeJson = "{\"greeting\":\"Hello 世界\",\"emoji\":\"🎉\"}";
 
-            JVS jvs = JVS.read(unicodeJson);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(unicodeJson);
 
             assertThat(jvs).isNotNull();
         }
@@ -252,7 +251,7 @@ class JVSTest {
         void shouldHandleNumbersOfVariousTypes() {
             String numbersJson = "{\"int\":42,\"float\":3.14,\"negative\":-100,\"exp\":1.5e10}";
 
-            JVS jvs = JVS.read(numbersJson);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(numbersJson);
 
             assertThat(jvs).isNotNull();
         }
@@ -268,7 +267,7 @@ class JVSTest {
         void shouldHandleDocumentWithTypeField() {
             String typedJson = "{\"type\":\"document\",\"content\":\"test\"}";
 
-            JVS jvs = JVS.read(typedJson);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(typedJson);
 
             assertThat(jvs).isNotNull();
         }
@@ -285,7 +284,7 @@ class JVSTest {
                 }
                 """;
 
-            JVS jvs = JVS.read(timestampedJson);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(timestampedJson);
 
             assertThat(jvs).isNotNull();
         }
@@ -321,7 +320,7 @@ class JVSTest {
                 }
                 """;
 
-            JVS jvs = JVS.read(userProfile);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(userProfile);
 
             assertThat(jvs).isNotNull();
         }
@@ -350,7 +349,7 @@ class JVSTest {
                 }
                 """;
 
-            JVS jvs = JVS.read(article);
+            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(article);
 
             assertThat(jvs).isNotNull();
         }

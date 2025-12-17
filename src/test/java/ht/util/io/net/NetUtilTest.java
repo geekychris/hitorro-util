@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ht.util.io.net;
+package com.hitorro.util.io.net;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -117,13 +117,13 @@ class NetUtilTest {
         @Test
         @DisplayName("Should have host hash name constant")
         void shouldHaveHostHashNameConstant() {
-            assertThat(NetUtil.HOST_HASH_NAME).isEqualTo("host");
+            assertThat(com.hitorro.util.io.net.NetUtil.HOST_HASH_NAME).isEqualTo("host");
         }
 
         @Test
         @DisplayName("Should have host hash address constant")
         void shouldHaveHostHashAddressConstant() {
-            assertThat(NetUtil.HOST_HASH_ADDRESS).isEqualTo("address");
+            assertThat(com.hitorro.util.io.net.NetUtil.HOST_HASH_ADDRESS).isEqualTo("address");
         }
     }
 

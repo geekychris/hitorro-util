@@ -34,11 +34,11 @@ import static org.assertj.core.api.Assertions.*;
 @DisplayName("Counter Tests")
 class CounterTest {
 
-    private Counter<String> counter;
+    private com.hitorro.util.Counter<String> counter;
 
     @BeforeEach
     void setUp() {
-        counter = new Counter<>();
+        counter = new com.hitorro.util.Counter<>();
     }
 
     @Nested
@@ -136,7 +136,7 @@ class CounterTest {
         @Test
         @DisplayName("Should increment all from another counter")
         void shouldIncrementAllFromAnotherCounter() {
-            Counter<String> other = new Counter<>();
+            com.hitorro.util.Counter<String> other = new com.hitorro.util.Counter<>();
             other.setCount("apple", 5.0);
             other.setCount("banana", 3.0);
 
@@ -263,7 +263,7 @@ class CounterTest {
             counter.setCount("banana", 10.0);
             counter.setCount("cherry", 3.0);
 
-            PriorityQueue<String> pq = counter.asPriorityQueue();
+            com.hitorro.util.PriorityQueue<String> pq = counter.asPriorityQueue();
 
             assertThat(pq).isNotNull();
             // Priority queue should contain all elements

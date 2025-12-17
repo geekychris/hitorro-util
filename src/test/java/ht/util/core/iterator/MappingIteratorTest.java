@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ht.util.core.iterator;
+package com.hitorro.util.core.iterator;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5);
             Function<Integer, String> mapper = i -> "num" + i;
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             List<String> result = collectToList(iter);
             
@@ -61,7 +61,7 @@ class MappingIteratorTest {
             List<String> input = Arrays.asList("hello", "world", "test");
             Function<String, String> mapper = String::toUpperCase;
             
-            MappingIterator<String, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<String, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             List<String> result = collectToList(iter);
             
@@ -75,7 +75,7 @@ class MappingIteratorTest {
             List<String> input = Arrays.asList("1", "2", "3");
             Function<String, Integer> mapper = Integer::parseInt;
             
-            MappingIterator<String, Integer> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<String, Integer> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             List<Integer> result = collectToList(iter);
             
@@ -94,7 +94,7 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4, 5);
             Function<Integer, String> mapper = i -> i % 2 == 0 ? "even" + i : null;
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             List<String> result = collectToList(iter);
             
@@ -109,7 +109,7 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3);
             Function<Integer, String> mapper = i -> null;
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             assertThat(iter.hasNext()).isFalse();
         }
@@ -120,7 +120,7 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3);
             Function<Integer, String> mapper = i -> i == 1 ? null : "val" + i;
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             List<String> result = collectToList(iter);
             
@@ -139,7 +139,7 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList();
             Function<Integer, String> mapper = Object::toString;
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             assertThat(iter.hasNext()).isFalse();
         }
@@ -150,7 +150,7 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList(42);
             Function<Integer, String> mapper = i -> "answer" + i;
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             List<String> result = collectToList(iter);
             
@@ -165,7 +165,7 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3);
             Function<Integer, String> mapper = Object::toString;
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             assertThat(iter.hasNext()).isTrue();
             assertThat(iter.hasNext()).isTrue();
@@ -190,7 +190,7 @@ class MappingIteratorTest {
             );
             Function<Person, String> mapper = p -> p.name + ":" + p.age;
             
-            MappingIterator<Person, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<com.hitorro.util.core.iterator.MappingIteratorTest.Person, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             List<String> result = collectToList(iter);
             
@@ -204,10 +204,10 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3, 4);
             Function<Integer, Integer> doubler = i -> i * 2;
             
-            MappingIterator<Integer, Integer> iter = new MappingIterator<>(input.iterator(), doubler);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, Integer> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), doubler);
             
             Function<Integer, String> stringifier = i -> "doubled:" + i;
-            MappingIterator<Integer, String> iter2 = new MappingIterator<>(iter, stringifier);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter2 = new com.hitorro.util.core.iterator.MappingIterator<>(iter, stringifier);
             
             List<String> result = collectToList(iter2);
             
@@ -225,7 +225,7 @@ class MappingIteratorTest {
                 return null; // Skip 5, 6, 7
             };
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             List<String> result = collectToList(iter);
             
@@ -245,7 +245,7 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList(1, 2, 3);
             Function<Integer, String> mapper = Object::toString;
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             List<String> result = new ArrayList<>();
             while (iter.hasNext()) {
@@ -261,7 +261,7 @@ class MappingIteratorTest {
             List<Integer> input = Arrays.asList(1, 2);
             Function<Integer, String> mapper = Object::toString;
             
-            MappingIterator<Integer, String> iter = new MappingIterator<>(input.iterator(), mapper);
+            com.hitorro.util.core.iterator.MappingIterator<Integer, String> iter = new com.hitorro.util.core.iterator.MappingIterator<>(input.iterator(), mapper);
             
             iter.next();
             iter.next();

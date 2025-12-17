@@ -19,7 +19,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package ht.util.core.string;
+package com.hitorro.util.core.string;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.junit.jupiter.api.DisplayName;
@@ -38,35 +38,35 @@ class StringUtilTest {
         @Test
         @DisplayName("Should return substring after character")
         void shouldReturnSubstringAfterCharacter() {
-            String result = StringUtil.after("hello:world", ':');
+            String result = com.hitorro.util.core.string.StringUtil.after("hello:world", ':');
             assertThat(result).isEqualTo("world");
         }
 
         @Test
         @DisplayName("Should return null when character is at end")
         void shouldReturnNullWhenCharacterIsAtEnd() {
-            String result = StringUtil.after("hello:", ':');
+            String result = com.hitorro.util.core.string.StringUtil.after("hello:", ':');
             assertThat(result).isNull();
         }
 
         @Test
         @DisplayName("Should return original string when character not found")
         void shouldReturnOriginalStringWhenCharacterNotFound() {
-            String result = StringUtil.after("hello", ':');
+            String result = com.hitorro.util.core.string.StringUtil.after("hello", ':');
             assertThat(result).isEqualTo("hello");
         }
 
         @Test
         @DisplayName("Should return null for null input")
         void shouldReturnNullForNullInput() {
-            String result = StringUtil.after(null, ':');
+            String result = com.hitorro.util.core.string.StringUtil.after(null, ':');
             assertThat(result).isNull();
         }
 
         @Test
         @DisplayName("Should handle multiple occurrences")
         void shouldHandleMultipleOccurrences() {
-            String result = StringUtil.after("a:b:c", ':');
+            String result = com.hitorro.util.core.string.StringUtil.after("a:b:c", ':');
             assertThat(result).isEqualTo("b:c");
         }
     }
@@ -78,42 +78,42 @@ class StringUtilTest {
         @Test
         @DisplayName("Should collapse multiple spaces to single space")
         void shouldCollapseMultipleSpacesToSingleSpace() {
-            String result = StringUtil.collapseWhitespace("hello    world");
+            String result = com.hitorro.util.core.string.StringUtil.collapseWhitespace("hello    world");
             assertThat(result).isEqualTo("hello world");
         }
 
         @Test
         @DisplayName("Should collapse tabs and newlines")
         void shouldCollapseTabsAndNewlines() {
-            String result = StringUtil.collapseWhitespace("hello\t\n\rworld");
+            String result = com.hitorro.util.core.string.StringUtil.collapseWhitespace("hello\t\n\rworld");
             assertThat(result).isEqualTo("hello world");
         }
 
         @Test
         @DisplayName("Should handle leading whitespace")
         void shouldHandleLeadingWhitespace() {
-            String result = StringUtil.collapseWhitespace("   hello world");
+            String result = com.hitorro.util.core.string.StringUtil.collapseWhitespace("   hello world");
             assertThat(result).isEqualTo(" hello world");
         }
 
         @Test
         @DisplayName("Should handle trailing whitespace")
         void shouldHandleTrailingWhitespace() {
-            String result = StringUtil.collapseWhitespace("hello world   ");
+            String result = com.hitorro.util.core.string.StringUtil.collapseWhitespace("hello world   ");
             assertThat(result).isEqualTo("hello world ");
         }
 
         @Test
         @DisplayName("Should return empty string for empty input")
         void shouldReturnEmptyStringForEmptyInput() {
-            String result = StringUtil.collapseWhitespace("");
+            String result = com.hitorro.util.core.string.StringUtil.collapseWhitespace("");
             assertThat(result).isEmpty();
         }
 
         @Test
         @DisplayName("Should handle strings with no whitespace")
         void shouldHandleStringsWithNoWhitespace() {
-            String result = StringUtil.collapseWhitespace("hello");
+            String result = com.hitorro.util.core.string.StringUtil.collapseWhitespace("hello");
             assertThat(result).isEqualTo("hello");
         }
     }
@@ -125,7 +125,7 @@ class StringUtilTest {
         @Test
         @DisplayName("Should return 0 for no arguments")
         void shouldReturnZeroForNoArguments() {
-            int result = StringUtil.mergeHashcodes();
+            int result = com.hitorro.util.core.string.StringUtil.mergeHashcodes();
             assertThat(result).isZero();
         }
 
@@ -133,29 +133,29 @@ class StringUtilTest {
         @DisplayName("Should return object hashcode for single argument")
         void shouldReturnObjectHashcodeForSingleArgument() {
             String str = "test";
-            int result = StringUtil.mergeHashcodes(str);
+            int result = com.hitorro.util.core.string.StringUtil.mergeHashcodes(str);
             assertThat(result).isEqualTo(str.hashCode());
         }
 
         @Test
         @DisplayName("Should merge multiple hashcodes")
         void shouldMergeMultipleHashcodes() {
-            int result = StringUtil.mergeHashcodes("a", "b", "c");
+            int result = com.hitorro.util.core.string.StringUtil.mergeHashcodes("a", "b", "c");
             assertThat(result).isNotZero();
         }
 
         @Test
         @DisplayName("Should handle null values")
         void shouldHandleNullValues() {
-            int result = StringUtil.mergeHashcodes("a", null, "b");
+            int result = com.hitorro.util.core.string.StringUtil.mergeHashcodes("a", null, "b");
             assertThat(result).isNotZero();
         }
 
         @Test
         @DisplayName("Should produce consistent results")
         void shouldProduceConsistentResults() {
-            int result1 = StringUtil.mergeHashcodes("a", "b", "c");
-            int result2 = StringUtil.mergeHashcodes("a", "b", "c");
+            int result1 = com.hitorro.util.core.string.StringUtil.mergeHashcodes("a", "b", "c");
+            int result2 = com.hitorro.util.core.string.StringUtil.mergeHashcodes("a", "b", "c");
             assertThat(result1).isEqualTo(result2);
         }
     }
@@ -168,7 +168,7 @@ class StringUtilTest {
         @DisplayName("Should normalize text to lowercase letters and digits")
         void shouldNormalizeTextToLowercaseLettersAndDigits() {
             StringBuilder sb = new StringBuilder();
-            StringUtil.normalizeText("Hello123World!", sb);
+            com.hitorro.util.core.string.StringUtil.normalizeText("Hello123World!", sb);
             assertThat(sb.toString()).isEqualTo("hello123world");
         }
 
@@ -176,7 +176,7 @@ class StringUtilTest {
         @DisplayName("Should remove punctuation and special characters")
         void shouldRemovePunctuationAndSpecialCharacters() {
             StringBuilder sb = new StringBuilder();
-            StringUtil.normalizeText("Test@#$123", sb);
+            com.hitorro.util.core.string.StringUtil.normalizeText("Test@#$123", sb);
             assertThat(sb.toString()).isEqualTo("test123");
         }
 
@@ -184,7 +184,7 @@ class StringUtilTest {
         @DisplayName("Should handle empty string")
         void shouldHandleEmptyString() {
             StringBuilder sb = new StringBuilder();
-            StringUtil.normalizeText("", sb);
+            com.hitorro.util.core.string.StringUtil.normalizeText("", sb);
             assertThat(sb.toString()).isEmpty();
         }
 
@@ -192,7 +192,7 @@ class StringUtilTest {
         @DisplayName("Should preserve digits")
         void shouldPreserveDigits() {
             StringBuilder sb = new StringBuilder();
-            StringUtil.normalizeText("ABC123XYZ789", sb);
+            com.hitorro.util.core.string.StringUtil.normalizeText("ABC123XYZ789", sb);
             assertThat(sb.toString()).isEqualTo("abc123xyz789");
         }
 
@@ -200,7 +200,7 @@ class StringUtilTest {
         @DisplayName("Should handle unicode letters")
         void shouldHandleUnicodeLetters() {
             StringBuilder sb = new StringBuilder();
-            StringUtil.normalizeText("Café123", sb);
+            com.hitorro.util.core.string.StringUtil.normalizeText("Café123", sb);
             assertThat(sb.toString()).isEqualTo("café123");
         }
     }
@@ -213,7 +213,7 @@ class StringUtilTest {
         @DisplayName("Should increase string array size")
         void shouldIncreaseStringArraySize() {
             String[] original = {"a", "b", "c"};
-            String[] result = StringUtil.increaseStringArray(original, 3);
+            String[] result = com.hitorro.util.core.string.StringUtil.increaseStringArray(original, 3);
 
             assertThat(result).hasSize(6);
             assertThat(result[0]).isEqualTo("a");
@@ -226,7 +226,7 @@ class StringUtilTest {
         @DisplayName("Should prepend string to array elements")
         void shouldPrependStringToArrayElements() {
             String[] original = {"world", "there"};
-            String[] result = StringUtil.preapendArray(original, "hello ");
+            String[] result = com.hitorro.util.core.string.StringUtil.preapendArray(original, "hello ");
 
             assertThat(result).hasSize(2);
             assertThat(result[0]).isEqualTo("hello world");
@@ -236,7 +236,7 @@ class StringUtilTest {
         @Test
         @DisplayName("Should handle null array in prepend")
         void shouldHandleNullArrayInPrepend() {
-            String[] result = StringUtil.preapendArray(null, "prefix");
+            String[] result = com.hitorro.util.core.string.StringUtil.preapendArray(null, "prefix");
             assertThat(result).isNull();
         }
 
@@ -244,7 +244,7 @@ class StringUtilTest {
         @DisplayName("Should handle null elements in prepend")
         void shouldHandleNullElementsInPrepend() {
             String[] original = {"a", null, "b"};
-            String[] result = StringUtil.preapendArray(original, "x");
+            String[] result = com.hitorro.util.core.string.StringUtil.preapendArray(original, "x");
 
             assertThat(result[0]).isEqualTo("xa");
             assertThat(result[1]).isEqualTo("x");
@@ -259,21 +259,21 @@ class StringUtilTest {
         @Test
         @DisplayName("Should trim trailing spaces")
         void shouldTrimTrailingSpaces() {
-            String result = StringUtil.rightTrim("hello   ");
+            String result = com.hitorro.util.core.string.StringUtil.rightTrim("hello   ");
             assertThat(result).isEqualTo("hello");
         }
 
         @Test
         @DisplayName("Should not modify string without trailing spaces")
         void shouldNotModifyStringWithoutTrailingSpaces() {
-            String result = StringUtil.rightTrim("hello");
+            String result = com.hitorro.util.core.string.StringUtil.rightTrim("hello");
             assertThat(result).isEqualTo("hello");
         }
 
         @Test
         @DisplayName("Should handle string with only spaces")
         void shouldHandleStringWithOnlySpaces() {
-            String result = StringUtil.rightTrim("     ");
+            String result = com.hitorro.util.core.string.StringUtil.rightTrim("     ");
             // Based on implementation, this would trim all
             assertThat(result).isNotNull();
         }
@@ -289,7 +289,7 @@ class StringUtilTest {
             char[] arr1 = {'h', 'e', 'l', 'l', 'o'};
             char[] arr2 = {'h', 'e', 'l', 'l', 'o'};
 
-            int result = StringUtil.compareTo(arr1, 5, arr2, 5);
+            int result = com.hitorro.util.core.string.StringUtil.compareTo(arr1, 5, arr2, 5);
 
             assertThat(result).isZero();
         }
@@ -300,7 +300,7 @@ class StringUtilTest {
             char[] arr1 = {'a', 'b', 'c'};
             char[] arr2 = {'a', 'b', 'd'};
 
-            int result = StringUtil.compareTo(arr1, 3, arr2, 3);
+            int result = com.hitorro.util.core.string.StringUtil.compareTo(arr1, 3, arr2, 3);
 
             assertThat(result).isNegative();
         }
@@ -311,7 +311,7 @@ class StringUtilTest {
             char[] arr1 = {'a', 'b', 'c'};
             char[] arr2 = {'a', 'b', 'c', 'd'};
 
-            int result = StringUtil.compareTo(arr1, 3, arr2, 4);
+            int result = com.hitorro.util.core.string.StringUtil.compareTo(arr1, 3, arr2, 4);
 
             assertThat(result).isNegative();
         }
@@ -322,7 +322,7 @@ class StringUtilTest {
             char[] arr1 = {'h', 'e', 'l'};
             char[] arr2 = {'h', 'e', 'l', 'l', 'o'};
 
-            int result = StringUtil.startsWith(arr1, 3, arr2, 5);
+            int result = com.hitorro.util.core.string.StringUtil.startsWith(arr1, 3, arr2, 5);
 
             assertThat(result).isZero();
         }
@@ -333,7 +333,7 @@ class StringUtilTest {
             char[] arr1 = {'h', 'e', 'x'};
             char[] arr2 = {'h', 'e', 'l', 'l', 'o'};
 
-            int result = StringUtil.startsWith(arr1, 3, arr2, 5);
+            int result = com.hitorro.util.core.string.StringUtil.startsWith(arr1, 3, arr2, 5);
 
             assertThat(result).isNotZero();
         }
@@ -346,7 +346,7 @@ class StringUtilTest {
         @Test
         @DisplayName("Should calculate size for multiple strings")
         void shouldCalculateSizeForMultipleStrings() {
-            int result = StringUtil.size("abc", "def");
+            int result = com.hitorro.util.core.string.StringUtil.size("abc", "def");
             // Each string length * 2
             assertThat(result).isEqualTo(12); // (3 + 3) * 2
         }
@@ -354,21 +354,21 @@ class StringUtilTest {
         @Test
         @DisplayName("Should handle null strings in size calculation")
         void shouldHandleNullStringsInSizeCalculation() {
-            int result = StringUtil.size("abc", null, "def");
+            int result = com.hitorro.util.core.string.StringUtil.size("abc", null, "def");
             assertThat(result).isEqualTo(12); // (3 + 3) * 2
         }
 
         @Test
         @DisplayName("Should return zero for no strings")
         void shouldReturnZeroForNoStrings() {
-            int result = StringUtil.size();
+            int result = com.hitorro.util.core.string.StringUtil.size();
             assertThat(result).isZero();
         }
 
         @Test
         @DisplayName("Should handle empty strings")
         void shouldHandleEmptyStrings() {
-            int result = StringUtil.size("", "abc", "");
+            int result = com.hitorro.util.core.string.StringUtil.size("", "abc", "");
             assertThat(result).isEqualTo(6); // 3 * 2
         }
     }
@@ -381,7 +381,7 @@ class StringUtilTest {
         @DisplayName("Should convert throwable to JSON array")
         void shouldConvertThrowableToJsonArray() {
             Exception e = new RuntimeException("Test exception");
-            ArrayNode result = StringUtil.getCallstackAsJsonArray(e);
+            ArrayNode result = com.hitorro.util.core.string.StringUtil.getCallstackAsJsonArray(e);
 
             assertThat(result).isNotNull();
             assertThat(result.isArray()).isTrue();
@@ -392,7 +392,7 @@ class StringUtilTest {
         @DisplayName("Should include exception message in stack trace")
         void shouldIncludeExceptionMessageInStackTrace() {
             Exception e = new RuntimeException("Custom error message");
-            ArrayNode result = StringUtil.getCallstackAsJsonArray(e);
+            ArrayNode result = com.hitorro.util.core.string.StringUtil.getCallstackAsJsonArray(e);
 
             String stackTrace = result.toString();
             assertThat(stackTrace).contains("Custom error message");
@@ -406,21 +406,21 @@ class StringUtilTest {
         @Test
         @DisplayName("Should find last non-space character")
         void shouldFindLastNonSpaceCharacter() {
-            int result = StringUtil.lastNonChar("hello   ", ' ');
+            int result = com.hitorro.util.core.string.StringUtil.lastNonChar("hello   ", ' ');
             assertThat(result).isEqualTo(4); // index of 'o'
         }
 
         @Test
         @DisplayName("Should return -1 when all characters match")
         void shouldReturnMinusOneWhenAllCharactersMatch() {
-            int result = StringUtil.lastNonChar("     ", ' ');
+            int result = com.hitorro.util.core.string.StringUtil.lastNonChar("     ", ' ');
             assertThat(result).isEqualTo(-1);
         }
 
         @Test
         @DisplayName("Should handle string without target character")
         void shouldHandleStringWithoutTargetCharacter() {
-            int result = StringUtil.lastNonChar("hello", ' ');
+            int result = com.hitorro.util.core.string.StringUtil.lastNonChar("hello", ' ');
             assertThat(result).isGreaterThanOrEqualTo(0);
         }
     }

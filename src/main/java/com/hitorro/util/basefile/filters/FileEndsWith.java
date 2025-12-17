@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2006-2025 Chris Collins
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+package com.hitorro.util.basefile.filters;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.hitorro.util.basefile.fs.BaseFile;
+import com.hitorro.util.basefile.fs.CompressionType;
+import com.hitorro.util.core.HTAssert;
+import com.hitorro.util.core.string.StringUtil;
+
+/**
+ *
+ */
+public class FileEndsWith extends FileFilterBase {
+    private String endsWith;
+    private boolean ignoreCase;
+    private boolean ignoreCompressionPiece = false;
+
+    /**
+     * "special edition" that will first remove the .gz extension from the string if exists.
+     *
+     * @param endsWith
+     * @param ignoreCase
+     * @param ignoreCompressionPiece
+     */
+    public FileEndsWith(String endsWith, boolean ignoreCase, boolean ignoreCompressionPiece) {
+        this.endsWith = endsWith;
+        this.ignoreCase = ignoreCase;
+        this.ignoreCompressionPiece = true;
+    }
+
+    public FileEndsWith(String endsWith, boolean ignoreCase) {
+        this.endsWith = endsWith;
+        this.ignoreCase = ignoreCase;
+    }
+
+    public boolean initFromMap(final JsonNode map) {
+        // MUST IMPLEMENT
+        HTAssert.assertThat(false, "FileExtension.initFromMap not implemented");
+        return false;
+    }
+
+    public void initForPass() {
+
+    }
+
+    public boolean test(BaseFile baseFile) {
+        String name = baseFile.getName();
+        if (ignoreCompressionPiece) {
+            CompressionType ct = CompressionType.getFilterByFileName(name);
+            if (ct != CompressionType.none) {
+                String nameSansCompressionExtensio = ct.getNameSansCompression(name);
+                return StringUtil.endsWithIgnoringCase(nameSansCompressionExtensio, endsWith, ignoreCase);
+            }
+        }
+        return StringUtil.endsWithIgnoringCase(name, endsWith, ignoreCase);
+    }
+}

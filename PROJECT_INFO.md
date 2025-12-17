@@ -40,7 +40,7 @@ This standalone project was created on **December 16, 2025** by extracting the `
 
 3. **Main Packages**
    - `ht.jsontypesystem.*` - JSON type system implementation
-   - `ht.util.*` - Utility classes and helpers
+   - `com.hitorro.util.*` - Utility classes and helpers
    - Various sub-packages for specialized functionality
 
 ### Build Verification

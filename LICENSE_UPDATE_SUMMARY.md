@@ -69,21 +69,21 @@ mvn test
 
 ### Main Source Packages
 - `ht.jsontypesystem.*` - JSON type system (60+ files)
-- `ht.util.core.*` - Core utilities (300+ files)
-- `ht.util.io.*` - I/O utilities (200+ files)
-- `ht.util.json.*` - JSON utilities (50+ files)
-- `ht.util.basefile.*` - File system abstractions (150+ files)
-- `ht.util.commandandcontrol.*` - Command and control (80+ files)
-- `ht.util.html.*` - HTML utilities (30+ files)
-- `ht.util.xml.*` - XML utilities (20+ files)
+- `com.hitorro.util.core.*` - Core utilities (300+ files)
+- `com.hitorro.util.io.*` - I/O utilities (200+ files)
+- `com.hitorro.util.json.*` - JSON utilities (50+ files)
+- `com.hitorro.util.basefile.*` - File system abstractions (150+ files)
+- `com.hitorro.util.commandandcontrol.*` - Command and control (80+ files)
+- `com.hitorro.util.html.*` - HTML utilities (30+ files)
+- `com.hitorro.util.xml.*` - XML utilities (20+ files)
 - And many more...
 
 ### Test Packages
-- `ht.util.*` - Core utility tests (3 files)
-- `ht.util.core.string.*` - String utility tests (1 file)
-- `ht.util.core.iterator.*` - Iterator tests (2 files)
-- `ht.util.io.*` - I/O tests (2 files)
-- `ht.util.json.*` - JSON tests (1 file)
+- `com.hitorro.util.*` - Core utility tests (3 files)
+- `com.hitorro.util.core.string.*` - String utility tests (1 file)
+- `com.hitorro.util.core.iterator.*` - Iterator tests (2 files)
+- `com.hitorro.util.io.*` - I/O tests (2 files)
+- `com.hitorro.util.json.*` - JSON tests (1 file)
 - `ht.jsontypesystem.*` - Type system tests (1 file)
 
 ## Process Used
