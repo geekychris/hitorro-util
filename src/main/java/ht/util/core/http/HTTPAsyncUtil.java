@@ -28,7 +28,8 @@ import org.apache.hc.client5.http.impl.async.CloseableHttpAsyncClient;
 import org.apache.hc.client5.http.impl.async.HttpAsyncClients;
 import org.apache.hc.core5.concurrent.FutureCallback;
 import org.apache.hc.core5.http.HttpHost;
-import org.apache.hc.core5.io.ShutdownType;
+import org.apache.hc.core5.http.Method;
+import org.apache.hc.core5.io.CloseMode;
 import org.apache.hc.core5.reactor.IOReactorConfig;
 import org.apache.hc.core5.util.Timeout;
 
@@ -75,7 +76,7 @@ public class HTTPAsyncUtil {
 
         List<Future<SimpleHttpResponse>> results = new ArrayList<>();
         for (final String requestUri : requestUris) {
-            final SimpleHttpRequest httpget = SimpleHttpRequest.get(target, requestUri);
+            final SimpleHttpRequest httpget = SimpleHttpRequest.create(Method.GET, target, requestUri);
             System.out.println("Executing request " + httpget.getMethod() + " " + httpget.getUri());
             final Future<SimpleHttpResponse> future = client.execute(
                     httpget,
@@ -106,7 +107,7 @@ public class HTTPAsyncUtil {
             Console.println();
         }
         System.out.println("Shutting down");
-        client.shutdown(ShutdownType.GRACEFUL);
+        client.close(CloseMode.GRACEFUL);
     }
 
     // Waits for all futures to complete and returns a list of results.
