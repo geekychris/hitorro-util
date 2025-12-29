@@ -23,6 +23,7 @@ package ht.jsontypesystem;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.hitorro.util.testframework.TestPlus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +32,7 @@ import org.junit.jupiter.api.Disabled;
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("JVS (JSON Value System) Tests")
-class JVSTest {
+class JVSTest implements TestPlus {
 
     @Nested
     @DisplayName("Construction")
