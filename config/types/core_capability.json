@@ -1,0 +1,25 @@
+{
+  "name": "capability",
+  "fields": [
+    {
+      "name": "capability",
+      "type": "string"
+    },
+    {
+      "name": "segment",
+      "type": "string"
+    },
+    {
+      "name": "internal_url",
+      "type": "url"
+    },
+    {
+      "name": "external_url",
+      "type": "url"
+    },
+    {
+      "name": "active",
+      "type": "boolean"
+    }
+  ]
+}

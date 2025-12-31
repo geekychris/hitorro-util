@@ -1,0 +1,10 @@
+{
+  "name": "mls",
+  "fields": [
+    {
+      "name": "mls",
+      "type": "mlselem",
+      "vector": true
+    }
+  ]
+}

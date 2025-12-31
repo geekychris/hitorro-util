@@ -1,0 +1,262 @@
+{
+  "name": "mlselem",
+  "indexseeker": {
+    "class": "com.hitorro.jsontypesystem.IsoLanguageSeeker"
+  },
+  "fetchlang": true,
+  "fields": [
+    {
+      "name": "lang",
+      "type": "core_string"
+    },
+    {
+      "name": "text",
+      "type": "core_string",
+      "i18n": true
+    },
+    {
+      "name": "clean",
+      "type": "core_string",
+      "i18n": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "mapper": {
+          "class": "com.hitorro.jsontypesystem.dynamic.mappers.Json2HTMLScrubbedJson"
+        },
+        "fields": [
+          ".text"
+        ]
+      },
+      "groups": [
+        {
+          "name": "index",
+          "method": "text",
+          "tags": ["basic"]
+        }
+      ]
+    },
+    {
+      "name": "dependency",
+      "type": "core_string",
+      "i18n": true,
+      "dynamic_": {
+        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "mapper": {
+          "class": "com.hitorro.dataaquisition.importing.wikipedia.MSTMapper"
+        },
+        "fields": [
+          ".text"
+        ]
+      },
+      "groups": [
+      ]
+    },
+
+
+    {
+      "name": "clean_normhash",
+      "type": "core_string",
+      "vector": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "mapper": {
+          "class": "com.hitorro.jsontypesystem.dynamic.mappers.NormalizedTextHashMapper"
+        },
+        "fields": [
+          ".clean"
+        ]
+      },
+      "groups": [
+        {
+          "name": "index",
+          "method": "long",
+          "tags": ["basic"]
+        },
+        {
+          "name": "enrich",
+          "method": "text",
+          "tags": ["hash"]
+        }
+      ]
+    },
+    {
+      "name": "pos",
+      "type": "core_string",
+      "vector": true,
+      "i18n": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.POSTokenizer",
+        "fields": [
+          ".lang",
+          ".clean"
+        ],
+        "mapper": {
+          "class": ""
+        }
+      },
+      "groups": [
+        {
+          "name": "enrich",
+          "method": "text",
+          "tags": ["pos"]
+        }
+
+      ]
+    },
+    {
+      "name": "segmented_span",
+      "type": "core_string",
+      "vector": true,
+      "i18n": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.SentenceSegmenterSpan",
+        "fields": [
+          ".lang",
+          ".clean"
+        ],
+        "mapper": {
+          "class": ""
+        }
+      },
+      "groups": [
+        {
+          "name": "index",
+          "method": "text",
+          "tags": ["basic"]
+        },
+        {
+          "name": "enrich",
+          "method": "text",
+          "tags": ["segmented"]
+        }
+
+      ]
+    },
+    {
+      "name": "segmented",
+      "type": "core_string",
+      "vector": true,
+      "i18n": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.SentenceSegmenter",
+        "fields": [
+          ".segmented_span",
+          ".clean"
+        ],
+        "mapper": {
+          "class": ""
+        }
+      },
+      "groups": [
+        {
+          "name": "index",
+          "method": "text",
+          "tags": ["basic"]
+        },
+        {
+          "name": "enrich",
+          "method": "text",
+          "tags": ["segmented"]
+        }
+
+      ]
+    },
+    {
+      "name": "segmented_parsed",
+      "type": "core_string",
+      "vector": true,
+      "i18n": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.ChunkMapper",
+        "fields": [
+          ".lang",
+          ".segmented"
+        ]
+      },
+      "groups": [
+
+        {
+          "name": "enrich",
+          "method": "text",
+          "tags": ["parsed"]
+        }
+      ]
+    },
+    {
+      "name": "segmented_answers",
+      "type": "core_string",
+      "vector": true,
+      "i18n": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.TextClassifier",
+        "fields": [
+          ".lang",
+          ".segmented"
+        ]
+      },
+      "groups": [
+        {
+          "name": "enrich",
+          "method": "text"
+        },
+        {
+          "name": "enrich",
+          "method": "text",
+          "tags": ["answers"]
+        }
+      ]
+    },
+    {
+      "name": "segmented_ner",
+      "type": "core_string",
+      "vector": true,
+      "i18n": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.NERMarkupMapper",
+        "fields": [
+          ".lang",
+          ".segmented"
+        ]
+      },
+      "groups": [
+        {
+          "name": "index",
+          "method": "textmarkup",
+          "tags": ["advanced"]
+        },
+        {
+          "name": "enrich",
+          "method": "text",
+          "tags": ["ner"]
+        }
+      ]
+    },
+    {
+      "name": "segmented_normhash",
+      "type": "core_string",
+      "vector": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "mapper": {
+          "class": "com.hitorro.jsontypesystem.dynamic.mappers.NormalizedTextHashMapper"
+        },
+        "fields": [
+          ".segmented"
+        ]
+      },
+      "groups": [
+        {
+          "name": "index",
+          "method": "long",
+          "tags": ["basic"]
+        },
+        {
+          "name": "enrich",
+          "method": "text",
+          "tags": ["hash"]
+        }
+
+      ]
+    }
+  ]
+}

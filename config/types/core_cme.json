@@ -1,0 +1,71 @@
+{
+  "name": "core_cme",
+  "extends": "sysobject",
+  "description": "",
+  "super": null,
+  "fields": [
+    {
+      "name": "server_id",
+      "type": "string"
+    },
+    {
+      "name": "node_id",
+      "type": "string"
+    },
+    {
+      "name": "server_type",
+      "type": "string"
+    },
+    {
+      "name": "global_id",
+      "type": "string"
+    },
+    {
+      "name": "software_version",
+      "type": "string"
+    },
+    {
+      "name": "database_id",
+      "type": "string"
+    },
+    {
+      "name": "node_comment",
+      "type": "string"
+    },
+    {
+      "name": "started",
+      "type": "long"
+    },
+    {
+      "name": "last_touched",
+      "type": "long"
+    },
+    {
+      "name": "ip_address",
+      "type": "string"
+    },
+    {
+      "name": "realm_id",
+      "type": "string"
+    },
+    {
+      "name": "cluster_server",
+      "type": "boolean"
+    },
+    {
+      "name": "cluster_client",
+      "type": "boolean"
+    },
+    {
+      "name": "ports",
+      "type": "port",
+      "vector": true
+    },
+    {
+      "name": "ports",
+      "type": "capability",
+      "vector": true
+    }
+  ]
+}
+

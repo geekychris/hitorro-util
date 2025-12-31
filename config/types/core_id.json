@@ -1,0 +1,45 @@
+{
+  "name": "id",
+  "fields": [
+    {
+      "name": "domain",
+      "type": "core_string"
+    },
+    {
+      "name": "did",
+      "type": "core_string"
+    },
+    {
+      "name": "id",
+      "type": "core_string",
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.MultiValueMergerDM",
+        "fields": [
+          ".domain",
+          ".did"
+        ]
+      },
+      "groups": [
+        {
+          "name": "index",
+          "method": "identifier",
+          "tags": ["basic"]
+        }
+      ]
+    },
+    {
+      "name": "id_hash",
+      "type": "core_long",
+      "vector": true,
+      "dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "mapper": {
+          "class": "com.hitorro.jsontypesystem.dynamic.mappers.FPHashMapper"
+        },
+        "fields": [
+          ".id"
+        ]
+      }
+    }
+  ]
+}

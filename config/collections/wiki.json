@@ -1,0 +1,8 @@
+{
+  "name": "wiki",
+  "meta": {
+    "type": "core_sysobject"
+  },
+  "intents": {"answer":[{"class": "com.hitorro.obj.core.solr.collection.modulators.AnswerTypeModulator"},
+    {"class":"com.hitorro.obj.core.solr.collection.modulators.SniffModulator"}]}
+}

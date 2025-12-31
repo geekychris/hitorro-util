@@ -1,0 +1,13 @@
+{
+  "name": "port",
+  "fields": [
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "port",
+      "type": "long"
+    }
+  ]
+}

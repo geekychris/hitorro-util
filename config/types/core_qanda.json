@@ -1,0 +1,16 @@
+{
+  "name": "qanda",
+
+  "description": "",
+  "super": "sysobject",
+  "fields": [
+    {
+      "name": "question",
+      "type": "core_mls"
+    },
+    {
+      "name": "answer",
+      "type": "core_mls"
+    }
+  ]
+}

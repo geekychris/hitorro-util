@@ -1,0 +1,27 @@
+{
+  "name": "sysobject",
+  "description": "",
+  "super": null,
+  "fields": [
+    {
+      "name": "id",
+      "type": "core_id"
+    },
+    {
+      "name": "times",
+      "type": "core_dates"
+    },
+    {
+      "name": "title",
+      "type": "core_mls"
+    },
+    {
+      "name": "body",
+      "type": "core_mls"
+    },
+    {
+      "name": "description",
+      "type": "core_mls"
+    }
+  ]
+}

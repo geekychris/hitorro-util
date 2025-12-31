@@ -1,0 +1,8 @@
+{
+  "name": "result",
+  "super": "sysobject",
+  "description": "",
+  "super": null,
+  "fields": [
+  ]
+}

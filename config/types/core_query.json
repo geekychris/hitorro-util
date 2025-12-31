@@ -1,0 +1,16 @@
+{
+  "name": "query",
+  "extends": "sysobject",
+  "description": "",
+  "super": null,
+  "fields": [
+    {
+      "name": "lang",
+      "type": "string"
+    },
+    {
+      "name": "natural",
+      "type": "core_mls"
+    }
+  ]
+}

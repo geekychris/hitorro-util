@@ -1,0 +1,27 @@
+{
+  "name": "dates",
+  "fields": [
+    {
+      "name": "created",
+      "type": "core_date",
+      "groups": [
+        {
+          "name": "index",
+          "method": "date",
+          "tags": ["basic"]
+        }
+      ]
+    },
+    {
+      "name": "modified",
+      "type": "core_date",
+      "groups": [
+        {
+          "name": "index",
+          "method": "date",
+          "tags": ["basic"]
+        }
+      ]
+    }
+  ]
+}
