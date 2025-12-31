@@ -65,29 +65,6 @@ public class Propaccess {
         return prev;
     }
 
-    /**
-     * Hacky set of tests to ensure we can do nested arrays and objects.
-     *
-     * @throws Exception
-     */
-    public static void test() throws Exception {
-        BaseFile bf = BaseFileSystem.getBaseFileFromPath("file://Users/chris/hkdemo.json");
-        JsonNode node = bf.getJsonNode(null);
-        JsonNode out = Propaccess.get(null, node, "a[0].label", PAContext.NeverCreate);
-        JsonNode out2 = Propaccess.set(null, node, "a[0].label", PAContext.NeverCreate, JsonNodeFactory.instance.textNode("hello"));
-        JsonNode out3 = Propaccess.set(null, node, "b[3].bla.poop", PAContext.AlwaysCreate, JsonNodeFactory.instance.textNode("poopy"));
-        Propaccess.set(null, node, "b[3].bla2[2].foo", PAContext.AlwaysCreate, JsonNodeFactory.instance.textNode("fooey"));
-        JsonNode foo = Propaccess.get(null, node, "b[3].bla2[2].foo", PAContext.AlwaysCreate);
-
-
-        Propaccess.set(null, node, "c[2].[1].noooo", PAContext.AlwaysCreate, JsonNodeFactory.instance.textNode("noooo"));
-        JsonNode noooo = Propaccess.get(null, node, "c[2].[1].noooo", PAContext.AlwaysCreate);
-
-        Propaccess.set(null, node, "x[2].[1].[3].[4].deeep", PAContext.AlwaysCreate, JsonNodeFactory.instance.textNode("deeeeep"));
-        JsonNode deeep = Propaccess.get(null, node, "x[2].[1].[3].[4].deeep", PAContext.AlwaysCreate);
-        Console.println();
-    }
-
     public Propaccess clone() {
         return new Propaccess(this);
     }
