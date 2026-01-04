@@ -366,6 +366,9 @@
                         <include>**/*Test.java</include>
                         <include>**/*Tests.java</include>
                     </includes>
+                    <systemPropertyVariables>
+                        <HT_HOME>${session.executionRootDirectory}</HT_HOME>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
         </plugins>
