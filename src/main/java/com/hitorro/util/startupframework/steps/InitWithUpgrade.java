@@ -73,6 +73,18 @@ public class InitWithUpgrade implements ServiceStep {
                 boolean upgradeService = false;
                 File serviceFile = null;
                 if (upgrade) {
+                    FileUtil.ensureDirectoryExists(versionsDir);
+                    if (module == null) {
+                        System.out.println();
+                    }
+                    if (versionsDir == null) {
+                        System.out.println();
+                    }
+                    try {
+                        serviceFile = new File(versionsDir, module.getShortName());
+                    }catch (Exception e) {
+                        System.out.println();
+                    }
                     serviceFile = new File(versionsDir, module.getShortName());
                     moduleVersion = FileUtil.readLongStringValFromFileDefaulting(serviceFile, moduleVersion);
                     if (moduleVersion != softVersion) {

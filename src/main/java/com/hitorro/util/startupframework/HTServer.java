@@ -30,12 +30,12 @@ import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.json.keys.StringProperty;
 import com.hitorro.util.json.keys.propaccess.PropaccessError;
-import com.hitorro.util.startupframework.phases.*;
+import com.hitorro.util.startupframework.phases.ServiceDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@com.hitorro.util.startupframework.phases.ServiceDefinition(dependentService = {},
+@ServiceDefinition(dependentService = {},
         shortName = "server",
         description = "Service startup service",
         debugCommands = {},

@@ -347,6 +347,9 @@ public class ServiceWrapper {
     }
 
     public String getShortName() {
+        if (sd.shortName() != null) {
+            return sd.shortName();
+        }
         if (sd.generatedServices()) {
             com.hitorro.util.core.classes.MethodAnnotation ma = com.hitorro.util.core.classes.ClassAnoUtil.getMemberFunction(clazz, shortNameConst, null);
             if (ma != null) {
@@ -360,10 +363,8 @@ public class ServiceWrapper {
             } else {
                 Log.servicecontext.warn("Module %s does not have an start method", clazz);
             }
-            return null;
-
         }
-        return sd.shortName();
+        return null;
     }
 
     public Class[] getDebugCommands() {
