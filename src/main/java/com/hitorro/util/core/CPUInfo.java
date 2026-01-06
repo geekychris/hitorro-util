@@ -104,11 +104,93 @@ public class CPUInfo {
 	
 	/**
 	 * Get CPU clock speed on Linux systems.
-	 * Reads from /proc/cpuinfo and parses the "cpu MHz" field.
+	 * First tries to read from sysfs (/sys/devices/system/cpu/cpufreq), which works on modern Linux
+	 * including ARM64 systems. Falls back to /proc/cpuinfo for older x86/x86_64 systems.
 	 *
 	 * @return ClockSpeed object or null if unable to determine
 	 */
 	private static ClockSpeed getLinuxCPUClockSpeed() {
+		// Try modern sysfs interface first (works on ARM64 and modern x86_64)
+		ClockSpeed speed = getLinuxCPUFreqFromSysfs();
+		if (speed != null) {
+			return speed;
+		}
+		
+		// Fallback to /proc/cpuinfo for older systems or x86/x86_64
+		return getLinuxCPUSpeedFromProcCpuinfo();
+	}
+	
+	/**
+	 * Get CPU clock speed from Linux sysfs cpufreq interface.
+	 * This works on modern Linux systems including ARM64.
+	 * Reads from /sys/devices/system/cpu/cpuN/cpufreq/scaling_cur_freq for each CPU.
+	 *
+	 * @return ClockSpeed object or null if unable to determine
+	 */
+	private static ClockSpeed getLinuxCPUFreqFromSysfs() {
+		try {
+			File cpufreqDir = new File("/sys/devices/system/cpu");
+			if (!cpufreqDir.exists()) {
+				return null;
+			}
+			
+			List<Double> currentSpeeds = new ArrayList<>();
+			List<Double> maxSpeeds = new ArrayList<>();
+			
+			// Read current and max frequencies for all CPUs
+			File[] cpuDirs = cpufreqDir.listFiles(f -> f.isDirectory() && f.getName().matches("cpu\\d+"));
+			if (cpuDirs == null || cpuDirs.length == 0) {
+				return null;
+			}
+			
+			for (File cpuDir : cpuDirs) {
+				File freqFile = new File(cpuDir, "cpufreq/scaling_cur_freq");
+				if (freqFile.exists()) {
+					try (BufferedReader reader = new BufferedReader(new FileReader(freqFile))) {
+						String line = reader.readLine();
+						if (line != null && !line.trim().isEmpty()) {
+							// Frequency is in kHz, convert to MHz
+							double khz = Double.parseDouble(line.trim());
+							currentSpeeds.add(khz / 1000.0);
+						}
+					}
+				}
+				
+				// Also read max frequency for reference
+				File maxFreqFile = new File(cpuDir, "cpufreq/cpuinfo_max_freq");
+				if (maxFreqFile.exists()) {
+					try (BufferedReader reader = new BufferedReader(new FileReader(maxFreqFile))) {
+						String line = reader.readLine();
+						if (line != null && !line.trim().isEmpty()) {
+							double khz = Double.parseDouble(line.trim());
+							maxSpeeds.add(khz / 1000.0);
+						}
+					}
+				}
+			}
+			
+			if (!currentSpeeds.isEmpty()) {
+				// Return average current speed across all cores
+				double avgCurrent = currentSpeeds.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+				double maxSpeed = maxSpeeds.isEmpty() ? 0.0 : maxSpeeds.stream().mapToDouble(Double::doubleValue).max().orElse(0.0);
+				
+				String source = String.format("sysfs cpufreq (current avg: %.0f MHz, max: %.0f MHz)", avgCurrent, maxSpeed);
+				return new ClockSpeed(avgCurrent, source);
+			}
+		} catch (Exception e) {
+			Log.util.debug("Error reading CPU frequency from sysfs: %s", e.getMessage());
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Get CPU clock speed from /proc/cpuinfo.
+	 * This works on older x86/x86_64 Linux systems.
+	 *
+	 * @return ClockSpeed object or null if unable to determine
+	 */
+	private static ClockSpeed getLinuxCPUSpeedFromProcCpuinfo() {
 		File cpuInfo = new File("/proc/cpuinfo");
 		if (!cpuInfo.exists()) {
 			Log.util.warn("Cannot read /proc/cpuinfo");
