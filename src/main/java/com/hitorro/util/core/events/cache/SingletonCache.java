@@ -28,7 +28,6 @@ import org.apache.poi.ss.formula.functions.T;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 17, 2006 Time: 6:41:34 PM
  */
 public class SingletonCache<E> extends Cache<Object, E> {
     private Object m_lock = new Object();

@@ -31,9 +31,6 @@ import java.io.IOException;
 import java.util.Queue;
 
 /**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 27, 2005 Time: 4:45:46 PM
- * <p/>
  * Aggregator has the responsibility of
  */
 public interface Aggregator<T extends CompressedStreamIO, O extends CompressedStreamIO> {

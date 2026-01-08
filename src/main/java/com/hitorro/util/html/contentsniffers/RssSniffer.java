@@ -24,7 +24,6 @@ package com.hitorro.util.html.contentsniffers;
 import com.hitorro.util.html.TagFinder;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 5, 2005 Time: 3:44:18 PM
  * <p/>
  * <?xml version="1.0" encoding="UTF-8"?> <!-- generator="wordpress/2.0.3" --> <rss version="2.0"
  * xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/"

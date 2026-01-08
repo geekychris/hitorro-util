@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.text.ParseException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 15, 2006 Time: 7:12:49 PM
  */
 public class HTMLUtil {
     /**

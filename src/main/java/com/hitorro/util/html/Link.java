@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 3, 2005 Time: 4:10:46 PM
  */
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.Link,
         isView = false,

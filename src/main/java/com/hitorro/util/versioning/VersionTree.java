@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 5, 2006 Time: 3:23:22 PM
  */
 public class VersionTree<V extends VersionNode> {
     private static final OrderVersion OVComparitor = new OrderVersion();

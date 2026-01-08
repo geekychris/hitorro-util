@@ -42,7 +42,6 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 8, 2006 Time: 9:00:19 PM
  * <p/>
  * Manages local resource files
  * <p/>

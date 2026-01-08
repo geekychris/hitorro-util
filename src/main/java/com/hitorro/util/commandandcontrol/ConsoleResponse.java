@@ -27,7 +27,6 @@ import com.hitorro.util.core.string.StringUtil;
 import java.io.PrintWriter;
 
 /*
- * Copyright (c) 2003 - present HiTorro All rights reserved.
  *
  * User: chris
  */

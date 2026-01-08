@@ -26,7 +26,6 @@ import com.hitorro.util.io.StoreException;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 28, 2006 Time: 8:35:09 AM
  */
 public abstract class VersionBaseType<T extends BaseSession> extends BaseType<T> {
     private transient boolean m_markedFlush = false;

@@ -36,7 +36,6 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 9, 2007 Time: 8:34:35 AM
  * <p/>
  * Machine holds all the finite states, groups.  States hold what the adjacent edges are along with the action that must
  * be performed when entering the state.

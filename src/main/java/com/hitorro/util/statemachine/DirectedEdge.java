@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.text.ParseException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 9, 2007 Time: 8:35:54 AM
  * <p/>
  * Description:
  * <p/>

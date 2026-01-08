@@ -25,7 +25,6 @@ import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.log.Logger;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 6:52:23 PM
  */
 public class LogResponse extends Response {
     private Logger logger;

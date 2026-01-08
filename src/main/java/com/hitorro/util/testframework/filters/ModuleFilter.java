@@ -28,7 +28,6 @@ import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.testframework.TestCaseWrapper;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
  */
 public class ModuleFilter implements HTPredicate<TestCaseWrapper> {
     private String module;

@@ -38,7 +38,6 @@ import java.util.List;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 15, 2005 Time: 8:50:28 AM
  */
 public class DiskUsage {
     private static long lastRefresh = -1;

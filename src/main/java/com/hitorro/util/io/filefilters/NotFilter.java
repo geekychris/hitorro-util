@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 15, 2006 Time: 8:19:49 PM
  */
 public class NotFilter implements FilenameFilter {
     private FilenameFilter m_filter;

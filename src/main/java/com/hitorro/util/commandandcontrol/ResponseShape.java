@@ -28,7 +28,6 @@ import com.hitorro.util.core.Log;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 3, 2005 Time: 8:41:59 AM
  */
 public class ResponseShape {
     protected ResponseRow m_header;

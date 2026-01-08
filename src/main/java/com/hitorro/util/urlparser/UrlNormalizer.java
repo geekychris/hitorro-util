@@ -36,7 +36,6 @@ import java.util.List;
  * Unlike the rules set down there, here we we lowercase escape sequences not upper case them as it reduces the amount
  * of checks that need to be performed
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris
  */
 public class UrlNormalizer {
     private static final int Unknown = 0;

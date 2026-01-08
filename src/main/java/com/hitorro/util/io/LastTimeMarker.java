@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 23, 2005 Time: 10:31:11 AM
  * <p/>
  * Manage a file based time marker.  Provides a persisted way to track the last time something was done. Once the last
  * time is returned it sets in memory the time that will be committed when set is called.

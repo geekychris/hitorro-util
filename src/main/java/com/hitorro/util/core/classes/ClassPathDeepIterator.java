@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 18, 2006 Time: 1:42:51 PM
  */
 public class ClassPathDeepIterator extends AbstractIterator<String> {
     private boolean m_includeJars = false;

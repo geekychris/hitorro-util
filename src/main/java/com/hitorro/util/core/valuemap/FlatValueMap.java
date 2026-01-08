@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 3, 2006 Time: 11:51:45 AM
  */
 public class FlatValueMap<E> implements ValueMap<E> {
     protected String m_domain;

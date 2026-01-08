@@ -28,7 +28,6 @@ import com.hitorro.util.statemachine.State;
 import com.hitorro.util.statemachine.scoreboard.StateRow;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 11, 2007 Time: 6:51:07 PM
  * <p/>
  * Match rows that have a given state.
  */

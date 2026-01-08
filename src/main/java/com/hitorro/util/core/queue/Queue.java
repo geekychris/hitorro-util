@@ -22,7 +22,6 @@
 package com.hitorro.util.core.queue;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Mar 9, 2005 Time: 4:05:27 PM
  */
 public interface Queue<E> {
     E dequeue() throws ThreadedQueueCanceledException,

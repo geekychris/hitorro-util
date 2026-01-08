@@ -26,7 +26,6 @@ import java.util.List;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 19, 2005 Time: 12:44:52 PM
  */
 public class GenericDifferContainer<E> implements GenericDifferCallback<E> {
     private List<E> added = new ArrayList<E>();

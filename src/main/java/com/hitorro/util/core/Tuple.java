@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 11:34:29 PM
  */
 public class Tuple<Type> {
     private Type m_vals[];

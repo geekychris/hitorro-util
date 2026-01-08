@@ -34,7 +34,6 @@ import junit.framework.TestSuite;
 import java.util.*;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 18, 2006 Time: 4:29:40 PM
  * <p/>
  * Enumerate the classpath and get all the tests that meet a test level criteria to run
  */

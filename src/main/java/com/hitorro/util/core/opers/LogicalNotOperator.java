@@ -34,7 +34,6 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jul 24, 2005 Time: 2:07:17 PM Compliment of
  * the operator
  */
 @TypeClassMetaInfo(shortTypeName = "NotConstraint",

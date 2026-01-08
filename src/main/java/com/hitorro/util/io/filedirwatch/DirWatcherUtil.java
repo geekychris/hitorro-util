@@ -25,7 +25,6 @@ import com.hitorro.util.core.Env;
 import com.hitorro.util.core.Log;
 
 /**
- * Watch a directory and Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time:
  * 10:10:06 AM
  */
 public class DirWatcherUtil {

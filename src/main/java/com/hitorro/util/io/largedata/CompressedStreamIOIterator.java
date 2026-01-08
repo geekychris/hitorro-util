@@ -36,7 +36,6 @@ import java.io.InputStream;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 27, 2005 Time: 2:03:25 PM Read an
  * encoded log file one row at a time till you hit the null terminator.
  */
 public class CompressedStreamIOIterator<T extends CompressedStreamIO> extends AbstractIterator<T> {

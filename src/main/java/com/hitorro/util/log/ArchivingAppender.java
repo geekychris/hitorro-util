@@ -41,7 +41,6 @@ import java.io.Writer;
  * specified maxinum size. The name of the archived file encodes the date/time that it was archived.
  * <p/>
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 1, 2006 Time: 9:34:34 AM
  */
 
 public class ArchivingAppender extends FileAppender {

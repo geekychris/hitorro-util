@@ -29,7 +29,6 @@ import java.net.URL;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 25, 2005 Time: 11:34:43 PM
  */
 public class UrlLengthLessThan implements LinkConstraint {
     private int m_size;

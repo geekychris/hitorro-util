@@ -24,7 +24,6 @@ package com.hitorro.util.urlparser;
 import com.hitorro.util.core.string.StringUtil;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 24, 2005 Time: 6:29:12 PM path to test
  * against.
  */
 public class PathMatch {

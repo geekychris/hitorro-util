@@ -29,7 +29,6 @@ import com.hitorro.util.commandandcontrol.RestOperations;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 3, 2005 Time: 12:57:32 PM
  */
 @CommandDef(command = "test.runhtmlstress", description = "Run html fetching stress")
 public class RunHTMLStress extends Command {

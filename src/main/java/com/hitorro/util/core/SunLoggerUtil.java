@@ -25,7 +25,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 28, 2005 Time: 8:19:39 AM
  */
 public class SunLoggerUtil {
 

@@ -25,7 +25,6 @@ import gnu.trove.map.hash.TObjectIntHashMap;
 import com.hitorro.util.core.Constants;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 9, 2005 Time: 10:02:25 AM
  * <p/>
  * * Represents a wrapper of column name to index position into the a table. This is used so that column names can be
  * translated to index positions and from index positions to the content of a row of the table.

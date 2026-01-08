@@ -25,7 +25,6 @@ import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 2, 2005 Time: 10:15:59 PM Defines the
  * offset within the table to apply fields (in an multi row response)
  */
 public class GroupTuple {

@@ -24,7 +24,6 @@ package com.hitorro.util.core.valuemap;
 import com.hitorro.util.core.string.StringUtil;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 3, 2006 Time: 11:52:01 AM
  */
 public class LabelValueMap extends FlatValueMap {
     // Labels must be unique across versions.

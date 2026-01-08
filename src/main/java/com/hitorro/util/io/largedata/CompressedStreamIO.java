@@ -30,7 +30,6 @@ import java.io.IOException;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 31, 2005 Time: 10:16:51 AM
  */
 public interface CompressedStreamIO<T> {
     void write(COutputStream os) throws IOException;

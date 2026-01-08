@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 18, 2006 Time: 1:43:34 PM
  * <p/>
  * Recurse a filepath in an efficient way (this is really a cursor over a nested directory
  */

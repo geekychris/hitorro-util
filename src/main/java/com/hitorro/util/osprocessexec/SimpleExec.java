@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 1, 2006 Time: 10:14:29 AM
  * <p/>
  * From core web programming
  */

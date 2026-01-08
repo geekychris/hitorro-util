@@ -33,7 +33,6 @@ import java.util.jar.JarOutputStream;
 import java.util.zip.CRC32;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 11:45:33 PM
  * <p/>
  * Code adapted from numerous sources including ant.
  * <p/>

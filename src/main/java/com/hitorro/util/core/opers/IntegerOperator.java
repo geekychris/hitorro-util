@@ -30,7 +30,6 @@ import com.hitorro.util.typesystem.HTObjectOutputStream;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 2, 2008 Time: 7:49:03 PM
  */
 public class IntegerOperator implements HTPredicate<Integer> {
     public static final byte SerializationVersion = 1;

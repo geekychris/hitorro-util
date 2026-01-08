@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 16, 2006 Time: 1:20:30 PM
  * <p/>
  * Simple wrapper around a Map, to allow us to keep a listFiles of x to a key.
  */

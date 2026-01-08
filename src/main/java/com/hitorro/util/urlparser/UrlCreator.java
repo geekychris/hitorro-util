@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jul 5, 2005 Time: 5:59:20 PM
  */
 public class UrlCreator {
     private StringBuilder m_buffer = new StringBuilder();

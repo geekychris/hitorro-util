@@ -26,8 +26,6 @@ import com.hitorro.util.core.Constants;
 import com.hitorro.util.statemachine.scoreboard.StateRow;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * Copyright (c) 2003 - present HiTorro All rights reserved.
  * User: chris
  * Date: Feb 9, 2007
  * Time: 8:36:06 AM

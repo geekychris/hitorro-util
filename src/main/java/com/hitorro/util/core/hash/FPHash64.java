@@ -26,7 +26,6 @@ import com.hitorro.util.core.Log;
 import java.io.UnsupportedEncodingException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 22, 2006 Time: 9:28:32 AM
  * <p/>
  * Java convertion of Andrei Broaders' Fingerprint algorithm, which is an re-implementation of a rabin algorithm.
  * <p/>

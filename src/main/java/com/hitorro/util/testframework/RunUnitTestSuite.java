@@ -32,7 +32,6 @@ import junit.framework.TestResult;
 import junit.framework.TestSuite;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 18, 2006 Time: 4:46:07 PM
  */
 @CommandDef(command = "test.runsuite", description = "Run a suite of tests")
 

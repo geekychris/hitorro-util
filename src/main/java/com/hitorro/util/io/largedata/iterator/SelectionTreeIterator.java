@@ -31,7 +31,6 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time: 6:02:56 PM
  * <p/>
  * Based upon a selection tree model for merging n streams of data, the SelectionTreeIterator is given two Iterators
  * that provide elements that are Comparable and provide the smallest value.  These iterators are built into a tree of

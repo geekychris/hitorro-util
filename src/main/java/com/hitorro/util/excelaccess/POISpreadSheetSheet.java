@@ -37,7 +37,6 @@ import static org.apache.poi.ss.usermodel.Row.MissingCellPolicy.RETURN_NULL_AND_
 
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time: 10:46:06 AM
  */
 public class POISpreadSheetSheet {
     private HSSFSheet sheet;

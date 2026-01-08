@@ -25,7 +25,6 @@ import com.hitorro.util.core.Constants;
 import com.hitorro.util.core.Log;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Mar 3, 2008 Time: 8:08:29 AM To change this
  * template use File | Settings | File Templates.
  */
 public class HTMLEncoder {

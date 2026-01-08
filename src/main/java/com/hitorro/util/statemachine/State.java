@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.text.ParseException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 8, 2007 Time: 6:02:41 PM
  * <p/>
  * Defines a state of a finite state machine to be incorporated into a simple workflow or score board.
  */

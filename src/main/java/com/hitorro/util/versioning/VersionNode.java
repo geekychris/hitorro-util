@@ -32,7 +32,6 @@ import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 5, 2006 Time: 3:22:41 PM
  */
 @TypeClassMetaInfo(shortTypeName = "VN",
         isView = false,

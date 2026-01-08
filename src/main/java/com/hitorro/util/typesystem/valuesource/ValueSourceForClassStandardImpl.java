@@ -26,7 +26,6 @@ import com.hitorro.util.typesystem.TypeIntf;
 import com.hitorro.util.typesystem.annotation.UiProperties;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 21, 2006 Time: 2:29:20 PM
  */
 public class ValueSourceForClassStandardImpl implements ValueSourceForClass {
     private TypeIntf m_type;

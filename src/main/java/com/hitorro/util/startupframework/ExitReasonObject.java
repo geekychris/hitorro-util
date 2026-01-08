@@ -22,7 +22,6 @@
 package com.hitorro.util.startupframework;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 19, 2006 Time: 10:24:08 AM
  */
 public class ExitReasonObject {
     public String reason = "";

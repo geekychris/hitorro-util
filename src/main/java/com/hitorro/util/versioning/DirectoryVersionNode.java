@@ -26,7 +26,6 @@ import com.hitorro.jsontypesystem.JVS;
 import java.io.File;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 5, 2006 Time: 4:08:19 PM
  */
 public class DirectoryVersionNode extends VersionNode {
     protected File m_directory;

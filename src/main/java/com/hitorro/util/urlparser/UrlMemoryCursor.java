@@ -25,7 +25,6 @@ import com.hitorro.util.core.Log;
 import com.hitorro.util.core.string.StringUtil;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 20, 2005 Time: 8:13:47 PM Like
  * URLCursor, except it keeps track of positions of the url and the first argument.
  */
 public class UrlMemoryCursor extends UrlCursor {

@@ -25,7 +25,6 @@ import com.hitorro.util.startupframework.ServiceContext;
 import com.hitorro.util.typesystem.*;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 14, 2006 Time: 6:44:58 PM
  */
 public class BaseOnTriggerGeneric implements com.hitorro.util.typesystem.OnTrigger {
     boolean initialized = false;

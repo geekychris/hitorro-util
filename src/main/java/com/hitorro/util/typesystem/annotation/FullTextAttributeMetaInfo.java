@@ -25,7 +25,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 12, 2006 Time: 4:50:31 PM
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface FullTextAttributeMetaInfo {

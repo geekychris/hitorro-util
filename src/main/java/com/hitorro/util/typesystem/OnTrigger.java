@@ -22,7 +22,6 @@
 package com.hitorro.util.typesystem;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 16, 2006 Time: 1:17:36 PM Triggers are
  * fired  at specific points in time.
  */
 public interface OnTrigger {

@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.function.BiFunction;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time: 6:16:13 PM
  */
 
 public class LikeRowMergingIterator<E> extends AbstractIterator<E> {

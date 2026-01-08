@@ -52,7 +52,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /*
- * Copyright (c) 2003 - present HiTorro All rights reserved.
  *
  * User: chris
  */

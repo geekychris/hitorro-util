@@ -34,7 +34,6 @@ import junit.framework.Test;
 
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris
  */
 public class TestWatchdogTimer implements Runnable {
     private int timeoutSeconds;

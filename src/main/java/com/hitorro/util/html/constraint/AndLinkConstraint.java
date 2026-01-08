@@ -28,7 +28,6 @@ import org.w3c.dom.Node;
 import java.net.URL;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 3, 2005 Time: 6:37:20 PM
  */
 public class AndLinkConstraint extends LogicalLinkConstraint {
     public AndLinkConstraint(LinkConstraint... constraints) {

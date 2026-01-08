@@ -30,7 +30,6 @@ import com.hitorro.util.log.Logger;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 19, 2006 Time: 10:11:39 AM
  * <p/>
  * Exit handler that knows how to shutdown the system in an orderly way that means, asking the ServicesContext to
  * shutdown.

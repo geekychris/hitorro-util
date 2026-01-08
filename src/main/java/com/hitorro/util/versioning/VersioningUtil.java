@@ -25,7 +25,6 @@ import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.core.string.StringUtil;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 27, 2006 Time: 6:59:31 PM Utils
  * associated with major, minor and branch version numbers
  */
 public class VersioningUtil {

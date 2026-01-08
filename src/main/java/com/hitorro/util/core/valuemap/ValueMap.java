@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 3, 2006 Time: 11:51:51 AM
  */
 public interface ValueMap<E> {
 

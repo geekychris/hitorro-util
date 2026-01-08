@@ -32,7 +32,6 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 9, 2007 Time: 9:28:42 AM
  */
 public class StateMachineUtil {
     private static final String SheetGroups = "groups";

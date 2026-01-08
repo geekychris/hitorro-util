@@ -25,7 +25,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 13, 2005 Time: 9:56:41 AM
  */
 public class BlobLogWriter {
     private DataOutputStream m_dos;

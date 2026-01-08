@@ -32,7 +32,6 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time: 2:00:48 PM
  * <p/>
  * Bucket writer buffers the writing of a series of objects that need to be written in a specific order. For example. We
  * could be processing a series of documents for their urls we may want to writeout:

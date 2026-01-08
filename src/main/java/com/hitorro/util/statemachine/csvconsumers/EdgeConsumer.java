@@ -24,7 +24,6 @@ package com.hitorro.util.statemachine.csvconsumers;
 import com.hitorro.util.statemachine.MooreStateMachine;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 9, 2007 Time: 8:45:57 AM
  */
 public class EdgeConsumer extends BaseConsumer {
     public static final String StateName = "StateName";

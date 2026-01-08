@@ -33,7 +33,6 @@ import java.util.List;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 31, 2005 Time: 10:18:04 AM
  */
 
 public class CompressedStreamFileBucketWriter<T extends CompressedStreamIO> extends BaseFileBucketWriter<T> {

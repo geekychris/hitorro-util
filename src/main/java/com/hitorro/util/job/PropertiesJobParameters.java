@@ -4,7 +4,6 @@ import org.quartz.JobDataMap;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 18, 2005 Time: 4:23:41 PM
  */
 public class PropertiesJobParameters extends JobParameters {
     private JobDataMap dmap;

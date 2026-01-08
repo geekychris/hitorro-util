@@ -46,7 +46,6 @@ import java.util.*;
 /**
  * HTML Parser using the CyberNecko Parser.
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 14, 2006 Time: 10:47:09 AM
  */
 
 public class HTMLParser {

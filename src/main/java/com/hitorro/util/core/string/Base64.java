@@ -22,7 +22,6 @@
 package com.hitorro.util.core.string;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 11:11:58 PM
  */
 /*
     Code originally from WingNut html generation engine

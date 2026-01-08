@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris
  */
 public class FarmThreadWorkFlowCreator<E, T> {
     private List<CommandStep> steps = new ArrayList<CommandStep>();

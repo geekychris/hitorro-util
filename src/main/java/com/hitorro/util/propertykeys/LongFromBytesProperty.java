@@ -29,7 +29,6 @@ import java.text.ParseException;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time: 9:27:28 AM
  */
 public class LongFromBytesProperty extends PropertyKey<Long> {
     private long m_defaultValue = 0;

@@ -26,7 +26,6 @@ import com.hitorro.util.io.StoreException;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 24, 2006 Time: 9:27:07 PM
  */
 public interface HTSerializable {
 

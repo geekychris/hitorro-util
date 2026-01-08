@@ -24,7 +24,6 @@ package com.hitorro.util.html.contentsniffers;
 import com.hitorro.util.html.TagFinder;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 5, 2005 Time: 3:44:09 PM
  * <p/>
  * Mug Shot:
  * <p/>

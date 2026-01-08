@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 5, 2005 Time: 6:21:02 PM
  * <p/>
  * Simple iterator that scans a buffer to a max character position looking for things that look like:
  * <p/>

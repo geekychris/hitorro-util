@@ -23,7 +23,6 @@ package com.hitorro.util.typesystem;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 3, 2008 Time: 6:27:49 AM
  */
 public abstract class BaseSessionFactory<S extends BaseSession> {
     protected static BaseSessionFactory factory;

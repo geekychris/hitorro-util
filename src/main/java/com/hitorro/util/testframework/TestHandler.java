@@ -41,7 +41,6 @@ import java.io.File;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 21, 2006 Time: 8:13:01 PM
  */
 class TestHandler implements EventListener {
     public boolean event(String topic, String subTopic, Object args) {

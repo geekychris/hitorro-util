@@ -44,7 +44,6 @@ import java.net.URL;
 import java.util.*;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 2, 2005 Time: 2:30:05 PM
  * <p/>
  * Encapsulation of a html page that has been fetched by the fetcher.
  */

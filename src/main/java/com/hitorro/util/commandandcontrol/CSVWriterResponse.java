@@ -27,7 +27,6 @@ import com.hitorro.util.io.csv.CSVWriter;
 import java.util.List;
 
 /*
- * Copyright (c) 2003 - present HiTorro All rights reserved.
  *
  * User: chris
  */

@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 16, 2008 Time: 8:44:36 AM Keeps track of
  * a set of aggregators
  */
 public class AggregatorContext {

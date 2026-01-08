@@ -26,7 +26,6 @@ import com.hitorro.util.io.IOUtil;
 import java.io.*;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 11:19:16 PM
  */
 public class CopyRunner implements Runnable {
     private InputStream m_is = null;

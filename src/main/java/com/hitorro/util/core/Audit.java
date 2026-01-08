@@ -28,7 +28,6 @@ import java.util.HashMap;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 16, 2005 Time: 12:05:56 PM
  */
 public class   Audit {
     //   global audit topics

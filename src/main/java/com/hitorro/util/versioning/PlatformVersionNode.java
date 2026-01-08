@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 5, 2006 Time: 6:36:11 PM
  * <p/>
  * Definition of a platform binary release and a listFiles of the server configurations that use it.
  */

@@ -24,7 +24,6 @@ package com.hitorro.util.io;
 import java.io.OutputStream;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 4, 2006 Time: 1:52:37 PM
  */
 public class RotatingBufferedOutputStream extends OutputStream {
 

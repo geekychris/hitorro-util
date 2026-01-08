@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 1, 2005 Time: 6:56:34 PM
  */
 
 @TypeClassMetaInfo(shortTypeName = TypeClassMetaInfo.LinkSet,

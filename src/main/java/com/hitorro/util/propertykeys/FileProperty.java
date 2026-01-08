@@ -29,7 +29,6 @@ import java.io.File;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 4, 2006 Time: 9:24:14 PM
  */
 public class FileProperty extends PropertyKey<File> {
     protected boolean m_notNull;

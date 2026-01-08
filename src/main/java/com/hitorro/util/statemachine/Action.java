@@ -24,7 +24,6 @@ package com.hitorro.util.statemachine;
 import com.hitorro.jsontypesystem.JVS;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 8, 2007 Time: 7:57:19 PM
  */
 public abstract class Action<E, C> {
     private JVS m_parameters = null;

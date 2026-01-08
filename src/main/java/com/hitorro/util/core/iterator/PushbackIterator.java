@@ -24,7 +24,6 @@ package com.hitorro.util.core.iterator;
 import java.util.Iterator;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 18, 2006 Time: 1:40:46 PM
  */
 public class PushbackIterator<E> extends AbstractIterator<E> {
     private int m_bufferSize;

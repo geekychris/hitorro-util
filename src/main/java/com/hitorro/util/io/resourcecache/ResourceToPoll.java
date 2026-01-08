@@ -25,9 +25,6 @@ import com.hitorro.util.core.events.LocalEventHub;
 import com.hitorro.util.core.string.StringUtil;
 
 /**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 22, 2005 Time: 4:40:55 PM
- * <p/>
  * Defines the resource we wish to poll periodically to see if there is a newer version on another node.
  */
 public class ResourceToPoll {

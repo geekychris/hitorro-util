@@ -31,7 +31,6 @@ import java.util.Iterator;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 31, 2005 Time: 10:19:29 AM
  */
 public class CompressedStreamIteratorSink<T extends CompressedStreamIO> implements OutputIteratorSink<T> {
     private FSOutputStream m_os;

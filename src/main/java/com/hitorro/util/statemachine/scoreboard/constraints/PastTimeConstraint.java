@@ -27,7 +27,6 @@ import com.hitorro.util.core.opers.HTPredicate;
 import com.hitorro.util.statemachine.scoreboard.StateRow;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 11, 2007 Time: 6:47:22 PM
  * <p/>
  * If a row is older than the provided time then the constraint passes. We can set times in the past for look for rows
  * that are pased due.

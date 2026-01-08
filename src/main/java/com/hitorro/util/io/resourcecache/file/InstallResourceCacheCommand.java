@@ -36,7 +36,6 @@ import java.io.File;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 17, 2005 Time: 6:36:30 PM Given a source
  * directory or file, copy the files to the cache
  */
 @CommandDef(command = "resourcecache.install", description = "Install a resource from disk")

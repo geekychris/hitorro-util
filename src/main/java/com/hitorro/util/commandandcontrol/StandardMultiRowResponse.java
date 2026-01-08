@@ -26,7 +26,6 @@ import java.util.Queue;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Aug 3, 2005 Time: 8:53:08 AM
  */
 public class StandardMultiRowResponse extends MultiRowResponse {
     private Queue<Object>[] m_columns;

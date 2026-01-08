@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time: 10:46:06 AM
  */
 public class POICSVWriter {
     private POISpreadSheet spreadSheet;

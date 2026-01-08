@@ -38,7 +38,6 @@ import java.io.IOException;
  * <p/>
  * http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html#sum
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris
  */
 
 public class TestNameRegexpFilter implements HTPredicate<TestCaseWrapper> {

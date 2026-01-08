@@ -22,7 +22,6 @@
 package com.hitorro.util.core.opers;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris
  */
 public abstract class IntFieldMatch<T> implements HTPredicate<T> {
     private Operator op;

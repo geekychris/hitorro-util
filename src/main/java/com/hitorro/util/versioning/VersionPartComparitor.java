@@ -22,7 +22,6 @@
 package com.hitorro.util.versioning;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 5, 2006 Time: 4:51:46 PM
  */
 public class VersionPartComparitor {
     private String m_s;

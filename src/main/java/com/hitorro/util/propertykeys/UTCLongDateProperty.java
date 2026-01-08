@@ -31,7 +31,6 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
  * <p/>
  * Date is represented as a UTC long value rather than readable englishified text User: chris
  */

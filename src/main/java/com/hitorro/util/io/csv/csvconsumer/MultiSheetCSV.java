@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 9, 2005 Time: 10:25:19 AM
  * <p/>
  * Multi sheet csv reader assumes that you have a directory containing the sheets by name.
  */

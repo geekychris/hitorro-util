@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 17, 2006 Time: 6:39:40 PM
  */
 public abstract class Cache<K, V> implements EventListener {
     // Indicate the "Desire" to remove all items from the cache

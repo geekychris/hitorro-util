@@ -25,7 +25,6 @@ import com.hitorro.util.core.Constants;
 
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time: 10:46:06 AM
  */
 public class ExcelUtil {
     public static final int Excel5 = 0;

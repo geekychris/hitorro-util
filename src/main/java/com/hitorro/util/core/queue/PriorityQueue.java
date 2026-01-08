@@ -27,8 +27,6 @@ import java.util.Collection;
 import java.util.Comparator;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * Copyright (c) 2003 - present HiTorro All rights reserved.
  * User: chris
  * Date: Jan 11, 2007
  * Time: 11:18:56 AM

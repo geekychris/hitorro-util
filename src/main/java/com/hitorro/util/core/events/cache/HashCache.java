@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 17, 2006 Time: 6:39:16 PM
  * <p/>
  * Set of key->value pairs optimized for O(n) time lookup.  Missing values can be fetched by the subclass that
  * implements a getAux method.

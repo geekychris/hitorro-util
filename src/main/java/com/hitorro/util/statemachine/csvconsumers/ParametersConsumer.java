@@ -28,7 +28,6 @@ import java.io.File;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 3, 2008 Time: 5:59:58 PM
  */
 public class ParametersConsumer extends BaseConsumer {
 

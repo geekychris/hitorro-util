@@ -31,7 +31,6 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 15, 2005 Time: 9:16:17 PM
  * <p/>
  * Map of external hash to an internal document id.  Document ID'saveMap currently do not get re-used.
  */

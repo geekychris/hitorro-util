@@ -24,7 +24,6 @@ package com.hitorro.util.urlparser;
 import java.util.Arrays;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 24, 2005 Time: 11:53:36 AM Case free
  * collector of parameters we care to extract from a url using the UrlCursor.  This should be a relatively efficient
  * linear extraction process as long as the parameters expected are finite.  Other collectors should be used if key
  * value pairs are unknown in advance.

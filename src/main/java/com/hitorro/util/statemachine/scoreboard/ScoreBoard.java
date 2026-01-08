@@ -32,7 +32,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 11, 2007 Time: 6:13:15 PM
  * <p/>
  * Container of state rows.  These rows hold a state and an object (payload) that the state belongs to.
  */

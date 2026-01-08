@@ -31,7 +31,6 @@ import junit.framework.*;
 import org.junit.runner.Description;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 18, 2006 Time: 4:45:12 PM
  */
 public class JUnitListener implements TestListener {
     private Response m_response;

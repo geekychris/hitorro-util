@@ -22,7 +22,6 @@
 package com.hitorro.util.core.thread;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 16, 2005 Time: 5:29:11 PM
  */
 public class HTThread extends Thread {
     private String description = null;

@@ -22,7 +22,6 @@
 package com.hitorro.util.commandandcontrol;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 6:49:53 PM
  */
 public class TeeResponse extends Response {
     private Response m_left;

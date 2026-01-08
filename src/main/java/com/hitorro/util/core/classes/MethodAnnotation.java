@@ -34,7 +34,6 @@ import java.util.Map;
  * the method, as well as the method itself.  The "acceptable" annotations are those in the constraints handed to the
  * constructor.
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 13, 2006 Time: 11:54:26 AM
  */
 public class MethodAnnotation extends BaseAnnotation {
     private Method m_method;

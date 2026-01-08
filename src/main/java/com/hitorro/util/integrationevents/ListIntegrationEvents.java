@@ -30,7 +30,6 @@ import com.hitorro.util.commandandcontrol.ano.ResponseDefinition;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 18, 2006 Time: 6:58:46 PM
  */
 
 @CommandDef(command = "integration.listFiles", description = "List the available integration events")

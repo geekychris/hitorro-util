@@ -25,7 +25,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time: 6:10:37 PM
  * <p/>
  * Similar to a Selection tree in that it takes two iterators, in this case though the intent is to provide an iterator
  * of values that we want and a stop iterator of values that we dont want, it assumes iterable values are both in the

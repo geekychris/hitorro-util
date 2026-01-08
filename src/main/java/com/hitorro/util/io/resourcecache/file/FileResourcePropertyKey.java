@@ -30,7 +30,6 @@ import java.io.File;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 11, 2005 Time: 8:15:26 AM
  * <p/>
  * Defaulting File property key.  First attempts to get the file from resource cache, failing that it will get it from
  * the backup config key.  This is typically usefull for cases where we may ship with a "default" value and then

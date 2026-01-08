@@ -29,7 +29,6 @@ import com.hitorro.util.core.opers.LogicalAndOperator;
 import com.hitorro.util.core.string.Fmt;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 3, 2008 Time: 9:10:19 AM
  */
 public class DirEnumUtil {
 

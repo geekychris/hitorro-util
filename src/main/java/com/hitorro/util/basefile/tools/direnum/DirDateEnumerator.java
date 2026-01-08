@@ -29,7 +29,6 @@ import com.hitorro.util.core.opers.HTPredicate;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 1, 2008 Time: 9:36:02 AM Given an action
  * to perform, enumerates a file data structure that looks like: <year>/ <month>/ <day>
  */
 public class DirDateEnumerator {

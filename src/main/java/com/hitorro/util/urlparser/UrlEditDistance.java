@@ -24,7 +24,6 @@ package com.hitorro.util.urlparser;
 import junit.framework.TestCase;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 7, 2005 Time: 9:48:17 AM
  */
 public class UrlEditDistance extends TestCase {
     private UrlCursor m_curA = new UrlCursor();

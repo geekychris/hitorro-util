@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2005 Time: 5:20:04 PM
  * <p/>
  * Given an iterator, put its data to some kind of output (for example HTSerializable to a file).
  */

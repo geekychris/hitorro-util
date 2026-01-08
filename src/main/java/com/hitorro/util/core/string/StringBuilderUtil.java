@@ -24,7 +24,6 @@ package com.hitorro.util.core.string;
 import java.io.*;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Mar 3, 2008 Time: 8:16:47 AM To change this
  */
 public class StringBuilderUtil {
     /**

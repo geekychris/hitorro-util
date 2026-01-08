@@ -28,7 +28,6 @@ import com.hitorro.util.statemachine.MooreStateMachine;
 
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 9, 2007 Time: 8:47:12 AM
  * <p/>
  * base class that one subclasses to load state, group and edge data into a state machine
  */

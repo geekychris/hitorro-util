@@ -22,7 +22,6 @@
 package com.hitorro.util.core.tandemarrays;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 23, 2005 Time: 10:12:53 AM
  */
 public class TandemObjectArraySorterPeer extends TandemArraySorterPeer {
     private Object array[];

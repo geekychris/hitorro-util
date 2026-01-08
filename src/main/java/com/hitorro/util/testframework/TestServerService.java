@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 23, 2006 Time: 11:05:14 AM
  * <p/>
  * On startup of the server run unit tests defined at the provided run level and then exit. A positive exit code means
  * success and a negative exit code means failure. The log output it sent to the logs directory as

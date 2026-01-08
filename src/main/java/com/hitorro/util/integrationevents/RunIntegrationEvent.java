@@ -31,7 +31,6 @@ import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.json.keys.StringProperty;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 18, 2006 Time: 6:52:14 PM
  */
 @CommandDef(command = "integration.run", description = "Run an integration event")
 public class RunIntegrationEvent extends Command {

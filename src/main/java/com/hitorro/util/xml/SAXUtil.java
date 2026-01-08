@@ -35,7 +35,6 @@ import java.io.InputStream;
 import java.util.StringTokenizer;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 12, 2005 Time: 4:20:46 PM
  * <p/>
  * General SAX utility methods.
  */

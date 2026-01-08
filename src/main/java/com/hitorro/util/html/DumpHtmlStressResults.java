@@ -28,7 +28,6 @@ import com.hitorro.util.commandandcontrol.ano.RespColumn;
 import com.hitorro.util.commandandcontrol.ano.ResponseDefinition;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 3, 2005 Time: 12:29:58 PM
  */
 @CommandDef(command = "test.dumphtmlstress", description = "Dump the stress results of the html fetcher")
 public class DumpHtmlStressResults extends com.hitorro.util.commandandcontrol.Command {

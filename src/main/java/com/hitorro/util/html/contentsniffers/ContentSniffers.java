@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 5, 2005 Time: 3:51:08 PM
  */
 public class ContentSniffers {
     private static ContentSniffers s_sniffers;

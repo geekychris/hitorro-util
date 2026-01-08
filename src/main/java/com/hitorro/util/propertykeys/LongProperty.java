@@ -28,7 +28,6 @@ import com.hitorro.util.json.keys.PropertyKeyValidationException;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris
  */
 public class LongProperty extends PropertyKey<Long> {
     private long _defaultValue = 0;

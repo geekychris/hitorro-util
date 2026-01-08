@@ -26,7 +26,6 @@ import com.hitorro.util.io.csv.formatters.*;
 import java.util.Date;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 16, 2008 Time: 7:21:39 AM
  */
 public class CSVFormattedWriter {
     private com.hitorro.util.io.csv.formatters.CSVFormatter[] formatters;

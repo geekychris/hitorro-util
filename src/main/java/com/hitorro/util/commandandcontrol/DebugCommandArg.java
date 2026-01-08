@@ -26,7 +26,6 @@ import com.hitorro.util.commandandcontrol.ano.ArgType;
 import com.hitorro.util.json.keys.BaseMappingProperty;
 
 /*
- * Copyright (c) 2003 - present HiTorro All rights reserved.
  *
  * User: chris
  */

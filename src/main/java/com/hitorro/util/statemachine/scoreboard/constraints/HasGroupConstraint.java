@@ -29,7 +29,6 @@ import com.hitorro.util.statemachine.State;
 import com.hitorro.util.statemachine.scoreboard.StateRow;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 11, 2007 Time: 6:52:53 PM
  * <p/>
  * Match rows that have a state that belong to a state group.  If hierarchy test is set then if we have a constraint of
  * a, where a contains b which contains c, then if we present an item of group c, this is a test.

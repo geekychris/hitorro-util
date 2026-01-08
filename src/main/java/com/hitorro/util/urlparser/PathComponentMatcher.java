@@ -27,7 +27,6 @@ import com.hitorro.util.core.tandemarrays.TandemLongArraySorter;
 import com.hitorro.util.core.tandemarrays.TandemObjectArraySorterPeer;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris
  */
 public class PathComponentMatcher<O extends TokenKey> {
     protected long[] hashes;

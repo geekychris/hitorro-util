@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 9, 2005 Time: 10:43:40 AM
  * <p/>
  * Adaptation of the StringReader.
  */

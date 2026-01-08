@@ -24,7 +24,6 @@ package com.hitorro.util.core;
 import java.io.Externalizable;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 23, 2006 Time: 4:07:52 PM
  * <p/>
  * Serializable object that supports versions
  * <p/>

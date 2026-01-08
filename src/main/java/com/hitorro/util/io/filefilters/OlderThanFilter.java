@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 31, 2006 Time: 11:07:23 PM
  */
 
 public class OlderThanFilter implements FilenameFilter {

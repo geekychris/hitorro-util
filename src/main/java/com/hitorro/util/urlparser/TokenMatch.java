@@ -26,7 +26,6 @@ import com.hitorro.util.core.tandemarrays.TandemLongArraySorter;
 import com.hitorro.util.core.tandemarrays.TandemObjectArraySorterPeer;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 23, 2005 Time: 9:43:15 PM Look for token
  * matches.  They must be complete, but can be any case. We do not expect the matcher to advance.  The cursor must have
  * been set correctly beforehand
  */

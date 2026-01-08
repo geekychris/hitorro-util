@@ -29,7 +29,6 @@ import org.w3c.dom.Node;
 import java.net.URL;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 4, 2005 Time: 9:24:41 AM
  * <p/>
  * Determines if this link is a relative or absolute value.  For it to be an absolute link, it has to start with http.
  */

@@ -26,7 +26,6 @@ import com.hitorro.util.core.string.StringUtil;
 
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 7, 2005 Time: 6:57:00 PM Allow
  * enumeration of parts of a url. It identfies host, path part and argument parts. No Strings are newed in the normal
  * operation of the cursor (though you can ask for the token for debug purposes).
  */

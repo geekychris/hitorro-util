@@ -29,7 +29,6 @@ import java.net.URL;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 25, 2005 Time: 9:16:47 PM
  */
 public class UrlEqualsConstraint implements LinkConstraint {
     private String m_start;

@@ -33,7 +33,6 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jul 24, 2005 Time: 9:13:40 PM
  */
 public abstract class LogicalOperatorCollection<T> implements HTPredicate<T>, HTSerializable {
     public static final int SerializationVersion = 1;

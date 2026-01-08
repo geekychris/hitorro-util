@@ -36,7 +36,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Mar 1, 2005 Time: 7:46:03 AM
  */
 
 

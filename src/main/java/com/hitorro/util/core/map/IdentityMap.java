@@ -25,7 +25,6 @@ package com.hitorro.util.core.map;
 import gnu.trove.map.hash.TObjectByteHashMap;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 27, 2005 Time: 4:17:10 PM
  * <p/>
  * Simple container of a hash table that allows you to keep track of who exists.
  */

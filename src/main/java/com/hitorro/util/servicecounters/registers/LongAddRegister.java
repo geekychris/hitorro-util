@@ -25,7 +25,6 @@ import com.hitorro.util.servicecounters.CounterSet;
 import com.hitorro.util.servicecounters.Register;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris
  */
 public class LongAddRegister extends Register {
     Register regs[];

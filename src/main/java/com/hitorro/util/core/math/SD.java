@@ -24,7 +24,6 @@ package com.hitorro.util.core.math;
 import java.util.Arrays;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 5, 2005 Time: 4:39:38 PM Compute
  * standard deviation.
  * <p/>
  * 1) compute mean value 2) subtract mean from each element. 3) square the results and sum together 4) divide by count

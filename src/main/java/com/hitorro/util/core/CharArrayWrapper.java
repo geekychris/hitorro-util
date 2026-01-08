@@ -22,7 +22,6 @@
 package com.hitorro.util.core;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 18, 2004 Time: 9:30:01 PM
  */
 public class CharArrayWrapper implements PooledStorageElement {
     private int size = 0;

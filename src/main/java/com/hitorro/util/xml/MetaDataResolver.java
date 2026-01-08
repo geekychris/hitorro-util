@@ -30,7 +30,6 @@ import java.io.File;
 import java.net.URI;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Apr 16, 2004 Time: 5:56:00 PM
  */
 
 public class MetaDataResolver implements EntityResolver {

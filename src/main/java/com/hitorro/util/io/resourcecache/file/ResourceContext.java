@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 8, 2006 Time: 10:00:12 PM
  */
 public class ResourceContext {
     private ResourceCache m_rCache;

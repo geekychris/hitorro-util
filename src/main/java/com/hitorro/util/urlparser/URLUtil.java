@@ -29,7 +29,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 2, 2005 Time: 3:30:21 PM
  */
 public class URLUtil {
 

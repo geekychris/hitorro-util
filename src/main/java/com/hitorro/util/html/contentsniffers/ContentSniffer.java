@@ -22,7 +22,6 @@
 package com.hitorro.util.html.contentsniffers;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 5, 2005 Time: 3:36:25 PM
  */
 public interface ContentSniffer {
     String getMimeType();

@@ -32,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 24, 2006 Time: 2:03:50 PM
  */
 public interface HTObjectInputStream {
     void close() throws IOException;

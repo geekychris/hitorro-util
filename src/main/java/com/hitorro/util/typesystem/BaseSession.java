@@ -31,7 +31,6 @@ import java.util.function.Function;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 31, 2008 Time: 8:42:03 AM
  */
 public abstract class BaseSession {
     public abstract boolean isObjectPartOfSession(Object o);

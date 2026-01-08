@@ -24,7 +24,6 @@ package com.hitorro.util.core.events.cache;
 import com.hitorro.util.core.events.WeakReferenceList;
 
 /**
- * /** Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 17, 2006 Time: 6:39:16 PM
  */
 public class CacheRegistry {
     private static CacheRegistry me = new CacheRegistry();

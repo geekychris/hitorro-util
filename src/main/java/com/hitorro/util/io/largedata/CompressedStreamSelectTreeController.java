@@ -30,7 +30,6 @@ import java.util.Iterator;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 31, 2005 Time: 10:55:30 AM
  */
 public class CompressedStreamSelectTreeController<T extends CompressedStreamIO> extends BaseFileSelectTreeController {
     protected BaseFileAccessingObjectFactory<T> factory;

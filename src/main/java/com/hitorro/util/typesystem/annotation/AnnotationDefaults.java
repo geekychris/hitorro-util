@@ -22,7 +22,6 @@
 package com.hitorro.util.typesystem.annotation;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 13, 2006 Time: 11:00:06 AM Class used to
  * define "default / flyweight" annotations AND to allow us to specify a listFiles
  */
 @TypeClassMetaInfo(shortTypeName = "NA",

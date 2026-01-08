@@ -26,7 +26,6 @@ import com.hitorro.util.core.string.StringUtil;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 4, 2008 Time: 1:07:58 PM
  */
 public class TokenKey {
     protected String tld;

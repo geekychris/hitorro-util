@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 2, 2006 Time: 9:04:19 AM
  * <p/>
  * <p/>
  * The client compContext knows all about a service to run.  It knows:

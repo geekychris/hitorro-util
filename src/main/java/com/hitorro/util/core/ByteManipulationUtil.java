@@ -22,7 +22,6 @@
 package com.hitorro.util.core;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 28, 2005 Time: 10:32:17 AM Utils for
  * combining bytes and ints, etc into a single unit (such as long)
  */
 public class ByteManipulationUtil {

@@ -32,7 +32,6 @@ import org.w3c.dom.Node;
 import java.net.URL;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Mar 2, 2005 Time: 7:51:21 AM
  * <p/>
  * Test to see if a url comes from a certain site.
  */

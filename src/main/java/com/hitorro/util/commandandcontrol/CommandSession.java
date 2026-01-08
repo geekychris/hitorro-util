@@ -49,7 +49,6 @@ import static com.hitorro.util.core.Env.getBin;
 import static com.hitorro.util.core.Env.getHome;
 
 /*
- * Copyright (c) 2003 - present HiTorro All rights reserved.
  *
  * User: chris
  */

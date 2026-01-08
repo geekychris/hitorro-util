@@ -33,7 +33,6 @@ import java.io.IOException;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Sep 26, 2005 Time: 10:02:17 AM
  */
 public class DumpXMLHandler extends DefaultHandler {
     int depth = 0;

@@ -23,7 +23,6 @@ package com.hitorro.util.urlparser;
 
 /**
  * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 4, 2008 Time: 12:49:12 PM
  */
 public class TLDMatcher<O extends TokenKey> extends PathComponentMatcher<O> {
     public TLDMatcher(final O unknown, final O... keysIn) {

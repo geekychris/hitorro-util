@@ -29,7 +29,6 @@ import org.w3c.dom.Node;
 import java.net.URL;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 3, 2005 Time: 6:45:58 PM
  */
 public class UrlStartsWithLinkConstraint implements LinkConstraint {
     private String m_start;

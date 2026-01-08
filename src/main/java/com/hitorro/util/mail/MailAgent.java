@@ -38,7 +38,6 @@ import javax.mail.internet.MimeMultipart;
 import java.util.Properties;
 
 /**
- * Copyright (c) 2003-2008 HiTorro All rights reserved. User: chris Date: Oct 20, 2006 Time: 5:37:49 PM
  * <p/>
  * Send email using socket connection to local sendmail process.
  * <p/>

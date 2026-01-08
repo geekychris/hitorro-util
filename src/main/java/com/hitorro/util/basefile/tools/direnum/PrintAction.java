@@ -25,7 +25,6 @@ import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.core.Console;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 3, 2008 Time: 9:34:21 AM Test action to
  * print out the dates executed
  */
 public class PrintAction implements DateEnumAction {

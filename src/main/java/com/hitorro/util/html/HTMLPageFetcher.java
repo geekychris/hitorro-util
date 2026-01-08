@@ -37,7 +37,6 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 2, 2005 Time: 2:25:21 PM Fetch a html
  * page increment the fetch count.  Can be used multiple times by a single thread. Fetching follows redirects.
  */
 public class HTMLPageFetcher {

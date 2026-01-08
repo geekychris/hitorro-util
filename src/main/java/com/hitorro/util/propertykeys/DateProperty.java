@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris
  */
 public class DateProperty extends PropertyKey<Date> {
     public static final SimpleDateFormat YYMMDD = new SimpleDateFormat("yyMMdd");

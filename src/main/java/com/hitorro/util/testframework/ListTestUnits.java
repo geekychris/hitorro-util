@@ -34,7 +34,6 @@ import com.hitorro.util.json.keys.BaseMappingProperty;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Oct 29, 2006 Time: 9:09:22 AM
  */
 @CommandDef(command = "test.listtests", description = "List the available unit tests")
 public class ListTestUnits extends com.hitorro.util.commandandcontrol.Command {

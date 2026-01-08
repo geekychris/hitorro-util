@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 /**
- * Copyright (c) 2003-2008 HiTorro All rights reserved. User: chris Date: Oct 27, 2006 Time: 11:51:02 AM
  */
 public class AttachmentDataSource implements DataSource {
 

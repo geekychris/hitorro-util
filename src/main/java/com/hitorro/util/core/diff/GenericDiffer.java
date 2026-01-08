@@ -25,9 +25,6 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 /**
- * <p/>
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 19, 2005 Time: 12:16:32 PM
- * <p/>
  * Diff two iterators and determine additions, removals and mods
  */
 

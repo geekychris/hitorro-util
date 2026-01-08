@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Nov 1, 2006 Time: 4:00:56 PM
  * <p/>
  * Wrapper around an input stream to limit the amount of bytes that can be read.  This is usefull for streams within
  * streams.

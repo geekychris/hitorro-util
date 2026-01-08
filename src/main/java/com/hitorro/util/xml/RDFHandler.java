@@ -26,7 +26,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Jan 12, 2005 Time: 5:20:53 PM
  */
 public class RDFHandler extends DefaultHandler {
     public static final String ExternalPage = "ExternalPage";

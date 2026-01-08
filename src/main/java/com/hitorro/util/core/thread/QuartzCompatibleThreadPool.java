@@ -51,8 +51,7 @@ import java.util.List;
  */
 
 
-/**
- * <p/> This is class is a simple implementation of a thread pool, based on the <code>{@link
+/** This is class is a simple implementation of a thread pool, based on the <code>{@link
  * org.quartz.spi.ThreadPool}</code> interface. </p> <p/> <p/> <CODE>Runnable</CODE> objects are sent to the pool with
  * the <code>{@link #runInThread(Runnable)}</code> method, which blocks until a <code>Thread</code> becomes available.
  * </p> <p/> <p/> The pool has a fixed number of <code>Thread</code>s, and does not grow or shrink based on demand.

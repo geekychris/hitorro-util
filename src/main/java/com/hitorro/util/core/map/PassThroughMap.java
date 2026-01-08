@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 1, 2006 Time: 1:41:46 PM wrapper to
  * allow pass through of the getter operation....we have created a two tier hashmap.
  * <p/>
  * WARNING: the keysets, collections etc DO NOT FUNCTION CORRECTLY.  THIS SHOULD PRIMARILY BE USED FOR get!

@@ -24,7 +24,6 @@ package com.hitorro.util.statemachine.scoreboard;
 import com.hitorro.util.statemachine.State;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 11, 2007 Time: 6:13:37 PM
  * <p/>
  * A row that holds
  */

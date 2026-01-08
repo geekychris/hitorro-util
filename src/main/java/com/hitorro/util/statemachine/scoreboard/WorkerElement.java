@@ -22,7 +22,6 @@
 package com.hitorro.util.statemachine.scoreboard;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Feb 11, 2007 Time: 8:04:46 PM
  * <p/>
  * Element that contains the stateRow and the action to perform
  */

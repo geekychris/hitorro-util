@@ -22,7 +22,6 @@
 package com.hitorro.util.urlparser;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved. User: chris Date: Dec 23, 2005 Time: 10:28:24 AM Match the
  * extension of a url
  */
 public class ExtensionMatcher extends TokenMatch {
