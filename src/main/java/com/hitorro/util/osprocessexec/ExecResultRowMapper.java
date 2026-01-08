@@ -28,11 +28,7 @@ import com.hitorro.util.core.iterator.LineReaderIterator;
 import java.io.*;
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class ExecResultRowMapper implements TerminationKey {
     private String m_program;
     private String[] m_args;

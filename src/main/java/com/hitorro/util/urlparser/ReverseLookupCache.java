@@ -27,10 +27,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Cache of reverse looked up ip addresses to names.  Will return the ip address if it could not be resolved.
  */
 public class ReverseLookupCache {

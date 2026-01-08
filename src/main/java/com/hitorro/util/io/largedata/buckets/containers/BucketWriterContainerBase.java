@@ -28,11 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public abstract class BucketWriterContainerBase<T> implements BucketWriterContainer<T> {
     protected BucketWriter<T> m_writer;
     protected List<T> m_list = new ArrayList<T>();

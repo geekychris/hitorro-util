@@ -32,10 +32,7 @@ import com.hitorro.util.core.events.LocalEventHub;
 import com.hitorro.util.json.keys.StringProperty;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * <p/>
  * Send a simple event
  */

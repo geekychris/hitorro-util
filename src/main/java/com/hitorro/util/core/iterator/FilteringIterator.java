@@ -25,9 +25,7 @@ import java.util.Iterator;
 import java.util.function.Predicate;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris provide a filtering mechanism to iterating through a set of results
+ provide a filtering mechanism to iterating through a set of results
  */
 public class FilteringIterator<E> extends AbstractIterator<E> {
     private Iterator<E> m_iter;

@@ -28,11 +28,7 @@ import com.hitorro.util.core.Log;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.AttributesImpl;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 class XMLMultiRowResponse extends MultiRowResponse {
     private static AttributesImpl EmptyAttributes = new AttributesImpl();
 

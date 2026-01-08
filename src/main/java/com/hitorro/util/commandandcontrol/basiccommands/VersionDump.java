@@ -32,11 +32,7 @@ import com.hitorro.util.versioning.Version;
 
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @CommandDef(command = "env.version", description = "Dump the build, vm and os version information")
 public class VersionDump extends Command {
     public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {

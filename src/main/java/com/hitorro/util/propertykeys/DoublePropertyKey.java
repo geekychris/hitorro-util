@@ -26,11 +26,7 @@ import com.hitorro.util.json.keys.PropertyKeyValidationException;
 
 import java.util.Map;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class DoublePropertyKey extends PropertyKey<Double> {
     private double _defaultValue = 0;
     private boolean _haveDefault = false;

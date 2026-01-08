@@ -22,10 +22,7 @@
 package com.hitorro.util.core.math;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Single threaded distance calculator for sparse vectors.  This implementation assumes extreemely sparse vectors and
  * does not attempt to optimize with any backout mechanism.
  */

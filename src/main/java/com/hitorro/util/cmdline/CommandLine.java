@@ -42,9 +42,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris Standard entry point for starting a command / server
+ Standard entry point for starting a command / server
  */
 public class CommandLine extends BaseCommandLine<HTProperties> {
     public static DirectoryWatch m_logWatcher = null;

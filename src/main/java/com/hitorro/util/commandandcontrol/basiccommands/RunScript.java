@@ -33,11 +33,7 @@ import com.hitorro.util.json.keys.StringProperty;
 
 import java.io.File;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @CommandDef(command = "run", description = "run a script")
 public class RunScript extends Command {
     @CommandArgument(required = true)

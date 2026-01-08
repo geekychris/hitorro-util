@@ -38,10 +38,7 @@ import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Dump all the threads running in the system.  Also is capable of dumping stack frames and
  */
 @com.hitorro.util.commandandcontrol.ano.CommandDef(command = "env.threads", description = "Dump the threads running in the system and optionally their stack frames.")

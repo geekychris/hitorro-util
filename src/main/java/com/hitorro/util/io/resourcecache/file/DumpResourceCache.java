@@ -30,11 +30,7 @@ import com.hitorro.util.core.GenericKeyValue;
 
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @CommandDef(command = "resourcecache.listFiles", description = "Dump the resource cache contents.")
 public class DumpResourceCache extends com.hitorro.util.commandandcontrol.Command {
     @ResponseDefinition(command = "resources",

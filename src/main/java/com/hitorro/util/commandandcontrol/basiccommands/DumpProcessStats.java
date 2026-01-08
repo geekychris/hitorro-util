@@ -34,11 +34,7 @@ import java.lang.management.ThreadMXBean;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @CommandDef(command = "env.processstats", description = "Dump various stats about the running process")
 public class DumpProcessStats extends Command {
     public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {

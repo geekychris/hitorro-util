@@ -26,11 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public interface HTPredicate<T> extends Predicate<T> {
     /**
      * Initialized for pass through a scan

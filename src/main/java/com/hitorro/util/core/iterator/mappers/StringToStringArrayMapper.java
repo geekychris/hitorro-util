@@ -26,10 +26,7 @@ import com.hitorro.util.core.iterator.Mapper;
 import java.util.StringTokenizer;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Tokenize a line into individual strings.
  */
 public class StringToStringArrayMapper implements Mapper<String, String[]> {

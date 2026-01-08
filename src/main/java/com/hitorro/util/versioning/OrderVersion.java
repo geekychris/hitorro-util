@@ -23,11 +23,7 @@ package com.hitorro.util.versioning;
 
 import java.util.Comparator;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class OrderVersion implements Comparator<VersionNode> {
     public int compare(VersionNode v, VersionNode v1) {
         return getMajor(v, v1);

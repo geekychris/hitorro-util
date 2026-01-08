@@ -23,11 +23,7 @@ package com.hitorro.util.commandandcontrol.xml;
 
 import java.util.HashMap;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 class XMLJUnitResponseMsg {
     private String m_message;
     private XMLJUnitResponseMsg.Type m_type;

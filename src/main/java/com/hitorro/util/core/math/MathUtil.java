@@ -21,11 +21,7 @@
  */
 package com.hitorro.util.core.math;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class MathUtil {
 
     private static final double s_log2 = Math.log10(2);

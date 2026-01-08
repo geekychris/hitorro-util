@@ -26,9 +26,7 @@ import gnu.trove.iterator.TLongDoubleIterator;
 import gnu.trove.map.hash.TLongDoubleHashMap;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris Given a series of sparse vectors, generate a sparseVector which is the average of all (that is any
+ Given a series of sparse vectors, generate a sparseVector which is the average of all (that is any
  * element ei = sum(sv1.ei, sv2.ei, ....) / number of sparse vectors
  */
 public class AverageSparseVector {

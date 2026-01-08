@@ -25,11 +25,7 @@ import com.hitorro.jsontypesystem.JVS;
 import com.hitorro.util.commandandcontrol.*;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @CommandDef(command = "commands", description = "List the available commands")
 public class DumpCommands extends com.hitorro.util.commandandcontrol.Command {
     @Override

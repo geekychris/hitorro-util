@@ -22,10 +22,7 @@
 package com.hitorro.util.core.tandemarrays;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * sort an array of integers and at the same time sort a peer array encapsulated in the TandemArraySorterPeer.
  */
 public class TandemLongArraySorter {

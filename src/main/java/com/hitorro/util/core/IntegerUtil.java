@@ -23,11 +23,7 @@ package com.hitorro.util.core;
 
 import com.hitorro.util.core.string.StringUtil;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class IntegerUtil {
     public static final int Mask = 0xff;
 

@@ -34,9 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris Utils for loading props from files
+ Utils for loading props from files
  */
 public class PropReaderUtil {
     public static final BooleanProperty DebugMode = new BooleanProperty("debug", "If debug mode is enabled loads extra config files", false);

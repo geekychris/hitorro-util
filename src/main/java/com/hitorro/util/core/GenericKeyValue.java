@@ -21,11 +21,7 @@
  */
 package com.hitorro.util.core;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class GenericKeyValue<K, V> implements ColumnAccessor<Object> {
     private K m_k;
     private V m_v;

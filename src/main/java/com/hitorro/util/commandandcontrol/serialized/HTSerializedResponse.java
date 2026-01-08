@@ -26,11 +26,7 @@ import com.hitorro.util.commandandcontrol.*;
 
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 
 public class HTSerializedResponse extends com.hitorro.util.commandandcontrol.Response {
     private List<InfoRow> list;

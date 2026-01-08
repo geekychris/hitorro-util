@@ -27,10 +27,7 @@ import java.util.Iterator;
 import java.util.function.Function;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Given an iterator of type F, spews out results of type E If the me returns a null, then we keep reading the
  * iterator until we find a non null mapping
  */

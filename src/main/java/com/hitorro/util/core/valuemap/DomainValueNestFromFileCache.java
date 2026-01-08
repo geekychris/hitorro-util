@@ -32,11 +32,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class DomainValueNestFromFileCache implements Mapper<String, DomainValueMap> {
     private File m_directory;
     private String m_extension;

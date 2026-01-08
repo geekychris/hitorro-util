@@ -24,11 +24,7 @@ package com.hitorro.util.core.opers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.core.HTAssert;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class StringContainsOperator implements HTPredicate<String> {
     private boolean m_ignoreCase;
     private String m_term;

@@ -31,11 +31,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class ListBucketWriterContainer<T> extends BucketWriterContainerBase<T> {
     private int m_maxLength;
     private LikeRowMerger<T> m_merger;

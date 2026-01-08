@@ -35,11 +35,7 @@ import com.hitorro.util.json.keys.StringProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @CommandDef(command = "help", description = "Get help about a specific debug command.")
 public class Help extends com.hitorro.util.commandandcontrol.Command {
     @CommandArgument(required = false)

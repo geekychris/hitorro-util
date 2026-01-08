@@ -27,10 +27,7 @@ import com.hitorro.util.core.tandemarrays.TandemArraySorterDoublePeer;
 import com.hitorro.util.core.tandemarrays.TandemLongArraySorter;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * If I was smart enough I could figure out COLT for the vectors.  What wasnt obvious to me was the general efficiency
  * saying that our use of sparse vectors was to measure distance.  COLT implements them as hashtables.  I want to
  * iterate against the non zero elements in a more efficient way (yes a hashtable has constant lookup time, but its a

@@ -29,10 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Utility class to collect some basic info about a set of urls.
  */
 public class UrlCollectionStats {

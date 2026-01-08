@@ -27,11 +27,7 @@ import com.hitorro.util.json.JsonInitable;
 
 import java.util.function.Function;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public interface Mapper<I, O> extends Function<I, O>, JsonInitable {
     default boolean init(JsonNode node) {
         return true;

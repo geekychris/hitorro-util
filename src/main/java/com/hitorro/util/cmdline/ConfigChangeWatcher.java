@@ -28,10 +28,7 @@ import com.hitorro.util.json.keys.BooleanProperty;
 import com.hitorro.util.json.keys.IntegerProperty;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Responsible for watching changes to config files.  If there are any then should reload configs and run the
  * appropriate diffing.
  */

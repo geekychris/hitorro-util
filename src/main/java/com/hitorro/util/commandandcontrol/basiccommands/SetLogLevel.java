@@ -29,11 +29,7 @@ import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.json.keys.StringProperty;
 import com.hitorro.util.log.Logger;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @CommandDef(command = "env.setloglevel", description = "Set the logging level")
 public class SetLogLevel extends DumpLogLevels {
     public static final StringProperty Level = new StringProperty("level", "category:level,category2:level...", null);

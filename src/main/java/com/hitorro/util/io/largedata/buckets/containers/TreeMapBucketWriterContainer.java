@@ -29,10 +29,7 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * Manage a bucket of things by their key.  Merges them together and when there is enough of them spews them out
  */
 public class TreeMapBucketWriterContainer<T> extends BucketWriterContainerBase<T> {

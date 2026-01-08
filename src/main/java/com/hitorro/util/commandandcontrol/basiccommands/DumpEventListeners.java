@@ -32,10 +32,7 @@ import com.hitorro.util.core.events.LocalEventHub;
 import java.util.List;
 
 /**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- * <p/>
+
  * List the event listeners registered.
  */
 @CommandDef(command = "env.eventlisteners", description = "Dump the registered event listeners.")

@@ -30,11 +30,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @ServiceDefinition(dependentService = {},
         shortName = "statemachine",
         description = "State machine service",

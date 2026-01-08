@@ -35,11 +35,7 @@ import com.hitorro.util.core.opers.StringContainsOperator;
 import java.io.IOException;
 import java.util.Iterator;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 public class ProcessUtil {
     public static Iterator<String[]> find(HTPredicate oper) throws IOException, InterruptedException {
         ExecResultRowMapper mapper = Platform.getPlatform().getPSExec();

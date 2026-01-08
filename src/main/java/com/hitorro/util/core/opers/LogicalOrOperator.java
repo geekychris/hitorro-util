@@ -23,11 +23,7 @@ package com.hitorro.util.core.opers;
 
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 
 @TypeClassMetaInfo(shortTypeName = "OrConstraint",
         isView = false,

@@ -36,11 +36,7 @@ import com.hitorro.util.json.keys.StringProperty;
 import com.hitorro.util.log.Logger;
 import com.hitorro.util.startupframework.ExitReasonObject;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @CommandDef(command = "exit", description = "exit the session or the vm")
 public class Exit extends Command {
     @CommandArgument(required = true)

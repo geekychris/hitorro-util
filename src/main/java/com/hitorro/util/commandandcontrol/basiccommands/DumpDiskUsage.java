@@ -32,11 +32,7 @@ import com.hitorro.util.io.DiskUsage;
 
 import java.util.List;
 
-/**
- * Copyright (c) 2003 - present HiTorro All rights reserved.
- * <p/>
- * User: chris
- */
+
 @CommandDef(command = "env.df", description = "Disk usage")
 public class DumpDiskUsage extends com.hitorro.util.commandandcontrol.Command {
     @ResponseDefinition(command = "df",
