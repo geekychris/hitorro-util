@@ -67,8 +67,8 @@ public class XMLJUnitResponse extends Response {
     private final int RowAttrTime = 5;
     private DataWriter m_writer;
     private File m_File;
-    private List<XMLJUnitResponseRow> m_responseRows = new ArrayList<XMLJUnitResponseRow>();
-    private XMLJUnitResponseMsg m_responseMessage = null;
+    private List<XMLJUnitResponseRow> responseRows = new ArrayList<XMLJUnitResponseRow>();
+    private XMLJUnitResponseMsg responseMessage = null;
     private int m_errors = 0;
     private int m_failures = 0;
     private float m_time = 0.0F;
@@ -135,9 +135,9 @@ public class XMLJUnitResponse extends Response {
          *    thereafter in time for the next row.
          */
         XMLJUnitResponseRow row;
-        row = new XMLJUnitResponseRow(elements, m_responseMessage);
-        m_responseRows.add(row);
-        m_responseMessage = null;
+        row = new XMLJUnitResponseRow(elements, responseMessage);
+        responseRows.add(row);
+        responseMessage = null;
 
         /*   extract, aggregate test case execution time.   */
         String rowTime = elements[RowAttrTime].toString();
@@ -148,13 +148,13 @@ public class XMLJUnitResponse extends Response {
     public void addInfo(InfoLevel level, String info) {
         switch (level) {
             case Info:
-                m_responseMessage = new XMLJUnitResponseMsg(XMLJUnitResponseMsg.Type.info, info);
+                responseMessage = new XMLJUnitResponseMsg(XMLJUnitResponseMsg.Type.info, info);
                 break;
             case Warn:
-                m_responseMessage = new XMLJUnitResponseMsg(XMLJUnitResponseMsg.Type.warning, info);
+                responseMessage = new XMLJUnitResponseMsg(XMLJUnitResponseMsg.Type.warning, info);
                 break;
             case Error:
-                m_responseMessage = new XMLJUnitResponseMsg(XMLJUnitResponseMsg.Type.error, info);
+                responseMessage = new XMLJUnitResponseMsg(XMLJUnitResponseMsg.Type.error, info);
 
                 /*   junitlistener caller has compressed errors and failures into one 'addError' call.  explode this.  */
                 if (info.startsWith("Error ")) {
@@ -179,13 +179,13 @@ public class XMLJUnitResponse extends Response {
             attributes.addAttribute("", XmlAttrFailures, "", "", Integer.toString(m_failures));
             attributes.addAttribute("", XmlAttrName, "", "", suiteName);
             attributes.addAttribute("", XmlAttrRunLevel, "", "", runLevel);
-            attributes.addAttribute("", XmlAttrTests, "", "", Integer.toString(m_responseRows.size()));
+            attributes.addAttribute("", XmlAttrTests, "", "", Integer.toString(responseRows.size()));
             attributes.addAttribute("", XmlAttrTime, "", "", Float.toString(m_time));
 
             m_writer.startElement("", XmlEleTestSuite, "", attributes);
 
             /*  test cases: iterate   */
-            for (XMLJUnitResponseRow responseRow : m_responseRows) {
+            for (XMLJUnitResponseRow responseRow : responseRows) {
                 /*   test case: attributes   */
                 String className = StringUtil.substring(responseRow.getAttribute(RowAttrClassName), "class ", "", 0);
 

@@ -52,15 +52,15 @@ public class HTMLPage {
     public static final String ContentType = "content-type";
     public static final LinkConstraint PingBackConstraint = new TypeLinkConstraint(Link.LinkType.PingBack);
     private String m_url;
-    private String m_destinationUrl;
-    private String m_pageSource;
+    private String destinationUrl;
+    private String pageSource;
     private Date m_lastMod;
-    private Date m_expirationDate;
-    private int m_metaRefresh = 0;
-    private long m_publishedDate;
-    private long m_linkTime;
+    private Date expirationDate;
+    private int metaRefresh = 0;
+    private long publishedDate;
+    private long linkTime;
     private long m_parseTime;
-    private Exception m_exceptionReason = Exception.None;
+    private Exception exceptionReason = Exception.None;
     private HTMLParser m_parser = null;
     private List<Link> m_links = null;
     private Map<String, String> m_header;
@@ -79,11 +79,11 @@ public class HTMLPage {
     }
 
     public String getContentTypeFromContent() {
-        return ContentSniffers.getSniffers().getMimeType(m_pageSource, getContentTypeFromHeader());
+        return ContentSniffers.getSniffers().getMimeType(pageSource, getContentTypeFromHeader());
     }
 
     public void setPublishedDate(long date) {
-        m_publishedDate = date;
+        publishedDate = date;
     }
 
     public void setHeader(List<KeyValue> header) {
@@ -145,11 +145,11 @@ public class HTMLPage {
      * @return
      */
     public long getLinkTime() {
-        return m_linkTime;
+        return linkTime;
     }
 
     public void setLinkTime(long time) {
-        m_linkTime = time;
+        linkTime = time;
     }
 
     public long getParseTime() {
@@ -157,21 +157,21 @@ public class HTMLPage {
     }
 
     public Exception getExceptionReason() {
-        return m_exceptionReason;
+        return exceptionReason;
     }
 
     public void setExceptionReason(Exception reason) {
-        m_exceptionReason = reason;
+        exceptionReason = reason;
     }
 
     public HTMLParser getParser() throws IOException {
         if (m_parser == null) {
             Timer t = new Timer();
             m_parser = new HTMLParser();
-            m_parser.setHtmlPage(m_pageSource);
+            m_parser.setHtmlPage(pageSource);
             t.stop();
             m_parseTime = t.getTime();
-            m_parser.setPublishedDate(this.m_publishedDate);
+            m_parser.setPublishedDate(this.publishedDate);
         }
 
         return m_parser;
@@ -182,7 +182,7 @@ public class HTMLPage {
         try {
             // parser.setEntityResolver(new R());
             //parser.setFeature("http://xml.org/sax/features/validation", false);
-            InputStream is = new StringInputStream(m_pageSource);
+            InputStream is = new StringInputStream(pageSource);
             InputSource source = new InputSource();
             source.setByteStream(is);
             parser.parse(source);
@@ -213,29 +213,29 @@ public class HTMLPage {
      * Count of how many redirects were followed
      */
     public void incrementRefresh() {
-        m_metaRefresh++;
+        metaRefresh++;
     }
 
     public Date getExpirationDate() {
-        return m_expirationDate;
+        return expirationDate;
     }
 
     public void setExpirationDate(Date expirationDate) {
-        m_expirationDate = expirationDate;
+        this.expirationDate = expirationDate;
     }
 
     public void reset() {
         m_url = null;
-        m_pageSource = null;
+        pageSource = null;
         m_lastMod = null;
     }
 
     public String getSource() {
-        return m_pageSource;
+        return pageSource;
     }
 
     public void setSource(String src) {
-        m_pageSource = src;
+        pageSource = src;
         m_parser = null;
     }
 
@@ -304,11 +304,11 @@ public class HTMLPage {
     }
 
     public String getDestinationUrl() {
-        return m_destinationUrl;
+        return destinationUrl;
     }
 
     public void setDestinationUrl(String destinationUrl) {
-        m_destinationUrl = destinationUrl;
+        this.destinationUrl = destinationUrl;
     }
 
     public Date getLastModified() {
@@ -320,7 +320,7 @@ public class HTMLPage {
     }
 
     public void setMetaRefreshes(int metaRefreshes) {
-        m_metaRefresh = metaRefreshes;
+        metaRefresh = metaRefreshes;
     }
 
 

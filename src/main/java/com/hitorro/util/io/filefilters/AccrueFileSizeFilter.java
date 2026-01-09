@@ -29,24 +29,24 @@ import java.io.FileFilter;
  * file size stats.  We would use something like du but that only does blocks.
  */
 public class AccrueFileSizeFilter implements FileFilter {
-    private String m_fileExtensionToAccrue;
+    private String fileExtensionToAccrue;
     private long m_size = 0;
-    private int m_filesProcessed = 0;
-    private int m_filesWithExtension = 0;
-    private boolean m_acceptIfFileMatch = false;
+    private int filesProcessed = 0;
+    private int filesWithExtension = 0;
+    private boolean acceptIfFileMatch = false;
 
     public AccrueFileSizeFilter(String fileExtensionToAccrue, boolean acceptIfFileMatch) {
-        m_fileExtensionToAccrue = fileExtensionToAccrue;
-        m_acceptIfFileMatch = acceptIfFileMatch;
+        this.fileExtensionToAccrue = fileExtensionToAccrue;
+        this.acceptIfFileMatch = acceptIfFileMatch;
     }
 
     public boolean accept(File file) {
-        m_filesProcessed++;
-        if (file.getName().endsWith(m_fileExtensionToAccrue)) {
+        filesProcessed++;
+        if (file.getName().endsWith(fileExtensionToAccrue)) {
             if (file.isFile()) {
-                m_filesWithExtension++;
+                filesWithExtension++;
                 m_size += file.length();
-                if (m_acceptIfFileMatch) {
+                if (acceptIfFileMatch) {
                     return true;
                 }
             }
@@ -59,10 +59,10 @@ public class AccrueFileSizeFilter implements FileFilter {
     }
 
     public int getFilesProcessed() {
-        return m_filesProcessed;
+        return filesProcessed;
     }
 
     public int getFilesMatched() {
-        return m_filesWithExtension;
+        return filesWithExtension;
     }
 }

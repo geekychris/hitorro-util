@@ -52,7 +52,7 @@ public class ArchivingAppender extends FileAppender {
     private String m_filenamePattern;
     private File m_logDirectory;
     private File m_fileName;
-    private File m_archiveDir;
+    private File archiveDir;
 
     /**
      * The default constructor simply calls its {@link FileAppender#FileAppender parents constructor}.
@@ -83,8 +83,8 @@ public class ArchivingAppender extends FileAppender {
         m_logDirectory.mkdir();
 
         generateFileName();
-        this.m_archiveDir = archiveDirectory;
-        m_archiveDir.mkdir();
+        this.archiveDir = archiveDirectory;
+        archiveDir.mkdir();
         // move the existing file if it exists.
         if (this.m_fileName.exists()) {
             m_fileName.renameTo(this.getTargetFile());
@@ -97,7 +97,7 @@ public class ArchivingAppender extends FileAppender {
     }
 
     private File getTargetFile() {
-        return FileUtil.getDatedFileFromPattern(this.m_archiveDir, m_filenamePattern, "log");
+        return FileUtil.getDatedFileFromPattern(this.archiveDir, m_filenamePattern, "log");
     }
 
     /**

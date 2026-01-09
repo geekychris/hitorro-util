@@ -39,11 +39,11 @@ public class BaseFileSelectTreeController<E> {
     protected int m_maxPerIter;
     protected BaseFile m_dir;
     protected Queue<BaseFile> m_queue = new LinkedList<BaseFile>();
-    protected Queue<BaseFile> m_deleteQueue = new LinkedList<BaseFile>();
+    protected Queue<BaseFile> deleteQueue = new LinkedList<BaseFile>();
     protected boolean m_deleteOnceMerged;
     protected String m_finalFileExtension;
     protected BaseFileAccessingObjectFactory<E> factory;
-    private int m_noDeleteCount = -1;
+    private int noDeleteCount = -1;
 
     public BaseFileSelectTreeController(BaseFile dir,
                                         BaseFile fList[],
@@ -65,7 +65,7 @@ public class BaseFileSelectTreeController<E> {
         if (!removeOriginalFiles) {
             // when we dont want to remove the original files, we track a high water mark in the queue of the
             // files we passed in, only removing the merged files we create in the apply process
-            m_noDeleteCount = fList.length;
+            noDeleteCount = fList.length;
         }
         m_finalFileExtension = finalFileExtension;
         m_dir = dir;
@@ -127,11 +127,11 @@ public class BaseFileSelectTreeController<E> {
                     int count = sti.sink(sink);
                     nextQueue.add(f);
                     if (this.m_deleteOnceMerged) {
-                        while (m_deleteQueue.size() > 0) {
-                            BaseFile fd = m_deleteQueue.remove();
-                            if (m_noDeleteCount > 0) {
+                        while (deleteQueue.size() > 0) {
+                            BaseFile fd = deleteQueue.remove();
+                            if (noDeleteCount > 0) {
                                 // we potentially dont want to delete the input element.
-                                m_noDeleteCount--;
+                                noDeleteCount--;
                             } else {
                                 if (!fd.delete()) {
                                     Log.util.error("Unable to delete merged file: %s", fd);
@@ -159,11 +159,11 @@ public class BaseFileSelectTreeController<E> {
     protected AbstractIterator[] getInputIterators() throws IOException {
         int count = Math.min(m_maxPerIter, m_queue.size());
         AbstractIterator[] ptsArray = new AbstractIterator[count];
-        m_deleteQueue.clear();
+        deleteQueue.clear();
         for (int i = 0; i < count; i++) {
             BaseFile fc = m_queue.remove();
             ptsArray[i] = getIterator(fc);
-            m_deleteQueue.add(fc);
+            deleteQueue.add(fc);
         }
         return ptsArray;
     }

@@ -42,7 +42,7 @@ public class AndCollection extends LogicalCollection {
     @Override
     public boolean accept(File dir, String name) {
 
-        if (m_tempFilters != null) {
+        if (tempFilters != null) {
             finalizeArray();
         }
         for (int i = 0; i < m_filters.length; i++) {

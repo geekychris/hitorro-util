@@ -26,7 +26,7 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 
 public class LineReaderIterator extends AbstractIterator<String> {
-    private String m_currentRow = null;
+    private String currentRow = null;
 
     private boolean m_open = true;
 
@@ -42,8 +42,8 @@ public class LineReaderIterator extends AbstractIterator<String> {
 
     public String next() {
         readAux();
-        String returnThis = m_currentRow;
-        m_currentRow = null;
+        String returnThis = currentRow;
+        currentRow = null;
         return returnThis;
     }
 
@@ -52,10 +52,10 @@ public class LineReaderIterator extends AbstractIterator<String> {
             // closed
             return false;
         }
-        if (m_currentRow == null) {
+        if (currentRow == null) {
             try {
-                m_currentRow = m_reader.readLine();
-                if (m_currentRow == null) {
+                currentRow = m_reader.readLine();
+                if (currentRow == null) {
                     m_open = false;
                     m_reader.close();
                     return false;

@@ -13,16 +13,16 @@ import org.apache.log4j.Level;
 public class JobExecutionResult {
     public static final JobExecutionResult Executed = new JobExecutionResult();
 
-    private boolean m_shouldRetry = false;
-    private int m_timeMinutes = 0;
-    private JobParameters m_jobParameters = null;
-    private boolean m_hasMessage = false;
-    private Level m_messageLevel = Level.INFO;
+    private boolean shouldRetry = false;
+    private int timeMinutes = 0;
+    private JobParameters jobParameters = null;
+    private boolean hasMessage = false;
+    private Level messageLevel = Level.INFO;
     private String m_message = null;
-    private Object m_messageArgs[] = null;
+    private Object messageArgs[] = null;
 
-    private boolean m_completedRewrite = false;
-    private String m_newEventName;
+    private boolean completedRewrite = false;
+    private String newEventName;
     private int m_collectionId;
 
     protected JobExecutionResult() {
@@ -31,9 +31,9 @@ public class JobExecutionResult {
     }
 
     public JobExecutionResult(int retryTimeInMinutes, JobParameters params) {
-        m_shouldRetry = true;
-        m_timeMinutes = retryTimeInMinutes;
-        m_jobParameters = params;
+        shouldRetry = true;
+        timeMinutes = retryTimeInMinutes;
+        jobParameters = params;
     }
 
     public JobExecutionResult(Level level, String message, Object... msgArgs) {
@@ -48,17 +48,17 @@ public class JobExecutionResult {
      * @param collectionId
      */
     public void setNewEventName(String name, int collectionId) {
-        m_completedRewrite = true;
-        m_newEventName = name;
+        completedRewrite = true;
+        newEventName = name;
         m_collectionId = collectionId;
     }
 
     public boolean getCompleteWithRewrite() {
-        return m_completedRewrite;
+        return completedRewrite;
     }
 
     public String getNewEventName() {
-        return m_newEventName;
+        return newEventName;
     }
 
     public int getCollectionID() {
@@ -66,9 +66,9 @@ public class JobExecutionResult {
     }
 
     public void setMessage(Level level, String msg, Object... args) {
-        m_messageLevel = level;
+        messageLevel = level;
         m_message = msg;
-        m_messageArgs = args;
+        messageArgs = args;
     }
 
     /**
@@ -77,15 +77,15 @@ public class JobExecutionResult {
      * @param logger
      */
     public void applyMessageToLogger(Logger logger) {
-        if (m_hasMessage) {
-            logger.log(m_messageLevel, getMessage());
+        if (hasMessage) {
+            logger.log(messageLevel, getMessage());
         }
     }
 
     public String getMessage() {
-        if (m_hasMessage) {
-            if (m_messageArgs == null || m_messageArgs.length > 0) {
-                return Fmt.S(m_message, m_messageArgs);
+        if (hasMessage) {
+            if (messageArgs == null || messageArgs.length > 0) {
+                return Fmt.S(m_message, messageArgs);
             }
             return m_message;
         }
@@ -93,27 +93,27 @@ public class JobExecutionResult {
     }
 
     public Level getErrorLevel() {
-        return m_messageLevel;
+        return messageLevel;
     }
 
     public boolean isGood() {
         // good is when an error message was not provided
-        return m_messageLevel == Level.INFO;
+        return messageLevel == Level.INFO;
     }
 
     public boolean shouldRetry() {
-        return m_shouldRetry;
+        return shouldRetry;
     }
 
     public int getRetryMinutes() {
-        return m_timeMinutes;
+        return timeMinutes;
     }
 
     public JobParameters getJobParameters() {
-        return m_jobParameters;
+        return jobParameters;
     }
 
     public void setJobParameters(JobParameters jp) {
-        m_jobParameters = jp;
+        jobParameters = jp;
     }
 }

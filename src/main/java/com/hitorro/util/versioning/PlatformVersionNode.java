@@ -36,7 +36,7 @@ import java.util.List;
  */
 public class PlatformVersionNode<T extends ConfigTag> extends DirectoryVersionNode {
     private int m_usageCount = 0;
-    private List<T> m_serverConfigs = new ArrayList<T>();
+    private List<T> serverConfigs = new ArrayList<T>();
 
     public PlatformVersionNode(JVS manifest,
                                File directory) throws PropaccessError {
@@ -52,15 +52,15 @@ public class PlatformVersionNode<T extends ConfigTag> extends DirectoryVersionNo
     }
 
     public void addDependentServer(T sc) {
-        m_serverConfigs.add(sc);
+        serverConfigs.add(sc);
     }
 
     public List<T> getConfigs() {
-        return m_serverConfigs;
+        return serverConfigs;
     }
 
     public void removeConfig(T sc) {
-        m_serverConfigs.remove(sc);
+        serverConfigs.remove(sc);
     }
 
     public int getUsageCount() {
@@ -68,7 +68,7 @@ public class PlatformVersionNode<T extends ConfigTag> extends DirectoryVersionNo
     }
 
     public boolean delete() {
-        int count = m_serverConfigs.size();
+        int count = serverConfigs.size();
         if (count > 0) {
             Log.util.error("Attempt to delete platform config %s failed as it is used by %s servers", this.getVersion(), count);
             return false;

@@ -35,12 +35,12 @@ import java.io.IOException;
 public class TelnetResponse extends Response {
     private static final char PadChar = ' ';
     StringBuilder m_builder = new StringBuilder();
-    private boolean m_endCalled = false;
+    private boolean endCalled = false;
     private BasicTerminalIO bio;
-    private int m_paddingFromHeader;
-    private int m_columnSize[];
-    private String m_columnSeperator = "";
-    private String m_endOfLineSeperator = "";
+    private int paddingFromHeader;
+    private int columnSize[];
+    private String columnSeperator = "";
+    private String endOfLineSeperator = "";
     private int rowNumber = 0;
 
     public TelnetResponse(BasicTerminalIO bio) {
@@ -48,10 +48,10 @@ public class TelnetResponse extends Response {
     }
 
     public void setCommandSession(CommandSession cs) {
-        m_columnSeperator = cs.getVarAsString("columseperator");
-        m_columnSeperator = StringUtil.ifNullOrEmptyReplace(m_columnSeperator, "");
-        m_endOfLineSeperator = cs.getVarAsString("rowseperator");
-        m_endOfLineSeperator = StringUtil.ifNullOrEmptyReplace(m_endOfLineSeperator, "");
+        columnSeperator = cs.getVarAsString("columseperator");
+        columnSeperator = StringUtil.ifNullOrEmptyReplace(columnSeperator, "");
+        endOfLineSeperator = cs.getVarAsString("rowseperator");
+        endOfLineSeperator = StringUtil.ifNullOrEmptyReplace(endOfLineSeperator, "");
     }
 
     @Override
@@ -104,13 +104,13 @@ public class TelnetResponse extends Response {
     }
 
     public void addHeaderArray(String headers[]) {
-        m_columnSize = new int[headers.length];
+        columnSize = new int[headers.length];
 
         for (int i = 0; i < headers.length; i++) {
             Object o = headers[i];
             int l = m_builder.length();
-            StringUtil.pad(o, PadChar, m_paddingFromHeader, m_builder);
-            m_columnSize[i] = m_builder.length() - l;
+            StringUtil.pad(o, PadChar, paddingFromHeader, m_builder);
+            columnSize[i] = m_builder.length() - l;
         }
     }
 
@@ -121,11 +121,11 @@ public class TelnetResponse extends Response {
     @Override
     public void addRowArray(Object elements[]) {
         try {
-            int min = Math.min(elements.length, m_columnSize.length);
+            int min = Math.min(elements.length, columnSize.length);
             for (int i = 0; i < min; i++) {
                 Object o = elements[i];
                 if (i > 0) {
-                    bio.write(m_columnSeperator);
+                    bio.write(columnSeperator);
                 }
                 if (rowNumber == 0) {
                     bio.setForegroundColor(BasicTerminalIO.BLUE);
@@ -134,7 +134,7 @@ public class TelnetResponse extends Response {
                     RenderingContainer.setTerminal(this.containers, i, bio);
                 }
 
-                bio.write(StringUtil.gePadding(o, PadChar, m_columnSize[i], m_builder));
+                bio.write(StringUtil.gePadding(o, PadChar, columnSize[i], m_builder));
                 if (rowNumber == 0) {
                     bio.setForegroundColor(BasicTerminalIO.BLACK);
                     bio.setBackgroundColor(BasicTerminalIO.COLORINIT);
@@ -143,7 +143,7 @@ public class TelnetResponse extends Response {
 
             }
             rowNumber++;
-            bio.write(m_endOfLineSeperator);
+            bio.write(endOfLineSeperator);
             bio.write(Constants.CarriageReturnLineFeed);
         } catch (IOException e) {
             Log.util.error("Exception %s %e", e, e);
@@ -152,10 +152,10 @@ public class TelnetResponse extends Response {
 
     @Override
     public void end() {
-        if (m_endCalled) {
+        if (endCalled) {
             return;
         }
-        m_endCalled = true;
+        endCalled = true;
         rowNumber = 0;
         try {
 

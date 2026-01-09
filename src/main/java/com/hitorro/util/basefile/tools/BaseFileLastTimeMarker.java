@@ -31,19 +31,19 @@ import java.util.Date;
  * Created by chris on 5/23/18.
  */
 public class BaseFileLastTimeMarker {
-    private BaseFile m_lastIndexTimeFile;
+    private BaseFile lastIndexTimeFile;
 
-    private Date m_testDate;
+    private Date testDate;
 
     public BaseFileLastTimeMarker(BaseFile dir, String name) {
 
-        m_lastIndexTimeFile = dir.getChild("%s.lasttimemarker", name);
+        lastIndexTimeFile = dir.getChild("%s.lasttimemarker", name);
     }
 
     public long getLastIndexTimeMillis() {
-        m_testDate = new Date();
-        if (m_lastIndexTimeFile.exists()) {
-            return m_lastIndexTimeFile.getModifiedTime();
+        testDate = new Date();
+        if (lastIndexTimeFile.exists()) {
+            return lastIndexTimeFile.getModifiedTime();
         } else {
             return -1000000000;
         }
@@ -55,7 +55,7 @@ public class BaseFileLastTimeMarker {
 
     public boolean set() {
         try {
-            m_lastIndexTimeFile.writeLong(m_testDate.getTime());
+            lastIndexTimeFile.writeLong(testDate.getTime());
         } catch (IOException e) {
             Log.util.error("%s %e", e, e);
         }

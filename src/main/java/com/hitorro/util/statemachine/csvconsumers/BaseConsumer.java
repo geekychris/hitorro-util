@@ -34,16 +34,16 @@ import com.hitorro.util.statemachine.MooreStateMachine;
 public abstract class BaseConsumer implements CSVConsumer {
     protected MooreStateMachine m_registry;
     protected ColumnTableMeta m_meta;
-    private boolean m_firstRowProcessed = false;
+    private boolean firstRowProcessed = false;
 
     public BaseConsumer(MooreStateMachine registry) {
         m_registry = registry;
     }
 
     public void line(int row, String[] line) {
-        if (!m_firstRowProcessed) {
+        if (!firstRowProcessed) {
             m_meta = ColumnTableMeta.init(line);
-            m_firstRowProcessed = true;
+            firstRowProcessed = true;
         } else {
             processRow(line);
         }

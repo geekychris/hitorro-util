@@ -42,7 +42,7 @@ public abstract class Cache<K, V> implements EventListener {
     protected String eventName;
     protected List<CacheRelation> relations = new ArrayList<>();
     private long m_refreshInterval = 0;
-    private long m_lastRefresh = 0;
+    private long lastRefresh = 0;
     private boolean m_considerCacheFlush = false;
 
     public Cache() {
@@ -166,7 +166,7 @@ public abstract class Cache<K, V> implements EventListener {
         if (m_refreshInterval > 0) {
             // we are keeping a refresh interval
             long curr = System.currentTimeMillis();
-            return (m_lastRefresh + m_refreshInterval) < curr;
+            return (lastRefresh + m_refreshInterval) < curr;
         }
         return false;
     }
@@ -177,7 +177,7 @@ public abstract class Cache<K, V> implements EventListener {
      */
     protected void resetConsiderClearingCache() {
         m_considerCacheFlush = false;
-        m_lastRefresh = System.currentTimeMillis();
+        lastRefresh = System.currentTimeMillis();
     }
 
     public String eventName() {

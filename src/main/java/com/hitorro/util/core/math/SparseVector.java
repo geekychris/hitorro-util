@@ -51,22 +51,22 @@ import com.hitorro.util.core.tandemarrays.TandemLongArraySorter;
  * uses "cosine angle" as a distance metric to measure document similarity, that's all they're doing
  */
 public final class SparseVector<R> {
-    int m_elementCount;
+    int elementCount;
     int m_size;
-    long m_indexParticipants[];
-    double m_doubleValues[];
-    double m_euclideanNorm;
+    long indexParticipants[];
+    double doubleValues[];
+    double euclideanNorm;
     private R referrer;
 
 
-    private int m_elemPositionCounter = 0;
+    private int elemPositionCounter = 0;
 
 
     public SparseVector(final int elementCount, final int size) {
         m_size = size;
-        m_elementCount = elementCount;
-        m_indexParticipants = new long[elementCount];
-        m_doubleValues = new double[elementCount];
+        this.elementCount = elementCount;
+        indexParticipants = new long[elementCount];
+        doubleValues = new double[elementCount];
     }
 
     public static void main(String args[]) {
@@ -116,7 +116,7 @@ public final class SparseVector<R> {
     }
 
     public String toString() {
-        return Fmt.S("%s: s:%s, c:%s", referrer, m_size, m_elementCount);
+        return Fmt.S("%s: s:%s, c:%s", referrer, m_size, elementCount);
     }
 
     public int getSize() {
@@ -124,15 +124,15 @@ public final class SparseVector<R> {
     }
 
     public int getElementCount() {
-        return m_elementCount;
+        return elementCount;
     }
 
     public long getElementPos(int i) {
-        return m_indexParticipants[i];
+        return indexParticipants[i];
     }
 
     public double getValue(int i) {
-        return m_doubleValues[i];
+        return doubleValues[i];
     }
 
     /**
@@ -144,17 +144,17 @@ public final class SparseVector<R> {
      * @param value
      */
     public final void setNextElement(final long elemPosition, final double value) {
-        if (m_elemPositionCounter >= m_elementCount) {
+        if (elemPositionCounter >= elementCount) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        m_indexParticipants[m_elemPositionCounter] = elemPosition;
-        m_doubleValues[m_elemPositionCounter++] = value;
+        indexParticipants[elemPositionCounter] = elemPosition;
+        doubleValues[elemPositionCounter++] = value;
     }
 
     public final void sortByElemPosition() {
-        TandemArraySorterDoublePeer peer = new TandemArraySorterDoublePeer(m_doubleValues);
+        TandemArraySorterDoublePeer peer = new TandemArraySorterDoublePeer(doubleValues);
         TandemLongArraySorter sorter = new TandemLongArraySorter();
-        sorter.sort(m_indexParticipants, peer);
+        sorter.sort(indexParticipants, peer);
     }
 
     /**
@@ -163,13 +163,13 @@ public final class SparseVector<R> {
     public final void calculateEuclidNormalize() {
         double l = getEuclideanLength();
 
-        for (int i = 0; i < m_elementCount; i++) {
-            m_doubleValues[i] = m_doubleValues[i] / l;
+        for (int i = 0; i < elementCount; i++) {
+            doubleValues[i] = doubleValues[i] / l;
         }
     }
 
     public final void computeNorm() {
-        m_euclideanNorm = getEuclideanLength();
+        euclideanNorm = getEuclideanLength();
     }
 
     /**
@@ -180,8 +180,8 @@ public final class SparseVector<R> {
     public final double getEuclideanLength() {
         double d = 0.0;
         double t;
-        for (int i = 0; i < m_elementCount; i++) {
-            t = m_doubleValues[i];
+        for (int i = 0; i < elementCount; i++) {
+            t = doubleValues[i];
             d += t * t;
         }
         return Math.sqrt(d);
@@ -198,8 +198,8 @@ public final class SparseVector<R> {
      */
     public final SparseDoubleMatrix1D getAsCOLTMatrix() {
         SparseDoubleMatrix1D m = new SparseDoubleMatrix1D(this.m_size);
-        for (int i = 0; i < m_elementCount; i++) {
-            m.setQuick((int) this.m_indexParticipants[i], m_doubleValues[i]);
+        for (int i = 0; i < elementCount; i++) {
+            m.setQuick((int) this.indexParticipants[i], doubleValues[i]);
         }
         return m;
     }

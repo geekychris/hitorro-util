@@ -32,12 +32,12 @@ import java.util.ArrayList;
  */
 public abstract class LogicalCollection implements FilenameFilter {
     protected FilenameFilter m_filters[];
-    protected ArrayList<FilenameFilter> m_tempFilters =
+    protected ArrayList<FilenameFilter> tempFilters =
             new ArrayList<FilenameFilter>();
 
     public LogicalCollection(FilenameFilter... filters) {
         m_filters = filters;
-        m_tempFilters = null;
+        tempFilters = null;
     }
 
     /**
@@ -46,7 +46,7 @@ public abstract class LogicalCollection implements FilenameFilter {
      * @param filter
      */
     public void addFilter(FilenameFilter filter) {
-        m_tempFilters.add(filter);
+        tempFilters.add(filter);
     }
 
     /**
@@ -54,12 +54,12 @@ public abstract class LogicalCollection implements FilenameFilter {
      * structures.
      */
     protected void finalizeArray() {
-        int size = m_tempFilters.size();
+        int size = tempFilters.size();
         m_filters = new FilenameFilter[size];
         for (int i = 0; i < size; i++) {
-            m_filters[i] = m_tempFilters.get(i);
+            m_filters[i] = tempFilters.get(i);
         }
-        m_tempFilters = null;
+        tempFilters = null;
     }
 
     /**

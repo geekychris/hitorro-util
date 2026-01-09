@@ -35,7 +35,7 @@ import java.io.IOException;
  * block
  */
 public class BlockRegisteredOutputStream extends FSOutputStream {
-    protected long m_blockStart = 0;
+    protected long blockStart = 0;
 
     public BlockRegisteredOutputStream(File path)
             throws IOException {
@@ -43,8 +43,8 @@ public class BlockRegisteredOutputStream extends FSOutputStream {
     }
 
     public long markStartOfExpression() {
-        m_blockStart = getCurrentFileOffset();
-        return m_blockStart;
+        blockStart = getCurrentFileOffset();
+        return blockStart;
     }
 
     public void markEndOfExpression()

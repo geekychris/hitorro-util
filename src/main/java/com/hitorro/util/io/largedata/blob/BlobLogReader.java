@@ -29,10 +29,10 @@ import java.io.IOException;
 /**
  */
 public class BlobLogReader {
-    private DataInputStream m_dis;
+    private DataInputStream dis;
 
     public BlobLogReader(DataInputStream dis) {
-        m_dis = dis;
+        this.dis = dis;
     }
 
     /**
@@ -45,12 +45,12 @@ public class BlobLogReader {
      */
     public byte[] read(byte[] buffer)
             throws IOException {
-        long length = m_dis.readLong();
+        long length = this.dis.readLong();
         if (buffer == null || buffer.length < length) {
             // not big enough, grow
             buffer = new byte[(int) length];
         }
-        int lengthRead = m_dis.read(buffer, 0, (int) length);
+        int lengthRead = this.dis.read(buffer, 0, (int) length);
         if (lengthRead != length) {
             Log.util.error("BlobLogReader.read could not read blob, expected length %s got %s",
                     length, lengthRead);

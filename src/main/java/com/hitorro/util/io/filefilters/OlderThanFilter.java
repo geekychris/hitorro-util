@@ -28,14 +28,14 @@ import java.io.FilenameFilter;
  */
 
 public class OlderThanFilter implements FilenameFilter {
-    private long m_millisOld;
+    private long millisOld;
 
     public OlderThanFilter(long olderThanMillis) {
-        m_millisOld = olderThanMillis;
+        millisOld = olderThanMillis;
     }
 
     public boolean accept(File dir, String name) {
         long time = System.currentTimeMillis();
-        return dir.lastModified() + m_millisOld < time;
+        return dir.lastModified() + millisOld < time;
     }
 }

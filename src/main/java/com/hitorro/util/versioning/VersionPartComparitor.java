@@ -25,17 +25,17 @@ package com.hitorro.util.versioning;
  */
 public class VersionPartComparitor {
     private String m_s;
-    private boolean m_isWildCard = false;
-    private boolean m_equalToOrGreaterThan = false;
+    private boolean isWildCard = false;
+    private boolean equalToOrGreaterThan = false;
     private long m_number = 0;
 
     public VersionPartComparitor(String s) {
         m_s = s;
         if (m_s.equals("*")) {
-            m_isWildCard = true;
+            isWildCard = true;
             return;
         } else if (m_s.endsWith("+")) {
-            m_equalToOrGreaterThan = true;
+            equalToOrGreaterThan = true;
             m_s = m_s.substring(0, m_s.length() - 1);
 
         }
@@ -48,10 +48,10 @@ public class VersionPartComparitor {
     }
 
     public boolean match(long i) {
-        if (m_isWildCard) {
+        if (isWildCard) {
             return true;
         }
-        if (m_equalToOrGreaterThan) {
+        if (equalToOrGreaterThan) {
             if (i >= m_number) {
                 return true;
             }

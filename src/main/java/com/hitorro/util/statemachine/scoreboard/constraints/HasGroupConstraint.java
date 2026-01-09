@@ -35,11 +35,11 @@ import com.hitorro.util.statemachine.scoreboard.StateRow;
  */
 public class HasGroupConstraint implements HTPredicate<StateRow> {
     private Group m_group;
-    private boolean m_hierarchyMatch;
+    private boolean hierarchyMatch;
 
     public HasGroupConstraint(Group group, boolean hiearchyMatch) {
         m_group = group;
-        m_hierarchyMatch = hiearchyMatch;
+        hierarchyMatch = hiearchyMatch;
     }
 
     public boolean initFromMap(final JsonNode map) {
@@ -59,7 +59,7 @@ public class HasGroupConstraint implements HTPredicate<StateRow> {
             return false;
         }
 
-        if (m_hierarchyMatch) {
+        if (hierarchyMatch) {
             Group t = g;
             while (t != null) {
                 if (m_group.equals(t)) {

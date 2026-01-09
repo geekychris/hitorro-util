@@ -45,7 +45,7 @@ import java.io.IOException;
  Standard entry point for starting a command / server
  */
 public class CommandLine extends BaseCommandLine<HTProperties> {
-    public static DirectoryWatch m_logWatcher = null;
+    public static DirectoryWatch logWatcher = null;
 
 
     public final com.hitorro.jsontypesystem.propreaders.JVSPropertiesReader[] jvsPropLoaders = {new com.hitorro.jsontypesystem.propreaders.JVSSystemArgsPropertyReader(),
@@ -107,9 +107,9 @@ public class CommandLine extends BaseCommandLine<HTProperties> {
 
             if (setupLogWatching()) {
                 // lets setup a log watcher.
-                m_logWatcher = DirWatcherUtil.getWatcherFromParams();
-                if (m_logWatcher != null) {
-                    LocalEventHub.get().addEventListener(m_logWatcher, CheckLogEvent);
+                logWatcher = DirWatcherUtil.getWatcherFromParams();
+                if (logWatcher != null) {
+                    LocalEventHub.get().addEventListener(logWatcher, CheckLogEvent);
                 }
             }
         } catch (IOException e) {

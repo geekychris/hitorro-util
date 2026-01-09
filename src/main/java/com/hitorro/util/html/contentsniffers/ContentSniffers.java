@@ -33,7 +33,7 @@ import java.util.Map;
 public class ContentSniffers {
     private static ContentSniffers s_sniffers;
     private Map<String, ContentSniffer> m_sniffers = new HashMap<String, ContentSniffer>();
-    private List<ContentSniffer> m_sniffersList = new ArrayList<ContentSniffer>();
+    private List<ContentSniffer> sniffersList = new ArrayList<ContentSniffer>();
 
     public static ContentSniffers getSniffers() {
         if (s_sniffers == null) {
@@ -60,7 +60,7 @@ public class ContentSniffers {
      */
     public void addSniffer(ContentSniffer sniffer) {
         m_sniffers.put(sniffer.getMimeType(), sniffer);
-        m_sniffersList.add(sniffer);
+        sniffersList.add(sniffer);
     }
 
     /**
@@ -84,7 +84,7 @@ public class ContentSniffers {
                 }
             }
         }
-        for (ContentSniffer sn2 : m_sniffersList) {
+        for (ContentSniffer sn2 : sniffersList) {
             returnType = sn2.getTypeFromContent(content, mimeTypeHint);
             if (!StringUtil.nullOrEmptyOrBlankString(returnType)) {
                 // we believe this one already.

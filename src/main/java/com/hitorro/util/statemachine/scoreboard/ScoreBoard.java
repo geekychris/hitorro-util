@@ -38,18 +38,18 @@ import java.util.List;
 public class ScoreBoard<P, R extends StateRow<P>> {
     private List<R> m_rows = new LinkedList<R>();
 
-    private int m_numberWorkerThreads = 4;
+    private int numberWorkerThreads = 4;
 
 
-    private AbstractEnqueue<WorkerElement<P>> m_queueIn = null;
+    private AbstractEnqueue<WorkerElement<P>> queueIn = null;
 
-    private AbstractEnqueue<WorkerElement<P>> m_queueOut = null;
+    private AbstractEnqueue<WorkerElement<P>> queueOut = null;
     private EnhancedThreadGroup m_threadGroup = new EnhancedThreadGroup("ScoreBoard");
 
     private Farm m_farm;
 
     public ScoreBoard(int threads) {
-        m_numberWorkerThreads = threads;
+        numberWorkerThreads = threads;
     }
 
     public int size() {
@@ -69,12 +69,12 @@ public class ScoreBoard<P, R extends StateRow<P>> {
     }
 
     private void setupWorker(int numberThreads) {
-        if (m_queueIn == null) {
+        if (queueIn == null) {
             synchronized (this) {
-                m_queueIn = AbstractEnqueue.arrayBlocking(numberThreads * 2);
+                queueIn = AbstractEnqueue.arrayBlocking(numberThreads * 2);
                 // should not really need this as the farm element command will return null;
-                m_queueOut = AbstractEnqueue.arrayBlocking(numberThreads * 2);
-                m_farm = new Farm("ScoreBoard", m_threadGroup, m_queueIn, m_queueOut, new ScoreBoardCommand<P>(), 40);
+                queueOut = AbstractEnqueue.arrayBlocking(numberThreads * 2);
+                m_farm = new Farm("ScoreBoard", m_threadGroup, queueIn, queueOut, new ScoreBoardCommand<P>(), 40);
             }
         }
     }
@@ -90,8 +90,8 @@ public class ScoreBoard<P, R extends StateRow<P>> {
                 if (constraint.test(row)) {
                     if (useQueue) {
                         try {
-                            setupWorker(m_numberWorkerThreads);
-                            m_queueIn.put(new WorkerElement<P>(action, row));
+                            setupWorker(numberWorkerThreads);
+                            queueIn.put(new WorkerElement<P>(action, row));
                         } catch (InterruptedException e) {
                         }
                     } else {

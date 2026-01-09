@@ -31,7 +31,7 @@ import com.hitorro.util.core.Log;
  */
 public class ResponseShape {
     protected ResponseRow m_header;
-    protected String m_headerShort[];
+    protected String headerShort[];
     protected Class m_types[];
 
     protected GroupTuple m_group[];
@@ -56,7 +56,7 @@ public class ResponseShape {
         ResponseShape rs = new ResponseShape();
         rs.m_group = m_group;
         rs.m_header = m_header;
-        rs.m_headerShort = m_headerShort;
+        rs.headerShort = headerShort;
         rs.m_types = m_types;
         rs.transaction = transaction;
         rs.rowName = rowName;
@@ -96,7 +96,7 @@ public class ResponseShape {
     }
 
     public String[] getHeaderShort() {
-        return m_headerShort;
+        return headerShort;
     }
 
     public String[] getHeaderLong() {
@@ -116,7 +116,7 @@ public class ResponseShape {
     }
 
     public String[] getShortNames() {
-        return m_headerShort;
+        return headerShort;
     }
 
     public void addHeader(String... headers) {
@@ -133,7 +133,7 @@ public class ResponseShape {
     }
 
     public void addHeaderShortNamesArray(String columnHeaders[]) {
-        m_headerShort = columnHeaders;
+        headerShort = columnHeaders;
     }
 
     public void addRowTypes(Class... types) {

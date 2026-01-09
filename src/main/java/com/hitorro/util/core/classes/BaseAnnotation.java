@@ -31,14 +31,14 @@ import java.util.List;
  *
  */
 public class BaseAnnotation {
-    protected List<Annotation> m_anno = new ArrayList<Annotation>();
+    protected List<Annotation> anno = new ArrayList<Annotation>();
 
     public List<Annotation> getAnnotations() {
-        return m_anno;
+        return anno;
     }
 
     public Annotation getAnnotation(Class c) {
-        for (Annotation ano : m_anno) {
+        for (Annotation ano : anno) {
             if (ano.annotationType().equals(c)) {
                 return ano;
             }
@@ -61,7 +61,7 @@ public class BaseAnnotation {
      * @return
      */
     public boolean containsAnnotation(HTPredicate<Class> oper) {
-        for (Annotation ano : m_anno) {
+        for (Annotation ano : anno) {
             if (oper.test(ano.annotationType())) {
                 return true;
             }

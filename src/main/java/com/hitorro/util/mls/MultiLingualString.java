@@ -41,7 +41,7 @@ import java.util.Set;
  */
 public class MultiLingualString {
     private Map m_strings = new Hashtable();
-    private String m_defaultString = null;
+    private String defaultString = null;
 
     public static MultiLingualString readFromStream(DataInputStream dis) throws IOException {
         int count = dis.readInt();
@@ -76,14 +76,14 @@ public class MultiLingualString {
     }
 
     public String getDefaultString() {
-        if (StringUtil.nullOrEmptyString(m_defaultString)) {
+        if (StringUtil.nullOrEmptyString(defaultString)) {
             return getString(Env.getSystemLanguage());
         }
-        return m_defaultString;
+        return defaultString;
     }
 
     public void setDefaultString(String string) {
-        m_defaultString = string;
+        defaultString = string;
     }
 
     /*

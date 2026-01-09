@@ -96,7 +96,7 @@ public abstract class Response {
         if (shape == null) {
             return null;
         }
-        return new StandardMultiRowResponse(shape.m_headerShort.length, shape);
+        return new StandardMultiRowResponse(shape.headerShort.length, shape);
     }
 
     public void addMultiRowResponse(MultiRowResponse mrr) {

@@ -41,7 +41,7 @@ import java.io.IOException;
  */
 
 public class TestNameRegexpFilter implements HTPredicate<TestCaseWrapper> {
-    private String m_targetTag;
+    private String targetTag;
 
     public TestNameRegexpFilter(String tag) {
         setTargetTag(tag);
@@ -62,9 +62,9 @@ public class TestNameRegexpFilter implements HTPredicate<TestCaseWrapper> {
 
         String name = testcase.testClass.getCanonicalName();
 
-        if (StringUtil.nullOrEmptyOrBlankString(m_targetTag)) {
+        if (StringUtil.nullOrEmptyOrBlankString(targetTag)) {
             match = true;
-        } else if (name.matches(m_targetTag)) {
+        } else if (name.matches(targetTag)) {
             match = true;
         }
 
@@ -73,12 +73,12 @@ public class TestNameRegexpFilter implements HTPredicate<TestCaseWrapper> {
 
 
     public String getTag() {
-        return m_targetTag;
+        return targetTag;
     }
 
 
     public void setTargetTag(String tag) {
-        m_targetTag = tag;
+        targetTag = tag;
     }
 
     public void serialize(HTObjectOutputStream os) throws IOException, StoreException {

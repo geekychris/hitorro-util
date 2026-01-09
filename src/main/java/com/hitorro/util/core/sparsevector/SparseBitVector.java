@@ -32,13 +32,13 @@ package com.hitorro.util.core.sparsevector;
  */
 public class SparseBitVector {
     private int[] m_array[];
-    private int m_blockSizeToPower;
+    private int blockSizeToPower;
     private int m_blockSize;
-    private int m_blockSizeToPowerPlusBitOffset;
-    private int m_arraySize;
-    private int m_bitsPerBlock;
+    private int blockSizeToPowerPlusBitOffset;
+    private int arraySize;
+    private int bitsPerBlock;
     private int m_bits;
-    private int m_wordMask;
+    private int wordMask;
 
     private int t_blockNumber;
     private int t_wordNumber;
@@ -47,21 +47,21 @@ public class SparseBitVector {
     private int t_inverseBit;
 
     public SparseBitVector(int blockSizeToPower, int initialArraySize) {
-        m_arraySize = initialArraySize;
-        m_blockSizeToPower = blockSizeToPower;
-        m_blockSizeToPowerPlusBitOffset = m_blockSizeToPower + 5;
+        arraySize = initialArraySize;
+        this.blockSizeToPower = blockSizeToPower;
+        blockSizeToPowerPlusBitOffset = this.blockSizeToPower + 5;
         m_blockSize = 1 << blockSizeToPower;
         m_bits = 32;
-        m_bitsPerBlock = m_blockSize * m_bits; // using integers
-        m_array = new int[m_arraySize][];
-        m_wordMask = createWordMask(blockSizeToPower - 1);
+        bitsPerBlock = m_blockSize * m_bits; // using integers
+        m_array = new int[arraySize][];
+        wordMask = createWordMask(blockSizeToPower - 1);
     }
 
     public final boolean getBit(long address) {
         // rotate away the bitoffset
         computeBits(address);
 
-        if (t_blockNumber >= m_arraySize) {
+        if (t_blockNumber >= arraySize) {
             // not even in block range
             return false;
         }
@@ -76,19 +76,19 @@ public class SparseBitVector {
 
     public final void setBit(long address) {
         computeBits(address);
-        if (t_blockNumber >= m_arraySize) {
+        if (t_blockNumber >= arraySize) {
             increaseArraySize();
         }
 
         if (m_array[t_blockNumber] == null) {
-            m_array[t_blockNumber] = SparseBitVectorBlockPool.getBlock(m_blockSizeToPower);
+            m_array[t_blockNumber] = SparseBitVectorBlockPool.getBlock(blockSizeToPower);
         }
         m_array[t_blockNumber][t_wordNumber] |= t_bit;
     }
 
     public final void clearBit(long address) {
         computeBits(address);
-        if (t_blockNumber >= m_arraySize) {
+        if (t_blockNumber >= arraySize) {
             increaseArraySize();
         }
 
@@ -109,9 +109,9 @@ public class SparseBitVector {
     private final void computeBits(long address) {
         t_wordNumber = (int) (address >> 5);
         // now get block offset
-        t_blockNumber = (int) (address >> m_blockSizeToPowerPlusBitOffset);
+        t_blockNumber = (int) (address >> blockSizeToPowerPlusBitOffset);
 
-        t_wordNumber = t_wordNumber & m_wordMask;
+        t_wordNumber = t_wordNumber & wordMask;
         t_bitNumber = (int) address & 0x1F;
         t_bit = 1 << t_bitNumber;
     }
@@ -128,7 +128,7 @@ public class SparseBitVector {
     public final void clearAll() {
         for (int i = 0; i < m_array.length; i++) {
             if (m_array[i] != null) {
-                SparseBitVectorBlockPool.freeBlock(m_blockSizeToPower, m_array[i]);
+                SparseBitVectorBlockPool.freeBlock(blockSizeToPower, m_array[i]);
                 m_array[i] = null;
             }
         }
@@ -136,8 +136,8 @@ public class SparseBitVector {
 
     private final void increaseArraySize() {
         int[] temp[] = new int[t_blockNumber + 1][];
-        copyArray(m_array, temp, m_arraySize);
-        m_arraySize = t_blockNumber + 1;
+        copyArray(m_array, temp, arraySize);
+        arraySize = t_blockNumber + 1;
         m_array = temp;
     }
 

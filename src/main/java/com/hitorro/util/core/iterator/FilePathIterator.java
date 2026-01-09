@@ -31,11 +31,11 @@ import java.util.List;
  */
 public class FilePathIterator extends AbstractIterator<String> {
     private List<String> m_files = new ArrayList<String>();
-    private int m_removeLeft;
+    private int removeLeft;
     private String path;
 
     public FilePathIterator(String path, boolean includeJars) {
-        m_removeLeft = path.length();
+        removeLeft = path.length();
         recursiveList(path);
         this.path = path;
     }
@@ -50,7 +50,7 @@ public class FilePathIterator extends AbstractIterator<String> {
             if (file.isDirectory()) {
                 recursiveList(file.getAbsolutePath());
             } else {
-                String v = file.getAbsolutePath().substring(m_removeLeft + 1);
+                String v = file.getAbsolutePath().substring(removeLeft + 1);
                 m_files.add(v);
             }
         }

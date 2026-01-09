@@ -37,33 +37,33 @@ public class TerminalListener implements Runnable {
             "Terminal", true);
     private static BlockingQueue<Runnable> m_workQueue = new PriorityBlockingQueue<Runnable>(20);
     private static ThreadPoolExecutor s_exec = new ThreadPoolExecutor(5, 20, 100, TimeUnit.SECONDS, m_workQueue, m_factory);
-    public CommandRegistry m_Command_registry;
+    public CommandRegistry Command_registry;
     private ServerSocket m_server;
     private boolean m_running = true;
-    private int m_portNumber = 5000;
-    private boolean m_incrementPortIfUnavailable = true;
+    private int portNumber = 5000;
+    private boolean incrementPortIfUnavailable = true;
 
     public TerminalListener() {
-        m_Command_registry = CommandRegistry.getRegistry();
+        Command_registry = CommandRegistry.getRegistry();
     }
 
     public int getPort() {
-        return m_portNumber;
+        return portNumber;
     }
 
     public int listenSocket() {
-        m_portNumber = PortNumber.apply();
+        portNumber = PortNumber.apply();
         while (true) {
             try {
-                m_server = new ServerSocket(m_portNumber);
-                return m_portNumber;
+                m_server = new ServerSocket(portNumber);
+                return portNumber;
             } catch (IOException e) {
-                Log.commands.info("Could not listen on port %s", m_portNumber);
-                if (m_incrementPortIfUnavailable == false) {
+                Log.commands.info("Could not listen on port %s", portNumber);
+                if (incrementPortIfUnavailable == false) {
                     return -1;
                 }
             }
-            m_portNumber++;
+            portNumber++;
         }
 
     }
@@ -84,7 +84,7 @@ public class TerminalListener implements Runnable {
                         name);
                 s_exec.execute(session);
             } catch (IOException e) {
-                Log.commands.error("Accept failed: %s", this.m_portNumber);
+                Log.commands.error("Accept failed: %s", this.portNumber);
             } catch (RejectedExecutionException e) {
                 Log.commands.info("Request got rejected due max capacity %s %e", e, e);
                 try {
@@ -111,7 +111,7 @@ public class TerminalListener implements Runnable {
 
     public void initTCP(int initialPort, boolean allowFreePortScaning,
                         boolean httpOnly) {
-        m_incrementPortIfUnavailable = allowFreePortScaning;
-        m_portNumber = initialPort;
+        incrementPortIfUnavailable = allowFreePortScaning;
+        portNumber = initialPort;
     }
 }

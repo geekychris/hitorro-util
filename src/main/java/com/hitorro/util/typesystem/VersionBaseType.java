@@ -28,45 +28,45 @@ import java.io.IOException;
 /**
  */
 public abstract class VersionBaseType<T extends BaseSession> extends BaseType<T> {
-    private transient boolean m_markedFlush = false;
+    private transient boolean markedFlush = false;
 
-    private transient int m_versionStampSnapshot;
+    private transient int versionStampSnapshot;
 
-    private int m_versionStamp;
+    private int versionStamp;
 
     public int getVersionStamp() {
-        return m_versionStamp;
+        return versionStamp;
     }
 
     public void setVersionStamp(int version) {
-        m_versionStamp = version;
+        versionStamp = version;
     }
 
 
     public void snapshotVersionStamp() {
-        m_versionStampSnapshot = m_versionStamp;
+        versionStampSnapshot = versionStamp;
     }
 
     public void recoverSnapshotVersionStamp() {
-        m_versionStamp = m_versionStampSnapshot;
+        versionStamp = versionStampSnapshot;
     }
 
     public void markFlushed() {
-        m_markedFlush = true;
+        markedFlush = true;
     }
 
     public boolean isMarkedFlushed() {
-        return m_markedFlush;
+        return markedFlush;
     }
 
     public void resetMarkedFlushed() {
-        m_markedFlush = false;
+        markedFlush = false;
     }
 
     public void serialize(HTObjectOutputStream os)
             throws IOException, StoreException {
         super.serialize(os);
-        os.writeInt(m_versionStamp);
+        os.writeInt(versionStamp);
     }
 
     public void deserialize(HTObjectInputStream os)
@@ -75,7 +75,7 @@ public abstract class VersionBaseType<T extends BaseSession> extends BaseType<T>
         super.deserialize(os);
         switch (version) {
             case 1:
-                m_versionStamp = os.readInt();
+                versionStamp = os.readInt();
         }
     }
 

@@ -44,12 +44,12 @@ public class HTTPClient {
     private InputStream in = null;
     private String m_auth = null;
     private URLConnection m_connection = null;
-    private String m_contentType = "text/html";
+    private String contentType = "text/html";
     private List<com.hitorro.util.core.KeyValue> m_kv = new ArrayList<com.hitorro.util.core.KeyValue>();
     private boolean m_open = false;
     private String m_protocol = "http";
     // read timeout in ms.
-    private int m_readTimeout = 4000;
+    private int readTimeout = 4000;
     private OutputStream out = null;
 
     private static void dumpRaw(InputStream is) throws IOException {
@@ -141,7 +141,7 @@ public class HTTPClient {
             m_connection.setDoOutput(doOutput);
             m_connection.setUseCaches(false);
             m_connection.setAllowUserInteraction(false);
-            m_connection.setReadTimeout(m_readTimeout);
+            m_connection.setReadTimeout(readTimeout);
             for (com.hitorro.util.core.KeyValue kv : m_kv) {
                 m_connection.setRequestProperty(kv.getKey(), kv.getValue());
             }
@@ -259,7 +259,7 @@ public class HTTPClient {
     }
 
     public void setContentType(String contentType) {
-        m_contentType = contentType;
+        this.contentType = contentType;
     }
 
 
@@ -287,7 +287,7 @@ public class HTTPClient {
     }
 
     public void setReadTimoutInMillis(int millis) {
-        m_readTimeout = millis;
+        readTimeout = millis;
     }
 }
 

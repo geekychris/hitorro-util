@@ -25,17 +25,17 @@ import java.io.File;
 import java.io.FileFilter;
 
 public class AccrueFileCountFilter implements FileFilter {
-    private int m_filesProcessed = 0;
+    private int filesProcessed = 0;
 
     public AccrueFileCountFilter() {
     }
 
     public boolean accept(File file) {
-        m_filesProcessed++;
+        filesProcessed++;
         return false;
     }
 
     public int getFilesProcessed() {
-        return m_filesProcessed;
+        return filesProcessed;
     }
 }

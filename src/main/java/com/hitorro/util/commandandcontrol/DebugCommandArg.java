@@ -32,12 +32,12 @@ import com.hitorro.util.json.keys.BaseMappingProperty;
 public class DebugCommandArg implements Comparable<DebugCommandArg> {
     private boolean m_required;
 
-    private BaseMappingProperty m_propKey;
+    private BaseMappingProperty propKey;
 
     private ArgType argType = ArgType.Regular;
 
     public DebugCommandArg(boolean required, BaseMappingProperty key, ArgType argType) {
-        m_propKey = key;
+        propKey = key;
         m_required = required;
         this.argType = argType;
     }
@@ -55,15 +55,15 @@ public class DebugCommandArg implements Comparable<DebugCommandArg> {
     }
 
     public Object getPropValue(JVS jvs) {
-        if (m_propKey != null) {
-            return m_propKey.apply(jvs);
+        if (propKey != null) {
+            return propKey.apply(jvs);
         }
 
         return null;
     }
 
     public BaseMappingProperty getJsonPropertyKey() {
-        return m_propKey;
+        return propKey;
     }
 
     public boolean getRequired() {
@@ -71,16 +71,16 @@ public class DebugCommandArg implements Comparable<DebugCommandArg> {
     }
 
     public String getName() {
-        return this.m_propKey.toString();
+        return this.propKey.toString();
     }
 
     public String validate(JVS map) {
-        m_propKey.validate(map);
+        propKey.validate(map);
         return null;
     }
 
     public String getDescription() {
-        return this.m_propKey.getDescription();
+        return this.propKey.getDescription();
     }
 
     public int compareTo(final DebugCommandArg o) {

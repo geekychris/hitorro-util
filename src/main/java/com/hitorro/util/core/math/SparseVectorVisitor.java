@@ -23,8 +23,8 @@ package com.hitorro.util.core.math;
 
 
 public abstract class SparseVectorVisitor {
-    private long m_leftI;
-    private long m_rightI;
+    private long leftI;
+    private long rightI;
     private int m_left;
     private int m_right;
     private SparseVector m_v1;
@@ -36,28 +36,28 @@ public abstract class SparseVectorVisitor {
         m_v1 = v1In;
         m_v2 = v2In;
 
-        m_leftI = m_v1.m_indexParticipants[m_left];
-        m_rightI = m_v2.m_indexParticipants[m_right];
-        while (m_left < m_v1.m_elementCount && m_right < m_v2.m_elementCount) {
-            if (m_leftI < m_rightI) {
-                process(m_v1.m_doubleValues[m_left], 0.0);
+        leftI = m_v1.indexParticipants[m_left];
+        rightI = m_v2.indexParticipants[m_right];
+        while (m_left < m_v1.elementCount && m_right < m_v2.elementCount) {
+            if (leftI < rightI) {
+                process(m_v1.doubleValues[m_left], 0.0);
                 advanceLeft();
-            } else if (m_leftI > m_rightI) {
-                process(0.0, m_v2.m_doubleValues[m_right]);
+            } else if (leftI > rightI) {
+                process(0.0, m_v2.doubleValues[m_right]);
                 advanceRight();
             } else {
-                process(m_v1.m_doubleValues[m_left], m_v2.m_doubleValues[m_right]);
+                process(m_v1.doubleValues[m_left], m_v2.doubleValues[m_right]);
                 advanceRight();
                 advanceLeft();
             }
         }
         // deal with tail end
-        while (m_left < m_v1.m_elementCount) {
-            process(m_v1.m_doubleValues[m_left], 0.0);
+        while (m_left < m_v1.elementCount) {
+            process(m_v1.doubleValues[m_left], 0.0);
             advanceLeft();
         }
-        while (m_right < m_v2.m_elementCount) {
-            process(0.0, m_v2.m_doubleValues[m_right]);
+        while (m_right < m_v2.elementCount) {
+            process(0.0, m_v2.doubleValues[m_right]);
             advanceRight();
         }
     }
@@ -74,15 +74,15 @@ public abstract class SparseVectorVisitor {
         m_v1 = v1In;
         m_v2 = v2In;
 
-        m_leftI = m_v1.m_indexParticipants[m_left];
-        m_rightI = m_v2.m_indexParticipants[m_right];
-        while (m_left < m_v1.m_elementCount && m_right < m_v2.m_elementCount) {
-            if (m_leftI < m_rightI) {
+        leftI = m_v1.indexParticipants[m_left];
+        rightI = m_v2.indexParticipants[m_right];
+        while (m_left < m_v1.elementCount && m_right < m_v2.elementCount) {
+            if (leftI < rightI) {
                 advanceLeft();
-            } else if (m_leftI > m_rightI) {
+            } else if (leftI > rightI) {
                 advanceRight();
             } else {
-                process(m_v1.m_doubleValues[m_left], m_v2.m_doubleValues[m_right]);
+                process(m_v1.doubleValues[m_left], m_v2.doubleValues[m_right]);
                 advanceRight();
                 advanceLeft();
             }
@@ -91,15 +91,15 @@ public abstract class SparseVectorVisitor {
 
     private final void advanceLeft() {
         m_left++;
-        if (m_left < m_v1.m_elementCount) {
-            m_leftI = m_v1.m_indexParticipants[m_left];
+        if (m_left < m_v1.elementCount) {
+            leftI = m_v1.indexParticipants[m_left];
         }
     }
 
     private final void advanceRight() {
         m_right++;
-        if (m_right < m_v2.m_elementCount) {
-            m_rightI = m_v2.m_indexParticipants[m_right];
+        if (m_right < m_v2.elementCount) {
+            rightI = m_v2.indexParticipants[m_right];
         }
     }
 

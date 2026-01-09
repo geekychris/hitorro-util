@@ -27,13 +27,13 @@ import com.hitorro.util.core.HTAssert;
 
 public class StringContainsOperator implements HTPredicate<String> {
     private boolean m_ignoreCase;
-    private String m_term;
+    private String term;
 
     public StringContainsOperator(String term, boolean ignoreCase) {
         m_ignoreCase = ignoreCase;
-        m_term = term;
+        this.term = term;
         if (m_ignoreCase) {
-            m_term = m_term.toLowerCase();
+            this.term = this.term.toLowerCase();
         }
     }
 
@@ -53,6 +53,6 @@ public class StringContainsOperator implements HTPredicate<String> {
             s = s.toLowerCase();
 
         }
-        return s.indexOf(m_term) != -1;
+        return s.indexOf(term) != -1;
     }
 }

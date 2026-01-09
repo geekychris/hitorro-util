@@ -35,7 +35,7 @@ import java.util.*;
 public class WordBits implements Iterable<NamedBitsOfLong> {
     private Map<String, NamedBitsOfLong> handlers = new HashMap<String, NamedBitsOfLong>();
     private List<NamedBitsOfLong> bits = new ArrayList<NamedBitsOfLong>();
-    private int m_nextFree = 0;
+    private int nextFree = 0;
 
 
     public WordBits clone() {
@@ -57,8 +57,8 @@ public class WordBits implements Iterable<NamedBitsOfLong> {
     }
 
     private NamedBitsOfLong addAux(final String name, final int width, BiDirectionalKeyLongMap mapper) {
-        NamedBitsOfLong nl = new NamedBitsOfLong(this, name, m_nextFree, width, mapper);
-        m_nextFree += width;
+        NamedBitsOfLong nl = new NamedBitsOfLong(this, name, nextFree, width, mapper);
+        nextFree += width;
         handlers.put(name, nl);
         bits.add(nl);
         return nl;

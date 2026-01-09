@@ -34,7 +34,7 @@ import java.util.List;
  * @author chris
  */
 public class PackingResponse extends Response {
-    private boolean m_endCalled = false;
+    private boolean endCalled = false;
 
     private Response m_chain;
 
@@ -104,10 +104,10 @@ public class PackingResponse extends Response {
 
     @Override
     public void end() {
-        if (m_endCalled) {
+        if (endCalled) {
             return;
         }
-        m_endCalled = true;
+        endCalled = true;
         // header rows
         for (String header : headerRows) {
             m_chain.addBannerRow(header);
@@ -141,7 +141,7 @@ public class PackingResponse extends Response {
 }
 
 class ResponseRow {
-    private int m_truncateToMaxLength = -1;
+    private int truncateToMaxLength = -1;
 
     private String[] m_values;
     private RenderingContainer[] renderingContainer;
@@ -159,7 +159,7 @@ class ResponseRow {
     }
 
     public void setMaxColumnSize(int size) {
-        m_truncateToMaxLength = size;
+        truncateToMaxLength = size;
     }
 
     public void set(Object args[]) {
@@ -194,9 +194,9 @@ class ResponseRow {
         for (int i = 0; i < min; i++) {
             int s = m_values[i].length();
             if (sizes[i] < s) {
-                if (m_truncateToMaxLength > -1) {
-                    if (s > m_truncateToMaxLength) {
-                        sizes[i] = m_truncateToMaxLength;
+                if (truncateToMaxLength > -1) {
+                    if (s > truncateToMaxLength) {
+                        sizes[i] = truncateToMaxLength;
                     } else {
                         sizes[i] = s;
                     }

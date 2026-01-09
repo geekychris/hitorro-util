@@ -30,7 +30,7 @@ import java.io.File;
  * User: chris
  */
 public class CSVResponse extends Response {
-    CSVFileWriter m_File_writer = null;
+    CSVFileWriter File_writer = null;
     private File m_file = null;
 
     public CSVResponse(File f) {
@@ -56,7 +56,7 @@ public class CSVResponse extends Response {
     }
 
     public void addHeaderArray(String columnHeaders[]) {
-        m_File_writer = new CSVFileWriter(m_file, columnHeaders);
+        File_writer = new CSVFileWriter(m_file, columnHeaders);
     }
 
     public void addRow(Object... elements) {
@@ -64,7 +64,7 @@ public class CSVResponse extends Response {
     }
 
     public void addRowArray(Object elements[]) {
-        m_File_writer.writeRow(elements);
+        File_writer.writeRow(elements);
     }
 
 
@@ -72,6 +72,6 @@ public class CSVResponse extends Response {
     }
 
     public void end() {
-        m_File_writer.close();
+        File_writer.close();
     }
 }

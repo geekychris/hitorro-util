@@ -30,7 +30,7 @@ import com.hitorro.util.statemachine.State;
 public class StateRow<P> {
     private P m_payload;
     private State m_state;
-    private long m_lastTouchedTime;
+    private long lastTouchedTime;
     private int m_retries;
 
     private boolean m_isDeleted = false;
@@ -63,15 +63,15 @@ public class StateRow<P> {
     }
 
     public long getLastTouchedTime() {
-        return m_lastTouchedTime;
+        return lastTouchedTime;
     }
 
     public void setLastTouchedTime(long time) {
-        m_lastTouchedTime = time;
+        lastTouchedTime = time;
     }
 
     public void touch() {
-        m_lastTouchedTime = System.currentTimeMillis();
+        lastTouchedTime = System.currentTimeMillis();
     }
 
     public int getRetries() {

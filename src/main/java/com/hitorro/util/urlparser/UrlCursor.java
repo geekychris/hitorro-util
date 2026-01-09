@@ -32,13 +32,13 @@ import com.hitorro.util.core.string.StringUtil;
 public class UrlCursor {
     public Part m_type;
     protected String m_url;
-    protected int m_urlLength;
-    protected int m_tokenStart;
-    protected int m_tokenLength;
+    protected int urlLength;
+    protected int tokenStart;
+    protected int tokenLength;
     protected int m_curr;
-    protected boolean m_isSecure;
+    protected boolean isSecure;
     protected int index = 0;
-    protected int m_keyPartLength = 0;
+    protected int keyPartLength = 0;
     int dotOccur = 0;
     private StringBuilder sb = new StringBuilder();
 
@@ -57,19 +57,19 @@ public class UrlCursor {
         index = 0;
         m_curr = 0;
         m_url = url;
-        m_urlLength = url.length();
-        if (m_urlLength < 5) {
+        urlLength = url.length();
+        if (urlLength < 5) {
             return false;
         }
         m_type = null;
-        m_tokenStart = 0;
+        tokenStart = 0;
         skipProtocol();
         return true;
     }
 
     private boolean pass() {
-        while (m_tokenStart < m_urlLength) {
-            char c = m_url.charAt(m_tokenStart);
+        while (tokenStart < urlLength) {
+            char c = m_url.charAt(tokenStart);
             if (c == '/') {
                 if (m_type == null) {
                     m_type = Part.Host;
@@ -85,47 +85,47 @@ public class UrlCursor {
             } else {
                 return true;
             }
-            m_tokenStart++;
+            tokenStart++;
         }
         return false;
     }
 
 
     public boolean nextToken() {
-        m_keyPartLength = 0;
+        keyPartLength = 0;
         boolean inValue = false;
-        m_tokenStart = m_tokenStart + m_tokenLength;
+        tokenStart = tokenStart + tokenLength;
         if (!pass()) {
             return false;
         }
-        if (m_tokenStart >= m_urlLength) {
+        if (tokenStart >= urlLength) {
             return false;
         }
         index++;
-        for (int i = m_tokenStart; i < m_urlLength; i++) {
+        for (int i = tokenStart; i < urlLength; i++) {
             char c = m_url.charAt(i);
             if (inValue) {
                 if (c == '&') {
-                    m_tokenLength = i - m_tokenStart;
+                    tokenLength = i - tokenStart;
                     return true;
                 }
             } else if (c == '/' || c == '?' || c == '&' || c == '#' || c == ':') {
-                m_tokenLength = i - m_tokenStart;
+                tokenLength = i - tokenStart;
                 return true;
             }
             if (c == '=') {
                 inValue = true;
-                m_keyPartLength = i - m_tokenStart;
+                keyPartLength = i - tokenStart;
             }
         }
-        m_tokenLength = m_urlLength - m_tokenStart;
+        tokenLength = urlLength - tokenStart;
 
         return true;
     }
 
     public String getAllToCurrentPos() {
         try {
-            int to = m_tokenStart + m_tokenLength;
+            int to = tokenStart + tokenLength;
             if (m_url.length() >= to) {
                 return m_url.substring(0, to);
             } else {
@@ -137,7 +137,7 @@ public class UrlCursor {
     }
 
     public String getToken() {
-        return m_url.substring(m_tokenStart, m_tokenStart + m_tokenLength);
+        return m_url.substring(tokenStart, tokenStart + tokenLength);
     }
 
     public String getTokenLowerCase() {
@@ -147,8 +147,8 @@ public class UrlCursor {
     }
 
     public void getTokenLowerCase(StringBuilder s) {
-        for (int i = 0; i < m_tokenLength; i++) {
-            s.append(Character.toLowerCase(m_url.charAt(m_tokenStart + i)));
+        for (int i = 0; i < tokenLength; i++) {
+            s.append(Character.toLowerCase(m_url.charAt(tokenStart + i)));
         }
     }
 
@@ -159,13 +159,13 @@ public class UrlCursor {
     }
 
     public void getTokenUpperCase(StringBuilder s) {
-        for (int i = 0; i < m_tokenLength; i++) {
-            sb.append(Character.toUpperCase(m_url.charAt(m_tokenStart + i)));
+        for (int i = 0; i < tokenLength; i++) {
+            sb.append(Character.toUpperCase(m_url.charAt(tokenStart + i)));
         }
     }
 
     public boolean isTokenSameIgnoreCase(String buff, int pos, int size) {
-        return StringUtil.subStringEqualsIgnoreCase(m_url, m_tokenStart, m_tokenLength, buff, pos, size);
+        return StringUtil.subStringEqualsIgnoreCase(m_url, tokenStart, tokenLength, buff, pos, size);
     }
 
     /**
@@ -174,11 +174,11 @@ public class UrlCursor {
      * @return
      */
     public String getKeyPartOfArgToken() {
-        return m_url.substring(m_tokenStart, m_tokenStart + m_keyPartLength);
+        return m_url.substring(tokenStart, tokenStart + keyPartLength);
     }
 
     public void getKeyPartOfArgToken(StringBuilder sb, boolean lowerCase) {
-        for (int i = m_tokenStart; i < m_tokenStart + m_keyPartLength; i++) {
+        for (int i = tokenStart; i < tokenStart + keyPartLength; i++) {
             if (lowerCase) {
                 sb.append(Character.toLowerCase(m_url.charAt(i)));
             } else {
@@ -188,23 +188,23 @@ public class UrlCursor {
     }
 
     public String getValuePartOfArgToken() {
-        int start = m_tokenStart + m_keyPartLength + 1;
-        return m_url.substring(start, m_tokenStart + m_tokenLength);
+        int start = tokenStart + keyPartLength + 1;
+        return m_url.substring(start, tokenStart + tokenLength);
     }
 
     public void getValuePartOfArgToken(StringBuilder sb) {
-        int start = m_tokenStart + m_keyPartLength + 1;
-        for (int i = start; i < m_tokenStart + m_tokenLength; i++) {
+        int start = tokenStart + keyPartLength + 1;
+        for (int i = start; i < tokenStart + tokenLength; i++) {
             sb.append(m_url.charAt(i));
         }
     }
 
     public boolean isKeyPartTokenSameIgnoreCase(String buff, int pos, int size) {
-        return StringUtil.subStringEqualsIgnoreCase(m_url, m_tokenStart, m_keyPartLength, buff, pos, size);
+        return StringUtil.subStringEqualsIgnoreCase(m_url, tokenStart, keyPartLength, buff, pos, size);
     }
 
     public boolean isKeyPartTokenSameIgnoreCase(String buff) {
-        return StringUtil.subStringEqualsIgnoreCase(m_url, m_tokenStart, m_keyPartLength, buff, 0, buff.length());
+        return StringUtil.subStringEqualsIgnoreCase(m_url, tokenStart, keyPartLength, buff, 0, buff.length());
     }
 
     public boolean isValuePartTokenSameIgnoreCase(String buff) {
@@ -212,8 +212,8 @@ public class UrlCursor {
     }
 
     public boolean isValuePartTokenSameIgnoreCase(String buff, int pos, int size) {
-        int start = m_tokenStart + m_keyPartLength + 1;
-        return StringUtil.subStringEqualsIgnoreCase(m_url, start, m_tokenLength - start + m_tokenStart, buff, pos, size);
+        int start = tokenStart + keyPartLength + 1;
+        return StringUtil.subStringEqualsIgnoreCase(m_url, start, tokenLength - start + tokenStart, buff, pos, size);
     }
 
 
@@ -222,7 +222,7 @@ public class UrlCursor {
     }
 
     public boolean isTokenSameIgnoreCase(UrlCursor cur) {
-        return isTokenSameIgnoreCase(cur.m_url, cur.m_tokenStart, cur.m_tokenLength);
+        return isTokenSameIgnoreCase(cur.m_url, cur.tokenStart, cur.tokenLength);
     }
 
 
@@ -238,13 +238,13 @@ public class UrlCursor {
      * @return
      */
     public boolean hasExtension() {
-        if (m_keyPartLength == -1) {
+        if (keyPartLength == -1) {
             return false;
         }
-        if (m_keyPartLength == 0) {
-            for (int i = m_tokenStart + m_tokenLength - 1; i > m_tokenStart; i--) {
+        if (keyPartLength == 0) {
+            for (int i = tokenStart + tokenLength - 1; i > tokenStart; i--) {
                 if (this.m_url.charAt(i) == '.') {
-                    m_keyPartLength = i - m_tokenStart;
+                    keyPartLength = i - tokenStart;
                     return true;
                 }
             }
@@ -253,19 +253,19 @@ public class UrlCursor {
     }
 
     public boolean computeTLD() {
-        if (m_keyPartLength == -1) {
+        if (keyPartLength == -1) {
             return false;
         }
-        if (m_keyPartLength == 0) {
+        if (keyPartLength == 0) {
             boolean foundFirst = false;
-            for (int i = m_tokenStart + m_tokenLength - 1; i > m_tokenStart; i--) {
+            for (int i = tokenStart + tokenLength - 1; i > tokenStart; i--) {
                 char c = m_url.charAt(i);
                 if (c == '.' || c == '/') {
                     if (foundFirst == false) {
                         foundFirst = true;
                         continue;
                     }
-                    m_keyPartLength = i - m_tokenStart;
+                    keyPartLength = i - tokenStart;
                     return true;
                 }
             }
@@ -282,25 +282,25 @@ public class UrlCursor {
      */
     private boolean skipProtocol() {
         m_type = Part.Host;
-        m_tokenLength = 0;
+        tokenLength = 0;
 
         if (!StringUtil.startsWithIgnoreCase(m_url, "http")) {
             // could be something starting like /blablabla
             if (StringUtil.startsWithIgnoreCase(m_url, "/")) {
-                m_tokenStart = 1;
+                tokenStart = 1;
             }
             // no http part, thats ok.
             return true;
         }
-        m_tokenStart = 4;
+        tokenStart = 4;
         if (m_url.charAt(4) == 's') {
-            m_isSecure = true;
-            m_tokenStart = 5;
+            isSecure = true;
+            tokenStart = 5;
         } else {
-            m_isSecure = false;
+            isSecure = false;
         }
-        if (StringUtil.subStringEqualsIgnoreCase(m_url, m_tokenStart, 3, "://")) {
-            m_tokenStart += 3;
+        if (StringUtil.subStringEqualsIgnoreCase(m_url, tokenStart, 3, "://")) {
+            tokenStart += 3;
             // we want it to still be on the / so that we can progress past it with next
             return true;
         } else {
@@ -309,18 +309,18 @@ public class UrlCursor {
     }
 
     public boolean isSecure() {
-        return m_isSecure;
+        return isSecure;
     }
 
     /**
      * @return
      */
     public int getTokenIndex() {
-        return this.m_tokenStart;
+        return this.tokenStart;
     }
 
     public int getTokenLength() {
-        return this.m_tokenLength;
+        return this.tokenLength;
     }
 
     public enum Part {

@@ -42,9 +42,9 @@ public class VersionNode implements HTSerializable, Comparable<VersionNode> {
     private long m_major;
     private long m_minor;
     private long m_patch;
-    private long m_buildNumber;
+    private long buildNumber;
     private long[] m_version = new long[4];
-    private String m_stringName;
+    private String stringName;
 
     public VersionNode() {
 
@@ -64,37 +64,37 @@ public class VersionNode implements HTSerializable, Comparable<VersionNode> {
 
     public boolean equals(Object o) {
         if (o instanceof VersionNode) {
-            return ((VersionNode) o).m_stringName.equals(m_stringName);
+            return ((VersionNode) o).stringName.equals(stringName);
         }
         return false;
     }
 
     public int hashCode() {
-        return m_stringName.hashCode();
+        return stringName.hashCode();
     }
 
     public void init(long major, long minor, long patch, long buildNumber) {
         m_major = major;
         m_minor = minor;
         m_patch = patch;
-        m_buildNumber = buildNumber;
+        this.buildNumber = buildNumber;
         initAux();
-        m_stringName = Fmt.S("%s.%s.%s.%s", Long.toString(major), Long.toString(minor), Long.toString(patch), Long.toString(buildNumber));
+        stringName = Fmt.S("%s.%s.%s.%s", Long.toString(major), Long.toString(minor), Long.toString(patch), Long.toString(buildNumber));
     }
 
     private void initAux() {
         m_version[0] = m_major;
         m_version[1] = m_minor;
         m_version[2] = m_patch;
-        m_version[3] = m_buildNumber;
+        m_version[3] = buildNumber;
     }
 
     public String toString() {
-        return m_stringName;
+        return stringName;
     }
 
     public String getName() {
-        return m_stringName;
+        return stringName;
     }
 
     public long getMajor() {
@@ -110,11 +110,11 @@ public class VersionNode implements HTSerializable, Comparable<VersionNode> {
     }
 
     public long getBuildNumber() {
-        return m_buildNumber;
+        return buildNumber;
     }
 
     public String getVersion() {
-        return Fmt.S("%s.%s.%s.%s", m_major, m_minor, m_patch, m_buildNumber);
+        return Fmt.S("%s.%s.%s.%s", m_major, m_minor, m_patch, buildNumber);
     }
 
     public boolean meetsVersionCriteria(VersionPartComparitor[] comp) {
@@ -131,8 +131,8 @@ public class VersionNode implements HTSerializable, Comparable<VersionNode> {
         os.writeLong(m_major);
         os.writeLong(m_minor);
         os.writeLong(m_patch);
-        os.writeLong(m_buildNumber);
-        os.writeString(m_stringName);
+        os.writeLong(buildNumber);
+        os.writeString(stringName);
     }
 
     public void deserialize(HTObjectInputStream os) throws IOException, ClassNotFoundException, StoreException {
@@ -141,8 +141,8 @@ public class VersionNode implements HTSerializable, Comparable<VersionNode> {
         m_major = os.readLong();
         m_minor = os.readLong();
         m_patch = os.readLong();
-        m_buildNumber = os.readLong();
-        m_stringName = os.readString();
+        buildNumber = os.readLong();
+        stringName = os.readString();
         initAux();
     }
 

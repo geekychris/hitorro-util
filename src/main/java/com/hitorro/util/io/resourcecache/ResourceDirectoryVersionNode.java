@@ -44,13 +44,13 @@ public class ResourceDirectoryVersionNode extends DirectoryVersionNode {
     public static final int SerializationVersion = 1;
     private static final String LinkFileName = ".requiresLink.txt";
     private String m_resource;
-    private boolean m_requiresLink = false;
-    private boolean m_currentLink = false;
-    private File m_linkFile;
-    private boolean m_isTemp = true;
-    private int m_useCount = 0;
-    private File m_currentLinkDir = null;
-    private File m_versionedLinkDir = null;
+    private boolean requiresLink = false;
+    private boolean currentLink = false;
+    private File linkFile;
+    private boolean isTemp = true;
+    private int useCount = 0;
+    private File currentLinkDir = null;
+    private File versionedLinkDir = null;
 
     public ResourceDirectoryVersionNode() {
 
@@ -68,7 +68,7 @@ public class ResourceDirectoryVersionNode extends DirectoryVersionNode {
     }
 
     public void setTemp(boolean flag) {
-        m_isTemp = false;
+        isTemp = false;
     }
 
     public void setDirectory(File dir) {
@@ -77,73 +77,73 @@ public class ResourceDirectoryVersionNode extends DirectoryVersionNode {
     }
 
     private void setLink(File directory) {
-        m_linkFile = new File(directory, LinkFileName);
+        linkFile = new File(directory, LinkFileName);
     }
 
     public int getUseCount() {
-        return m_useCount;
+        return useCount;
     }
 
     public void incrementUseCount() {
-        m_useCount++;
+        useCount++;
     }
 
     public void derementUseCount() {
-        m_useCount--;
+        useCount--;
     }
 
     public void setOpenResourceVersionLink(boolean versioned, boolean current) throws Exception {
-        m_requiresLink = versioned;
-        this.m_currentLink = current;
-        if (m_requiresLink) {
+        requiresLink = versioned;
+        this.currentLink = current;
+        if (requiresLink) {
             //ensure link file exists.
-            if (!m_linkFile.exists()) {
-                FileUtil.writeLongValToFile(m_linkFile, System.currentTimeMillis());
+            if (!linkFile.exists()) {
+                FileUtil.writeLongValToFile(linkFile, System.currentTimeMillis());
             }
         } else {
-            if (m_linkFile.exists()) {
-                m_linkFile.delete();
+            if (linkFile.exists()) {
+                linkFile.delete();
             }
         }
         ensureLink();
     }
 
     public File getCurrentLink() {
-        return m_currentLinkDir;
+        return currentLinkDir;
     }
 
     public File getVersionedLink() {
-        return m_versionedLinkDir;
+        return versionedLinkDir;
     }
 
     public void ensureLink() throws IOException {
-        if (!m_isTemp) {
+        if (!isTemp) {
             File open = Env.getOpenResourceDir();
 
             //only if we are not temp do we
-            if (m_currentLink) {
-                if (m_currentLinkDir == null) {
+            if (currentLink) {
+                if (currentLinkDir == null) {
                     // ensure we have the current link.
                     File current = new File(open, "current");
                     FileUtil.ensureDirectoryExists(current);
 
-                    m_currentLinkDir = new File(current, this.m_resource);
+                    currentLinkDir = new File(current, this.m_resource);
                 }
-                m_currentLinkDir.delete();
-                Platform.getPlatform().softLink(this.getDirectory(), m_currentLinkDir);
+                currentLinkDir.delete();
+                Platform.getPlatform().softLink(this.getDirectory(), currentLinkDir);
             }
 
-            if (m_versionedLinkDir == null) {
+            if (versionedLinkDir == null) {
                 File versioned = new File(open, "versioned");
                 FileUtil.ensureDirectoryExists(versioned);
 
                 File versionResource = new File(versioned, this.m_resource);
                 FileUtil.ensureDirectoryExists(versionResource);
-                m_versionedLinkDir = new File(versionResource, getName());
+                versionedLinkDir = new File(versionResource, getName());
             }
-            m_versionedLinkDir.delete();
-            if (this.m_requiresLink) {
-                Platform.getPlatform().softLink(this.getDirectory(), m_versionedLinkDir);
+            versionedLinkDir.delete();
+            if (this.requiresLink) {
+                Platform.getPlatform().softLink(this.getDirectory(), versionedLinkDir);
             }
 
         }
@@ -158,10 +158,10 @@ public class ResourceDirectoryVersionNode extends DirectoryVersionNode {
         os.writeInt(SerializationVersion);
         super.serialize(os);
         os.writeString(m_resource);
-        os.writeBoolean(m_requiresLink);
-        os.writeBoolean(m_currentLink);
-        if (m_linkFile != null) {
-            os.writeString(m_linkFile.getAbsolutePath());
+        os.writeBoolean(requiresLink);
+        os.writeBoolean(currentLink);
+        if (linkFile != null) {
+            os.writeString(linkFile.getAbsolutePath());
         } else {
             os.writeString(null);
         }
@@ -172,11 +172,11 @@ public class ResourceDirectoryVersionNode extends DirectoryVersionNode {
         int version = os.readInt();
         super.deserialize(os);
         m_resource = os.readString();
-        m_requiresLink = os.readBoolean();
-        m_currentLink = os.readBoolean();
+        requiresLink = os.readBoolean();
+        currentLink = os.readBoolean();
         String s = os.readString();
         if (s != null) {
-            m_linkFile = new File(s);
+            linkFile = new File(s);
         }
     }
 

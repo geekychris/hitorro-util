@@ -36,7 +36,7 @@ import java.util.List;
 /**
  */
 public class ClassPathDeepIterator extends AbstractIterator<String> {
-    private boolean m_includeJars = false;
+    private boolean includeJars = false;
     private List<String> queue = new ArrayList<String>();
     private Iterator<String> currIterator = null;
 
@@ -55,7 +55,7 @@ public class ClassPathDeepIterator extends AbstractIterator<String> {
             queue.remove(queue.size() - 1);
             if (!path.endsWith("jar") || path.endsWith("zip")) {
                 // we only examine non jar files
-                return new FilePathIterator(path, m_includeJars);
+                return new FilePathIterator(path, includeJars);
             } else {
                 return new JarFileIterator(new File(path)).filter(ClassLO.clo);
             }

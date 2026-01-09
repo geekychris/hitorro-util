@@ -46,7 +46,7 @@ public class BeanStyleMethodAnnotation extends BaseAnnotation {
     }
 
     public boolean hasAnnotation(Class c) {
-        for (Annotation a : m_anno) {
+        for (Annotation a : anno) {
             if (a.annotationType().equals(c)) {
                 return true;
             }
@@ -79,9 +79,9 @@ public class BeanStyleMethodAnnotation extends BaseAnnotation {
 
         // get the annotations for the field (from the method) and apply them into previous annotations, if any
         // if there are collisions, annotations from the getter have precedence
-        if (m_anno.size() == 0) {
+        if (anno.size() == 0) {
             // this is the first pass (or no previous annotations) - just build the listFiles
-            ClassAnoUtil.loadAnnotation(m_anno, meth.getAnnotations(), constraint);
+            ClassAnoUtil.loadAnnotation(anno, meth.getAnnotations(), constraint);
         }
 
         // need to worry about merging
@@ -98,9 +98,9 @@ public class BeanStyleMethodAnnotation extends BaseAnnotation {
         List<Annotation> setterList;
         if (isGetter) {
             getterList = annos;
-            setterList = m_anno;
+            setterList = anno;
         } else {
-            getterList = m_anno;
+            getterList = anno;
             setterList = annos;
         }
 
@@ -114,7 +114,7 @@ public class BeanStyleMethodAnnotation extends BaseAnnotation {
             tempMap.put(ga.getClass(), ga);
         }
 
-        m_anno = new ArrayList<Annotation>();
-        m_anno.addAll(tempMap.values());
+        anno = new ArrayList<Annotation>();
+        anno.addAll(tempMap.values());
     }
 }

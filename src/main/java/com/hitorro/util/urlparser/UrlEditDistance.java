@@ -26,8 +26,8 @@ import junit.framework.TestCase;
 /**
  */
 public class UrlEditDistance extends TestCase {
-    private UrlCursor m_curA = new UrlCursor();
-    private UrlCursor m_curB = new UrlCursor();
+    private UrlCursor curA = new UrlCursor();
+    private UrlCursor curB = new UrlCursor();
 
     /**
      * Determine how far apart two urls are, ignoring case and not considering arguments.
@@ -56,24 +56,24 @@ public class UrlEditDistance extends TestCase {
      */
     public final int determineUrlDistance(String urlA, String urlB) {
         int distance = 0;
-        m_curA.setUrl(urlA);
-        m_curB.setUrl(urlB);
-        if (!m_curA.nextToken() || !m_curB.nextToken()) {
+        curA.setUrl(urlA);
+        curB.setUrl(urlB);
+        if (!curA.nextToken() || !curB.nextToken()) {
             // couldnt even parse past the host.
             return -1;
         }
-        if (!m_curA.isTokenSameIgnoreCase(m_curB)) {
+        if (!curA.isTokenSameIgnoreCase(curB)) {
             // hosts not same
             return -1;
         }
         boolean same = true;
         while (same) {
-            boolean nA = m_curA.nextToken();
-            boolean nB = m_curB.nextToken();
+            boolean nA = curA.nextToken();
+            boolean nB = curB.nextToken();
             if (nA && nB &&
-                    m_curA.getUrlPartType() == UrlCursor.Part.Path &&
-                    m_curB.getUrlPartType() == UrlCursor.Part.Path) {
-                if (m_curA.isTokenSameIgnoreCase(m_curB)) {
+                    curA.getUrlPartType() == UrlCursor.Part.Path &&
+                    curB.getUrlPartType() == UrlCursor.Part.Path) {
+                if (curA.isTokenSameIgnoreCase(curB)) {
                     // same parts
                     continue;
                 } else {
@@ -88,8 +88,8 @@ public class UrlEditDistance extends TestCase {
 
             }
 
-            distance += countPathParts(m_curA);
-            distance += countPathParts(m_curB);
+            distance += countPathParts(curA);
+            distance += countPathParts(curB);
 
             same = false;
         }

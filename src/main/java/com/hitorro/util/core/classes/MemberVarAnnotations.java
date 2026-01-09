@@ -37,7 +37,7 @@ public class MemberVarAnnotations extends BaseAnnotation {
         this.f = f;
         f.setAccessible(true);
         for (Annotation a : anos) {
-            m_anno.add(a);
+            anno.add(a);
         }
     }
 

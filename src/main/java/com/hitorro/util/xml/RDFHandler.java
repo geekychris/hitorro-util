@@ -33,7 +33,7 @@ public class RDFHandler extends DefaultHandler {
     public static final String ExternalPageDescription = "d:Description";
     public static final String ExternalPageTopic = "topic";
 
-    private boolean m_inEP = false;
+    private boolean inEP = false;
     private String m_title;
     private String m_description;
     private String m_topic;
@@ -51,7 +51,7 @@ public class RDFHandler extends DefaultHandler {
                              String qualifiedName,
                              Attributes attributes) {
         if (qualifiedName.equals(ExternalPage)) {
-            m_inEP = true;
+            inEP = true;
 
             m_title = null;
             m_description = null;
@@ -80,7 +80,7 @@ public class RDFHandler extends DefaultHandler {
     public void endElement(String namespaceUri,
                            String localName,
                            String qualifiedName) {
-        if (m_inEP) {
+        if (inEP) {
             if (qualifiedName.equals(ExternalPageTitle)) {
                 m_title = m_builder.toString();
             } else if (qualifiedName.equals(ExternalPageDescription)) {
@@ -88,7 +88,7 @@ public class RDFHandler extends DefaultHandler {
             } else if (qualifiedName.equals(ExternalPageTopic)) {
                 m_topic = m_builder.toString();
             } else if (qualifiedName.equals(ExternalPage)) {
-                m_inEP = false;
+                inEP = false;
                 m_counter++;
                 if (m_counter % 1000 == 0) {
                     Console.print("%s,", m_counter);
@@ -115,7 +115,7 @@ public class RDFHandler extends DefaultHandler {
     public void characters(char[] chars,
                            int startIndex,
                            int endIndex) {
-        if (m_inEP) {
+        if (inEP) {
             m_builder.append(chars, startIndex, endIndex);
         }
 

@@ -31,20 +31,20 @@ package com.hitorro.util.core.thread;
  * Timer that you setup with a time to wait and then invokes a callback handler
  */
 public class ThreadTimer extends Thread {
-    private long m_millisWait;
+    private long millisWait;
     private boolean m_loop;
     private TimerCallback m_callback;
 
     public ThreadTimer(TimerCallback callback, long millis, boolean loop) {
         m_loop = loop;
         m_callback = callback;
-        m_millisWait = millis;
+        millisWait = millis;
     }
 
     public void run() {
         while (m_loop) {
             try {
-                Thread.sleep(m_millisWait);
+                Thread.sleep(millisWait);
             } catch (InterruptedException ie) {
                 // XX Interrupted but lets still go on.
             }

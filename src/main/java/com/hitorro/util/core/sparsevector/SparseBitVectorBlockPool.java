@@ -33,7 +33,7 @@ import java.util.Arrays;
  * Memory pool for blocks used by the SparseBitVector.
  */
 public class SparseBitVectorBlockPool {
-    private static SparseBitVectorBlockPoolNode[] m_nodeChains = new SparseBitVectorBlockPoolNode[32];
+    private static SparseBitVectorBlockPoolNode[] nodeChains = new SparseBitVectorBlockPoolNode[32];
     private static Object lock = new Object();
 
     public static final SparseBitVector getBitVector(int blockSizeToPower, int initialArraySize) {
@@ -43,11 +43,11 @@ public class SparseBitVectorBlockPool {
 
     public static int[] getBlock(int addressBitSize) {
         synchronized (lock) {
-            if (m_nodeChains[addressBitSize] == null) {
+            if (nodeChains[addressBitSize] == null) {
                 return getBlockNew(addressBitSize);
             }
-            SparseBitVectorBlockPoolNode node = m_nodeChains[addressBitSize];
-            m_nodeChains[addressBitSize] = node.m_next;
+            SparseBitVectorBlockPoolNode node = nodeChains[addressBitSize];
+            nodeChains[addressBitSize] = node.m_next;
             return node.m_block;
         }
     }
@@ -59,8 +59,8 @@ public class SparseBitVectorBlockPool {
     public static void freeBlock(int blockSizePower, int[] block) {
         Arrays.fill(block, 0);
         synchronized (lock) {
-            m_nodeChains[blockSizePower] =
-                    new SparseBitVectorBlockPoolNode(block, m_nodeChains[blockSizePower]);
+            nodeChains[blockSizePower] =
+                    new SparseBitVectorBlockPoolNode(block, nodeChains[blockSizePower]);
         }
     }
 }

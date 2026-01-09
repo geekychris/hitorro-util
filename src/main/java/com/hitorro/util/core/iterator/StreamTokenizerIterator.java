@@ -29,7 +29,7 @@ public class StreamTokenizerIterator extends AbstractIterator<String> {
 
     private String m_token;
 
-    private boolean m_hasToken;
+    private boolean hasToken;
 
     public StreamTokenizerIterator(StreamTokenizer tokenizer) {
         m_tokenizer = tokenizer;
@@ -37,7 +37,7 @@ public class StreamTokenizerIterator extends AbstractIterator<String> {
     }
 
     public boolean hasNext() {
-        return m_hasToken;
+        return hasToken;
     }
 
     public String next() {
@@ -53,7 +53,7 @@ public class StreamTokenizerIterator extends AbstractIterator<String> {
     private boolean getToken() {
         try {
             if (m_tokenizer.nextToken() != StreamTokenizer.TT_EOF) {
-                m_hasToken = true;
+                hasToken = true;
                 switch (m_tokenizer.ttype) {
 
                     case StreamTokenizer.TT_NUMBER:
@@ -66,12 +66,12 @@ public class StreamTokenizerIterator extends AbstractIterator<String> {
                         m_token = String.valueOf((char) m_tokenizer.ttype);
                 }
             } else {
-                m_hasToken = false;
+                hasToken = false;
             }
         } catch (IOException e) {
-            m_hasToken = false;
+            hasToken = false;
         }
-        return m_hasToken;
+        return hasToken;
     }
 
     @Override

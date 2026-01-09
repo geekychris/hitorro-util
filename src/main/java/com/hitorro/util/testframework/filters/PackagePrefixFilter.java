@@ -31,10 +31,10 @@ import com.hitorro.util.testframework.TestCaseWrapper;
  * Look for a package starting with the provided root.  This mechanism ignores case.
  */
 public class PackagePrefixFilter implements HTPredicate<TestCaseWrapper> {
-    private String m_packagePrefix;
+    private String packagePrefix;
 
     public PackagePrefixFilter(String root) {
-        m_packagePrefix = root;
+        packagePrefix = root;
     }
 
     public boolean initFromMap(final JsonNode map) {
@@ -52,9 +52,9 @@ public class PackagePrefixFilter implements HTPredicate<TestCaseWrapper> {
 
         String canon = testcase.testClass.getCanonicalName();
 
-        if (StringUtil.nullOrEmptyOrBlankString(m_packagePrefix)) {
+        if (StringUtil.nullOrEmptyOrBlankString(packagePrefix)) {
             match = false;
-        } else if (StringUtil.startsWithIgnoreCase(canon, m_packagePrefix)) {
+        } else if (StringUtil.startsWithIgnoreCase(canon, packagePrefix)) {
             match = true;
 
         }

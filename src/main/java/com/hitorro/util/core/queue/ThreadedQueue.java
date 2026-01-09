@@ -36,9 +36,9 @@ import java.util.concurrent.TimeUnit;
  * @author chris
  */
 public class ThreadedQueue<E> extends BoundedQueue<E> implements ThreadedQueueInterface<E> {
-    private boolean m_isCanceled = false;
+    private boolean isCanceled = false;
 
-    private boolean m_isComplete = false;
+    private boolean isComplete = false;
 
     private String m_queueName = "<Name Not Set>";
 
@@ -126,7 +126,7 @@ public class ThreadedQueue<E> extends BoundedQueue<E> implements ThreadedQueueIn
                         // we timed out and we should return null;
                         return null;
                     }
-                    if (m_isCanceled) {
+                    if (isCanceled) {
                         throw new ThreadedQueueCanceledException();
                     }
                 }
@@ -238,7 +238,7 @@ public class ThreadedQueue<E> extends BoundedQueue<E> implements ThreadedQueueIn
                     if (failOnFull) {
                         return false;
                     }
-                    if (m_isCanceled) {
+                    if (isCanceled) {
                         throw new ThreadedQueueCanceledException();
                     }
                     notifier.wait();
@@ -258,11 +258,11 @@ public class ThreadedQueue<E> extends BoundedQueue<E> implements ThreadedQueueIn
     }
 
     public boolean getQueueCanceled() {
-        return m_isCanceled;
+        return isCanceled;
     }
 
     public void setQueueCanceled(boolean flag) {
-        m_isCanceled = flag;
+        isCanceled = flag;
     }
 
     /**
@@ -270,11 +270,11 @@ public class ThreadedQueue<E> extends BoundedQueue<E> implements ThreadedQueueIn
      * if it has, there will be no more data and should shut down.
      */
     public void setQueueComplete() {
-        m_isComplete = true;
+        isComplete = true;
     }
 
     public boolean getQueueComplete() {
-        return m_isComplete;
+        return isComplete;
     }
 
     public String getQueueName() {

@@ -34,18 +34,18 @@ import java.util.Date;
  * time is returned it sets in memory the time that will be committed when set is called.
  */
 public class LastTimeMarker {
-    private File m_lastIndexTimeFile;
-    private Date m_testDate;
+    private File lastIndexTimeFile;
+    private Date testDate;
 
     public LastTimeMarker(File dir, String name) {
 
-        m_lastIndexTimeFile = new File(dir, Fmt.S("%s.lasttimemarker", name));
+        lastIndexTimeFile = new File(dir, Fmt.S("%s.lasttimemarker", name));
     }
 
     public long getLastIndexTimeMillis() {
-        m_testDate = new Date();
-        if (m_lastIndexTimeFile.exists()) {
-            return m_lastIndexTimeFile.lastModified();
+        testDate = new Date();
+        if (lastIndexTimeFile.exists()) {
+            return lastIndexTimeFile.lastModified();
         } else {
             return -1000000000;
         }
@@ -58,7 +58,7 @@ public class LastTimeMarker {
 
     public boolean set() {
         try {
-            FileUtil.writeLongValToFile(m_lastIndexTimeFile, m_testDate.getTime());
+            FileUtil.writeLongValToFile(lastIndexTimeFile, testDate.getTime());
         } catch (IOException e) {
             Log.util.error("%s %e", e, e);
         }

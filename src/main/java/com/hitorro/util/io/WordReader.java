@@ -35,8 +35,8 @@ import java.io.IOException;
 public class WordReader {
 
     private int BUFFER_SIZE = 1024;
-    private int m_bytesRead;
-    private boolean m_moreBytesToRead = true;
+    private int bytesRead;
+    private boolean moreBytesToRead = true;
     private CInputStream m_stream;
     private char[] m_buff = new char[BUFFER_SIZE];
 
@@ -46,11 +46,11 @@ public class WordReader {
 
     private boolean fillBuffer()
             throws IOException {
-        if (m_moreBytesToRead == false) {
+        if (moreBytesToRead == false) {
             return false;
         }
-        //m_bytesRead = m_stream.readChars(m_buff, 0, BUFFER_SIZE);
-        if (m_bytesRead > 0) {
+        //bytesRead = m_stream.readChars(m_buff, 0, BUFFER_SIZE);
+        if (bytesRead > 0) {
             return true;
         }
         return false;

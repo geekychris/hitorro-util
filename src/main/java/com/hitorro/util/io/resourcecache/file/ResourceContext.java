@@ -31,14 +31,14 @@ import java.io.IOException;
 /**
  */
 public class ResourceContext {
-    private ResourceCache m_rCache;
+    private ResourceCache rCache;
     private String m_resource;
     private ResourceDirectoryVersionNode m_node;
     private File m_path;
 
 
     ResourceContext(ResourceCache rc, String resource, ResourceDirectoryVersionNode node) {
-        m_rCache = rc;
+        rCache = rc;
         m_node = node;
         m_resource = resource;
 
@@ -59,7 +59,7 @@ public class ResourceContext {
      * @throws ResourceCacheException
      */
     public void commit() throws IOException {
-        m_rCache.commit(m_resource, m_node, m_path);
+        rCache.commit(m_resource, m_node, m_path);
     }
 
     /**

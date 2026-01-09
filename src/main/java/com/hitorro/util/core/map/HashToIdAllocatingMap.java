@@ -35,13 +35,13 @@ import java.io.IOException;
  * Map of external hash to an internal document id.  Document ID'saveMap currently do not get re-used.
  */
 public class HashToIdAllocatingMap {
-    private TLongLongHashMap m_newMap = new TLongLongHashMap();
-    private TLongLongHashMap m_existingIDMap = new TLongLongHashMap();
-    private long m_currentHighValue;
+    private TLongLongHashMap newMap = new TLongLongHashMap();
+    private TLongLongHashMap existingIDMap = new TLongLongHashMap();
+    private long currentHighValue;
 
-    private TLongLongHashMap m_reverseNewMap = new TLongLongHashMap();
-    private TLongLongHashMap m_reverseIdMap = new TLongLongHashMap();
-    private boolean m_doDocIdTranslation = true;
+    private TLongLongHashMap reverseNewMap = new TLongLongHashMap();
+    private TLongLongHashMap reverseIdMap = new TLongLongHashMap();
+    private boolean doDocIdTranslation = true;
 
 
     private HashToIdAllocatingMap() {
@@ -49,26 +49,26 @@ public class HashToIdAllocatingMap {
     }
 
     public HashToIdAllocatingMap(boolean doDocIdTranslation) {
-        m_doDocIdTranslation = doDocIdTranslation;
+        this.doDocIdTranslation = doDocIdTranslation;
     }
 
     public boolean getHashExists(long hash) {
-        if (m_doDocIdTranslation) {
-            if (m_newMap.contains(hash)) {
+        if (doDocIdTranslation) {
+            if (newMap.contains(hash)) {
                 return true;
             }
-            return m_existingIDMap.contains(hash);
+            return existingIDMap.contains(hash);
         } else {
             return true;
         }
     }
 
     public boolean getDocIdExists(int docId) {
-        if (m_doDocIdTranslation) {
-            if (m_reverseNewMap.contains(docId)) {
+        if (doDocIdTranslation) {
+            if (reverseNewMap.contains(docId)) {
                 return true;
             }
-            return m_reverseIdMap.contains(docId);
+            return reverseIdMap.contains(docId);
         } else {
             // probably not the right thing todo
             return true;
@@ -76,7 +76,7 @@ public class HashToIdAllocatingMap {
     }
 
     public int getSize() {
-        return m_newMap.size() + m_existingIDMap.size();
+        return newMap.size() + existingIDMap.size();
     }
 
     /**
@@ -87,16 +87,16 @@ public class HashToIdAllocatingMap {
      * @return
      */
     public long getDocIdWithIDAllocation(long hash) {
-        if (!m_doDocIdTranslation) {
+        if (!doDocIdTranslation) {
             return hash;
         }
         long returnMe = 0;
-        returnMe = m_existingIDMap.get(hash);
+        returnMe = existingIDMap.get(hash);
         if (returnMe != 0) {
             return returnMe;
         }
 
-        returnMe = m_newMap.get(hash);
+        returnMe = newMap.get(hash);
         if (returnMe != 0) {
             return returnMe;
         }
@@ -108,7 +108,7 @@ public class HashToIdAllocatingMap {
      * Called on rollback to remove any additions
      */
     public void flushAdds() {
-        m_newMap.clear();
+        newMap.clear();
     }
 
     /**
@@ -119,10 +119,10 @@ public class HashToIdAllocatingMap {
      * @return
      */
     public long getDocId(long hash) {
-        if (!m_doDocIdTranslation) {
+        if (!doDocIdTranslation) {
             return hash;
         }
-        return m_existingIDMap.get(hash);
+        return existingIDMap.get(hash);
     }
 
     /**
@@ -133,27 +133,27 @@ public class HashToIdAllocatingMap {
      * @return hash code, or 0 if not found.
      */
     public long getHashFromDocId(long docId) {
-        if (!m_doDocIdTranslation) {
+        if (!doDocIdTranslation) {
             return docId;
         }
 
         long returnMe = 0;
-        returnMe = m_reverseIdMap.get(docId);
+        returnMe = reverseIdMap.get(docId);
         if (returnMe != 0) {
             return returnMe;
         }
 
-        return m_reverseNewMap.get(docId);
+        return reverseNewMap.get(docId);
     }
 
     public boolean load(File f) throws IOException {
-        if (!m_doDocIdTranslation) {
+        if (!doDocIdTranslation) {
             // do nothing as we are not translating
             return true;
         }
-        m_existingIDMap = TroveMapUtil.getTLongLongFromFile(f, m_existingIDMap);
-        m_currentHighValue = TroveMapUtil.getMaxValueFromTLongLongMap(m_existingIDMap);
-        m_reverseIdMap = TroveMapUtil.getReverseMapTLongLongMap(m_existingIDMap);
+        existingIDMap = TroveMapUtil.getTLongLongFromFile(f, existingIDMap);
+        currentHighValue = TroveMapUtil.getMaxValueFromTLongLongMap(existingIDMap);
+        reverseIdMap = TroveMapUtil.getReverseMapTLongLongMap(existingIDMap);
         return true;
     }
 
@@ -166,17 +166,17 @@ public class HashToIdAllocatingMap {
      * @throws IOException
      */
     public boolean save(File f) throws IOException {
-        if (!m_doDocIdTranslation) {
+        if (!doDocIdTranslation) {
             // do nothing as we are not translating
             return true;
         }
         DataOutputStream dos = FileUtil.getDataOutputStreamForFile(f);
-        int size = m_newMap.size() + m_existingIDMap.size();
+        int size = newMap.size() + existingIDMap.size();
         dos.writeInt(size);
-        saveMap(m_newMap, dos);
-        saveMap(m_existingIDMap, dos);
-        MapUtil.merge(m_existingIDMap, m_newMap);
-        m_newMap.clear();
+        saveMap(newMap, dos);
+        saveMap(existingIDMap, dos);
+        MapUtil.merge(existingIDMap, newMap);
+        newMap.clear();
         dos.flush();
         dos.close();
         return true;
@@ -184,12 +184,12 @@ public class HashToIdAllocatingMap {
 
 
     private long getNewDocId(long hash) {
-        m_currentHighValue++;
+        currentHighValue++;
         // put (hash->docId)
-        m_newMap.put(hash, m_currentHighValue);
+        newMap.put(hash, currentHighValue);
         // put the reverse (docid->hash)
-        m_reverseNewMap.put(m_currentHighValue, hash);
-        return m_currentHighValue;
+        reverseNewMap.put(currentHighValue, hash);
+        return currentHighValue;
     }
 
 

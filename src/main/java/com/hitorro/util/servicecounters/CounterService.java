@@ -46,7 +46,7 @@ public class CounterService {
     public static LongImplementableRegister currentTime;
     private static CounterService service;
     private RestartableService m_rs;
-    private CounterClock m_counterClock = new CounterClock(CounterContext.getContext());
+    private CounterClock counterClock = new CounterClock(CounterContext.getContext());
     private CounterSet testSet = new CounterSet("test");
 
     public static final CounterService getService() {
@@ -58,12 +58,12 @@ public class CounterService {
     }
 
     public CounterClock getClock() {
-        return m_counterClock;
+        return counterClock;
     }
 
     public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
         service = this;
-        m_rs = new RestartableService("CounterService", "Counters", 100, m_counterClock, true);
+        m_rs = new RestartableService("CounterService", "Counters", 100, counterClock, true);
         RestartableServiceDaemon.addService(m_rs);
         tick = testSet.getLongRegister("tick", "Test Tick");
 

@@ -29,10 +29,10 @@ public class PushbackIterator<E> extends AbstractIterator<E> {
     private int m_bufferSize;
     private Iterator<E> m_iter;
     private E[] m_buffer;
-    private int m_pushedBack = 0;
-    private long m_currentNextFreeSlot = 0;
+    private int pushedBack = 0;
+    private long currentNextFreeSlot = 0;
 
-    private long m_markPosition = 0;
+    private long markPosition = 0;
     private boolean m_marked = false;
 
     private PushbackIterator() {
@@ -46,30 +46,30 @@ public class PushbackIterator<E> extends AbstractIterator<E> {
     }
 
     public boolean hasNext() {
-        if (m_pushedBack > 0) {
+        if (pushedBack > 0) {
             return true;
         }
         return m_iter.hasNext();
     }
 
     public E next() {
-        if (m_pushedBack > 0) {
+        if (pushedBack > 0) {
             return getObjectFromBuffer();
         }
         return getObjectFromIterator();
     }
 
     private E getObjectFromBuffer() {
-        E o = m_buffer[(int) (m_currentNextFreeSlot - (m_pushedBack)) % m_bufferSize];
+        E o = m_buffer[(int) (currentNextFreeSlot - (pushedBack)) % m_bufferSize];
 
-        m_pushedBack--;
+        pushedBack--;
         return o;
     }
 
     private E getObjectFromIterator() {
         E temp = m_iter.next();
-        m_buffer[(int) m_currentNextFreeSlot % m_bufferSize] = temp;
-        m_currentNextFreeSlot++;
+        m_buffer[(int) currentNextFreeSlot % m_bufferSize] = temp;
+        currentNextFreeSlot++;
 
         return temp;
     }
@@ -78,17 +78,17 @@ public class PushbackIterator<E> extends AbstractIterator<E> {
     }
 
     public void mark() {
-        if (m_pushedBack > 0) {
-            m_markPosition = m_currentNextFreeSlot - m_pushedBack;
+        if (pushedBack > 0) {
+            markPosition = currentNextFreeSlot - pushedBack;
         } else {
-            m_markPosition = m_currentNextFreeSlot;
+            markPosition = currentNextFreeSlot;
         }
         m_marked = true;
     }
 
     public void reset() {
         if (m_marked) {
-            pushBack((int) (m_currentNextFreeSlot - m_markPosition));
+            pushBack((int) (currentNextFreeSlot - markPosition));
             m_marked = false;
         }
     }
@@ -103,7 +103,7 @@ public class PushbackIterator<E> extends AbstractIterator<E> {
         if (nObjects > m_bufferSize) {
             throw new ArrayIndexOutOfBoundsException();
         }
-        m_pushedBack = nObjects;
+        pushedBack = nObjects;
     }
 
     @Override

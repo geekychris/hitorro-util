@@ -42,7 +42,7 @@ public class RestartableServiceDaemon implements Runnable {
     private static final Object s_lock = new Object();
     private static List<RestartableService> m_services = new ArrayList<RestartableService>();
     private EnhancedThreadGroup m_threadGroup = new EnhancedThreadGroup(ServiceName);
-    private Thread m_serviceThread;
+    private Thread serviceThread;
 
 
     public static void addService(RestartableService service) {
@@ -59,9 +59,9 @@ public class RestartableServiceDaemon implements Runnable {
     }
 
     public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
-        m_serviceThread = new Thread(m_threadGroup, this, ServiceName);
-        m_serviceThread.setDaemon(true);
-        m_serviceThread.start();
+        serviceThread = new Thread(m_threadGroup, this, ServiceName);
+        serviceThread.setDaemon(true);
+        serviceThread.start();
         return null;
     }
 
@@ -73,7 +73,7 @@ public class RestartableServiceDaemon implements Runnable {
         for (RestartableService service : m_services) {
             service.stop();
         }
-        m_serviceThread = null;
+        serviceThread = null;
         return null;
     }
 

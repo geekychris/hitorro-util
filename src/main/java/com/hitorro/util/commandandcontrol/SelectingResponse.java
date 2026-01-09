@@ -34,7 +34,7 @@ import java.util.List;
  * - filtered by a column criteria (where a> 10)
  */
 public class SelectingResponse extends Response {
-    private boolean m_endCalled = false;
+    private boolean endCalled = false;
 
     private Response m_chain;
 
@@ -98,10 +98,10 @@ public class SelectingResponse extends Response {
 
     @Override
     public void end() {
-        if (m_endCalled) {
+        if (endCalled) {
             return;
         }
-        m_endCalled = true;
+        endCalled = true;
         // header rows
         for (String header : headerRows) {
             m_chain.addBannerRow(header);
@@ -132,7 +132,7 @@ public class SelectingResponse extends Response {
 }
 
 class SelectResponseRow {
-    private int m_truncateToMaxLength = -1;
+    private int truncateToMaxLength = -1;
 
     private String[] m_values;
     private RenderingContainer[] renderingContainer;
@@ -150,7 +150,7 @@ class SelectResponseRow {
     }
 
     public void setMaxColumnSize(int size) {
-        m_truncateToMaxLength = size;
+        truncateToMaxLength = size;
     }
 
     public void set(Object args[]) {
@@ -186,9 +186,9 @@ class SelectResponseRow {
         for (int i = 0; i < min; i++) {
             int s = m_values[i].length();
             if (sizes[i] < s) {
-                if (m_truncateToMaxLength > -1) {
-                    if (s > m_truncateToMaxLength) {
-                        sizes[i] = m_truncateToMaxLength;
+                if (truncateToMaxLength > -1) {
+                    if (s > truncateToMaxLength) {
+                        sizes[i] = truncateToMaxLength;
                     } else {
                         sizes[i] = s;
                     }

@@ -30,14 +30,14 @@ import java.io.IOException;
  *
  */
 public class BaseFileResourceContext {
-    private BaseFileResourceCache m_rCache;
+    private BaseFileResourceCache rCache;
     private String m_resource;
     private BaseFileResourceDirectoryVersionNode m_node;
     private BaseFile m_path;
 
 
     BaseFileResourceContext(BaseFileResourceCache rc, String resource, BaseFileResourceDirectoryVersionNode node) {
-        m_rCache = rc;
+        rCache = rc;
         m_node = node;
         m_resource = resource;
 
@@ -58,7 +58,7 @@ public class BaseFileResourceContext {
      * @throws ResourceCacheException
      */
     public void commit() throws IOException {
-        m_rCache.commit(m_resource, m_node, m_path);
+        rCache.commit(m_resource, m_node, m_path);
     }
 
     /**

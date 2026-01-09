@@ -32,15 +32,15 @@ public class UrlCreator {
     private StringBuilder m_buffer = new StringBuilder();
     private String m_url;
     private List<KeyValue> m_args = new ArrayList<KeyValue>();
-    private String m_fullUrl;
+    private String fullUrl;
 
     public void addArg(String argKey, String argValue) {
         m_args.add(new KeyValue(argKey, argValue));
-        m_fullUrl = null;
+        fullUrl = null;
     }
 
     public String getUrl() {
-        if (m_fullUrl == null) {
+        if (fullUrl == null) {
             m_buffer.setLength(0);
             m_buffer.append(m_url);
             m_buffer.append("?");
@@ -54,16 +54,16 @@ public class UrlCreator {
                 m_buffer.append(kv.getValue());
                 flag = true;
             }
-            m_fullUrl = m_buffer.toString();
+            fullUrl = m_buffer.toString();
         }
-        return m_fullUrl;
+        return fullUrl;
     }
 
     public void setUrl(String url) {
         m_url = url;
         m_args.clear();
 
-        m_fullUrl = null;
+        fullUrl = null;
 
 
     }

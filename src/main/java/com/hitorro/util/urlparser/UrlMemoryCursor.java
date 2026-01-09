@@ -88,7 +88,7 @@ public class UrlMemoryCursor extends UrlCursor {
                 // now in args
                 firstArgIndex = ind;
                 // we can break now since we got the first
-                firstKeyPartLength = m_keyPartLength;
+                firstKeyPartLength = keyPartLength;
                 break;
             } else if (m_type == Part.Host) {
                 hostPartIndex = ind;
@@ -117,7 +117,7 @@ public class UrlMemoryCursor extends UrlCursor {
 
     public boolean resetToFirstArg() {
         boolean f = setTokenParamsToIndex(firstArgIndex);
-        m_keyPartLength = firstKeyPartLength;
+        keyPartLength = firstKeyPartLength;
         return f;
     }
 
@@ -143,9 +143,9 @@ public class UrlMemoryCursor extends UrlCursor {
             if (m_type == Part.Argument) {
                 // never cache the hash of an argument (we are too lazy since we would have to whipe the whole arg listFiles
                 // in the scan phase we didnt go through it!
-                return StringUtil.hashStringCaseFree(this.m_url, m_tokenStart, this.m_keyPartLength);
+                return StringUtil.hashStringCaseFree(this.m_url, tokenStart, this.keyPartLength);
             } else {
-                h = StringUtil.hashStringCaseFree(this.m_url, m_tokenStart, m_tokenLength);
+                h = StringUtil.hashStringCaseFree(this.m_url, tokenStart, tokenLength);
                 hash[index] = h;
             }
         }
@@ -153,7 +153,7 @@ public class UrlMemoryCursor extends UrlCursor {
     }
 
     public boolean startsWith(String s) {
-        return StringUtil.startsWithIgnoreCase(m_url, m_tokenStart, s);
+        return StringUtil.startsWithIgnoreCase(m_url, tokenStart, s);
     }
 
     /**
@@ -163,30 +163,30 @@ public class UrlMemoryCursor extends UrlCursor {
      * @return
      */
     public long getValueHash() {
-        int start = m_tokenStart + m_keyPartLength + 1;
-        return StringUtil.hashStringCaseFree(this.m_url, start, m_tokenStart + m_tokenLength - start);
+        int start = tokenStart + keyPartLength + 1;
+        return StringUtil.hashStringCaseFree(this.m_url, start, tokenStart + tokenLength - start);
     }
 
     public long getKeyHash() {
-        return StringUtil.hashStringCaseFree(this.m_url, m_tokenStart, m_keyPartLength);
+        return StringUtil.hashStringCaseFree(this.m_url, tokenStart, keyPartLength);
     }
 
 
     private boolean setTokenParamsToIndex(int ind) {
-        m_keyPartLength = 0;
+        keyPartLength = 0;
         index = ind;
         if (index < 0) {
             return false;
         }
-        m_tokenStart = startPositions[index];
-        this.m_tokenLength = length[index];
+        tokenStart = startPositions[index];
+        this.tokenLength = length[index];
         m_type = type[index];
         return true;
     }
 
     private void setTokenParams(final int index) {
-        startPositions[index] = m_tokenStart;
-        length[index] = this.m_tokenLength;
+        startPositions[index] = tokenStart;
+        length[index] = this.tokenLength;
         type[index] = m_type;
     }
 }

@@ -42,7 +42,7 @@ public class HTMLFetcherStressController {
     private File m_inputFile;
     private int m_failures = 0;
     private int m_success = 0;
-    private long m_accumSuccessTimes = 0;
+    private long accumSuccessTimes = 0;
     private boolean m_running = false;
 
     public void setInputFile(String file) throws FileNotFoundException {
@@ -93,14 +93,14 @@ public class HTMLFetcherStressController {
 
     public synchronized void incrementSuccess(long timeToFetch) {
         m_success++;
-        m_accumSuccessTimes += timeToFetch;
+        accumSuccessTimes += timeToFetch;
     }
 
     public synchronized long getAverageFetchTime() {
         if (m_success == 0) {
             return 0;
         }
-        return m_accumSuccessTimes / m_success;
+        return accumSuccessTimes / m_success;
     }
 
     public int getSuccesses() {

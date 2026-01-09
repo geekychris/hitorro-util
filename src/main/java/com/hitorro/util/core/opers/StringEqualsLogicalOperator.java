@@ -29,13 +29,13 @@ import com.hitorro.util.core.HTAssert;
  */
 public class StringEqualsLogicalOperator implements HTPredicate<String> {
     private boolean m_ignoreCase;
-    private String m_term;
+    private String term;
 
     public StringEqualsLogicalOperator(String term, boolean ignoreCase) {
         m_ignoreCase = ignoreCase;
-        m_term = term;
+        this.term = term;
         if (m_ignoreCase) {
-            m_term = m_term.toLowerCase();
+            this.term = this.term.toLowerCase();
         }
     }
 
@@ -55,7 +55,7 @@ public class StringEqualsLogicalOperator implements HTPredicate<String> {
             s = s.toLowerCase();
 
         }
-        return s.equals(m_term);
+        return s.equals(term);
     }
 }
 

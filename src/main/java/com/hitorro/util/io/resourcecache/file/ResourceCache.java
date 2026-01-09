@@ -60,17 +60,17 @@ public class ResourceCache {
             new HashMap<String, VersionTree<ResourceDirectoryVersionNode>>();
     protected List<ResourceToPoll> resourcesToPoll = new ArrayList<ResourceToPoll>();
     private File m_rootDir;
-    private File m_rootTmp;
-    private int m_keepVersions = 3;
+    private File rootTmp;
+    private int keepVersions = 3;
 
     public ResourceCache() {
         String root = Root.apply();
         m_rootDir = new File(Env.getHome(), root);
         FileUtil.ensureDirectoryExists(m_rootDir);
-        m_rootTmp = new File(Env.getHome(), Fmt.S("%s.tmp", root));
-        FileUtil.ensureDirectoryExists(m_rootTmp);
+        rootTmp = new File(Env.getHome(), Fmt.S("%s.tmp", root));
+        FileUtil.ensureDirectoryExists(rootTmp);
 
-        m_keepVersions = MaxKeep.apply();
+        keepVersions = MaxKeep.apply();
         scanDirsForVersions();
     }
 
@@ -125,7 +125,7 @@ public class ResourceCache {
         }
 
         String name = Fmt.S("%s/%s.%s.%s.%s", resource, major, minor, patch, currentTime);
-        File dir = new File(this.m_rootTmp, name);
+        File dir = new File(this.rootTmp, name);
         if (!dir.mkdirs()) {
             Log.resourcecache.error("Unable to create temporary");
         }
@@ -197,7 +197,7 @@ public class ResourceCache {
     }
 
     public File getRootTmp() {
-        return m_rootTmp;
+        return rootTmp;
     }
 
     private void scanDirsForVersions() {
@@ -333,7 +333,7 @@ public class ResourceCache {
     }
 
     private void purgeOldVersions(VersionTree<ResourceDirectoryVersionNode> vt, ResourceDirectoryVersionNode node) {
-        List<ResourceDirectoryVersionNode> oldNodes = vt.getNodesMatchingVersion(node, this.m_keepVersions);
+        List<ResourceDirectoryVersionNode> oldNodes = vt.getNodesMatchingVersion(node, this.keepVersions);
         if (!ListUtil.nullOrEmpty(oldNodes)) {
             for (ResourceDirectoryVersionNode n : oldNodes) {
                 if (n.getUseCount() == 0) {

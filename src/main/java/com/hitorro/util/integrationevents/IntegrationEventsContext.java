@@ -50,8 +50,8 @@ public class IntegrationEventsContext {
                     ",",
                     null);
     private static IntegrationEventsContext s_context = null;
-    private List<String> m_eventNames = null;
-    private List<String> m_initDBEvents = new ArrayList<String>();
+    private List<String> eventNames = null;
+    private List<String> initDBEvents = new ArrayList<String>();
 
     public IntegrationEventsContext() {
         init();
@@ -65,15 +65,15 @@ public class IntegrationEventsContext {
     }
 
     public void init() {
-        m_eventNames = InitDBIntegrationEvents.apply();
+        eventNames = InitDBIntegrationEvents.apply();
     }
 
     public List<String> getEventNames() {
-        return m_eventNames;
+        return eventNames;
     }
 
     public boolean hasEvent(String event) {
-        return m_eventNames.contains(event);
+        return eventNames.contains(event);
     }
 
     /**
@@ -82,11 +82,11 @@ public class IntegrationEventsContext {
      * @param eventName
      */
     public void addInitDBEvent(String eventName) {
-        if (!m_initDBEvents.contains(eventName)) {
+        if (!initDBEvents.contains(eventName)) {
             // put to the listFiles of events to run at initdb
-            m_initDBEvents.add(eventName);
+            initDBEvents.add(eventName);
             // put to the complete listFiles of events
-            m_eventNames.add(eventName);
+            eventNames.add(eventName);
         }
     }
 
@@ -102,8 +102,8 @@ public class IntegrationEventsContext {
             }
         }
 
-        if (!ListUtil.nullOrEmpty(m_initDBEvents)) {
-            for (String event : m_initDBEvents) {
+        if (!ListUtil.nullOrEmpty(initDBEvents)) {
+            for (String event : initDBEvents) {
                 if (runEvent(event)) {
                     Log.integration.info("Ran integration event %s successfully", event);
                 } else {
@@ -115,7 +115,7 @@ public class IntegrationEventsContext {
 
 
     public boolean runEvent(String eventName) throws PropaccessError {
-        if (m_eventNames == null) {
+        if (eventNames == null) {
             Log.integration.error("Unable to retrieve a listFiles of integration events");
             return false;
         }

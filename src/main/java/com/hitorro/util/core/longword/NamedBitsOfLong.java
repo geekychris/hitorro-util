@@ -29,7 +29,7 @@ import com.hitorro.util.core.string.Fmt;
  */
 public class NamedBitsOfLong {
     public static final long AllOn = 0xFFFFFFFFFFFFFFFFl;
-    private int m_bitOffset;
+    private int bitOffset;
     private long m_bits;
     private int m_width = 1;
     private long m_mask;
@@ -55,7 +55,7 @@ public class NamedBitsOfLong {
     }
 
     public long getLongHash() {
-        String v = Fmt.S("%s.%s.%s", m_name, m_bitOffset, m_width);
+        String v = Fmt.S("%s.%s.%s", m_name, bitOffset, m_width);
         return FPHash64.getFP(v);
     }
 
@@ -65,7 +65,7 @@ public class NamedBitsOfLong {
 
     public void setBitOffset(String name, int position, int width, WordBits wordBits) {
         m_name = name.toLowerCase();
-        m_bitOffset = position;
+        bitOffset = position;
         m_width = width;
         this.wordBits = wordBits;
         if (m_width == 1) {
@@ -89,7 +89,7 @@ public class NamedBitsOfLong {
     }
 
     public int getBitOffset() {
-        return m_bitOffset;
+        return bitOffset;
     }
 
     public long set(long val) {
@@ -105,11 +105,11 @@ public class NamedBitsOfLong {
     }
 
     public long set(long word, long number) {
-        return word = (word & m_mask) | (number << m_bitOffset) & m_bits;
+        return word = (word & m_mask) | (number << bitOffset) & m_bits;
     }
 
     public long get(long word) {
-        return (word & m_bits) >> m_bitOffset;
+        return (word & m_bits) >> bitOffset;
     }
 
     public long clear(long val) {

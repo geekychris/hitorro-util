@@ -45,14 +45,14 @@ public class HTMLPageFetcher {
     public static final int DEFAULT_MAX_REDIRECTS = 16;
 
     private String defaultAgent = DefaultAgent_String;
-    private long m_maxRawPageLen = 1024 * 1024;
-    private long m_httpTimeout = 5 * Constants.MillisInSecond;
+    private long maxRawPageLen = 1024 * 1024;
+    private long httpTimeout = 5 * Constants.MillisInSecond;
 
     private HTTPClient m_httpClient = new HTTPClient();
-    private long m_pagesFetched = 0;
+    private long pagesFetched = 0;
     private int m_redirects;
-    private long m_accumParseTime;
-    private long m_accumFetchTime;
+    private long accumParseTime;
+    private long accumFetchTime;
 
     public HTMLPageFetcher() {
 
@@ -63,7 +63,7 @@ public class HTMLPageFetcher {
     }
 
     public void setHttpTimeout(int timeoutMs) {
-        m_httpTimeout = timeoutMs;
+        httpTimeout = timeoutMs;
         // re-init the manager as the timeouts have changed.
         initManager();
     }
@@ -73,29 +73,29 @@ public class HTMLPageFetcher {
     }
 
     public void setMaxRawPageLength(int size) {
-        m_maxRawPageLen = size;
+        maxRawPageLen = size;
     }
 
     private void initManager() {
-        m_httpClient.setReadTimoutInMillis((int) m_httpTimeout);
+        m_httpClient.setReadTimoutInMillis((int) httpTimeout);
     }
 
     public long getHTTPTimeout() {
-        return m_httpTimeout;
+        return httpTimeout;
     }
 
     public HTMLPage fetchPage(String url) {
         m_redirects = 0;
-        m_accumFetchTime = 0;
-        m_accumParseTime = 0;
+        accumFetchTime = 0;
+        accumParseTime = 0;
         HTMLPage page = new HTMLPage();
         fetchPage(m_httpClient, url, page, true);
-        m_pagesFetched++;
+        pagesFetched++;
         if (!StringUtil.nullOrEmptyString(page.getSource()) && !StringUtil.nullOrEmptyString(page.getUrl())) {
             return page;
         }
         Log.httpfetcher.debug("Redirects %s accum fetch time %s, accum parseTime %s, URL: %s",
-                m_redirects, m_accumFetchTime, m_accumParseTime, url);
+                m_redirects, accumFetchTime, accumParseTime, url);
         return null;
     }
 
@@ -152,7 +152,7 @@ public class HTMLPageFetcher {
                                    HTTPClient client,
                                    boolean truncate) throws IOException {
         HTMLParser parser = page.getParser();
-        m_accumParseTime += page.getParseTime();
+        accumParseTime += page.getParseTime();
         String redirectUrl = parser.getRedirectURL(url);
         if (!StringUtil.nullOrEmptyOrBlankString(redirectUrl)) {
             fetchRaw(client, redirectUrl, page, truncate);
@@ -204,14 +204,14 @@ public class HTMLPageFetcher {
                 String str;
                 long srcLen = 0;
                 str = bufReader.readLine();
-                while (str != null && srcLen < m_maxRawPageLen) {
+                while (str != null && srcLen < maxRawPageLen) {
                     long lineLen = str.length();
 
-                    if (!truncate || (lineLen + srcLen <= m_maxRawPageLen)) {
+                    if (!truncate || (lineLen + srcLen <= maxRawPageLen)) {
                         buf.append(str);
                     } else {
-                        buf.append(str, 0, (int) (m_maxRawPageLen - srcLen - 1));
-                        Log.httpfetcher.warn("Truncated the page at %str KB, URL: %s", m_maxRawPageLen / 1024, url);
+                        buf.append(str, 0, (int) (maxRawPageLen - srcLen - 1));
+                        Log.httpfetcher.warn("Truncated the page at %str KB, URL: %s", maxRawPageLen / 1024, url);
                         page.setTruncated();
                     }
                     buf.append("\n");
@@ -231,7 +231,7 @@ public class HTMLPageFetcher {
                 page.setTruncated();
             }
             t.stop();
-            m_accumFetchTime += t.getTime();
+            accumFetchTime += t.getTime();
         } catch (SocketTimeoutException ste) {
             Log.util.debug("HtmlPageFetcher: Couldn't fetch the page at %s, %s ", ste, url);
             page.setExceptionReason(HTMLPage.Exception.Timeout);

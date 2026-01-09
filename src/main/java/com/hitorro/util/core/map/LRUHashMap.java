@@ -51,7 +51,7 @@ public class LRUHashMap<K, V> implements Map<K, V> {
 
     private int m_cacheSize;
 
-    private LRURemovalCallback<V> m_removalCallback;
+    private LRURemovalCallback<V> removalCallback;
     private transient Entry<K, V> m_eldestRemovedEntry = null;
 
     /**
@@ -64,7 +64,7 @@ public class LRUHashMap<K, V> implements Map<K, V> {
         int hashTableCapacity = (int) Math
                 .ceil(cacheSize / s_hashTableLoadFactor) + 1;
         m_map = new com.hitorro.util.core.map.LRUHashMap.LRULinkedHashMap(hashTableCapacity, s_hashTableLoadFactor, true, false);
-        this.m_removalCallback = null;
+        this.removalCallback = null;
     }
 
     /**
@@ -77,7 +77,7 @@ public class LRUHashMap<K, V> implements Map<K, V> {
         int hashTableCapacity = (int) Math
                 .ceil(cacheSize / s_hashTableLoadFactor) + 1;
         m_map = new com.hitorro.util.core.map.LRUHashMap.LRULinkedHashMap(hashTableCapacity, s_hashTableLoadFactor, true, removalCallback != null);
-        this.m_removalCallback = removalCallback;
+        this.removalCallback = removalCallback;
     }
 
     /**
@@ -128,8 +128,8 @@ public class LRUHashMap<K, V> implements Map<K, V> {
 
         }
         if (removedEntry != null) {
-            assert m_removalCallback != null;
-            m_removalCallback.processRemoveFromLRU(removedEntry.getValue());
+            assert removalCallback != null;
+            removalCallback.processRemoveFromLRU(removedEntry.getValue());
             return removedEntry.getValue();
         }
         return null;

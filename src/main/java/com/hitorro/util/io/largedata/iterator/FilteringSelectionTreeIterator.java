@@ -44,14 +44,14 @@ import java.util.Iterator;
 public class FilteringSelectionTreeIterator<E, C extends Comparator<E>> implements Iterator<E> {
 
     private Iterator<E> m_iter;
-    private boolean m_iterHasElement = true;
+    private boolean iterHasElement = true;
     private Iterator<E> m_stop;
-    private boolean m_stopHasElement = true;
+    private boolean stopHasElement = true;
 
     private E m_returnMe = null;
 
-    private E m_iterComparable = null;
-    private E m_stopComparable = null;
+    private E iterComparable = null;
+    private E stopComparable = null;
     private C m_comparitor;
 
     /**
@@ -88,15 +88,15 @@ public class FilteringSelectionTreeIterator<E, C extends Comparator<E>> implemen
             if (val != null) {
                 return val;
             }
-            if (m_iterHasElement == false) {
+            if (iterHasElement == false) {
                 return null;
             }
         }
     }
 
     protected final E getIterValAndBackFillAux() {
-        if (m_iterHasElement && m_stopHasElement) {
-            int val = m_comparitor.compare(m_iterComparable, m_stopComparable);
+        if (iterHasElement && stopHasElement) {
+            int val = m_comparitor.compare(iterComparable, stopComparable);
             if (val == 0) {
                 // must remove iter val and try again...advance iter but dont return
                 // the value
@@ -114,30 +114,30 @@ public class FilteringSelectionTreeIterator<E, C extends Comparator<E>> implemen
             }
 
         }
-        if (m_iterHasElement) {
+        if (iterHasElement) {
             return getIter();
         }
         // the iterator does not have any more
-        m_iterHasElement = false;
+        iterHasElement = false;
         return null;
     }
 
     private final E getIter() {
-        E returnMe = m_iterComparable;
+        E returnMe = iterComparable;
         if (m_iter.hasNext()) {
-            m_iterComparable = m_iter.next();
+            iterComparable = m_iter.next();
         } else {
-            m_iterHasElement = false;
+            iterHasElement = false;
         }
         return returnMe;
     }
 
     private final E getStop() {
-        E returnMe = m_stopComparable;
+        E returnMe = stopComparable;
         if (m_stop.hasNext()) {
-            m_stopComparable = m_stop.next();
+            stopComparable = m_stop.next();
         } else {
-            m_stopHasElement = false;
+            stopHasElement = false;
         }
         return returnMe;
     }

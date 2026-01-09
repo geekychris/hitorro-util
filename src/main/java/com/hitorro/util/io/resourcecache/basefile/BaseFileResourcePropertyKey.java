@@ -37,7 +37,7 @@ import java.util.Map;
  */
 public class BaseFileResourcePropertyKey extends BasefileProperty {
     private String m_resourceKey;
-    private String m_resourceQueryString;
+    private String resourceQueryString;
     private String m_resourceFileName;
 
     /**
@@ -71,7 +71,7 @@ public class BaseFileResourcePropertyKey extends BasefileProperty {
 
     private void set(String resourceKey, String queryString, String resourceFileName) {
         m_resourceKey = resourceKey;
-        m_resourceQueryString = queryString;
+        resourceQueryString = queryString;
         m_resourceFileName = resourceFileName;
     }
 
@@ -83,7 +83,7 @@ public class BaseFileResourcePropertyKey extends BasefileProperty {
      */
     public boolean isInResourceCache(Map<String, String> map) {
         ResourceCache resourceCache = ResourceCache.getCache();
-        DirectoryVersionNode dvn = resourceCache.getResource(this.m_resourceKey, this.m_resourceQueryString);
+        DirectoryVersionNode dvn = resourceCache.getResource(this.m_resourceKey, this.resourceQueryString);
         return dvn != null;
     }
 
@@ -94,7 +94,7 @@ public class BaseFileResourcePropertyKey extends BasefileProperty {
         } catch (IOException e) {
             return null;
         }
-        BaseFileDirectoryVersionNode dvn = resourceCache.getResource(this.m_resourceKey, this.m_resourceQueryString);
+        BaseFileDirectoryVersionNode dvn = resourceCache.getResource(this.m_resourceKey, this.resourceQueryString);
         if (dvn != null) {
 
             BaseFile f = dvn.getDirectory();

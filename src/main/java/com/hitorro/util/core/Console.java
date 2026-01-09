@@ -33,7 +33,7 @@ import java.io.PrintWriter;
  */
 public class Console {
     public static PrintStream m_out = System.out;
-    public static PrintStream m_outErr = System.err;
+    public static PrintStream outErr = System.err;
 
     /**
      * Print a new line to stdout with carriage return
@@ -125,7 +125,7 @@ public class Console {
      * Print a new line to stdout with carriage return
      */
     public static final void eprintln() {
-        m_outErr.println();
+        outErr.println();
     }
 
     /**
@@ -134,7 +134,7 @@ public class Console {
      * @param text to print out
      */
     public static final void eprintln(String text) {
-        m_outErr.println(text);
+        outErr.println(text);
     }
 
     /**
@@ -143,14 +143,14 @@ public class Console {
      * @param text to print out formatted with all the arguments
      */
     public static final void eprintln(String text, Object... args) {
-        m_outErr.println(Fmt.S(text, args));
+        outErr.println(Fmt.S(text, args));
     }
 
     /**
      * Print text to stdout
      */
     public static final void eprint(String text) {
-        m_outErr.print(text);
+        outErr.print(text);
     }
 
     /**
@@ -160,7 +160,7 @@ public class Console {
      * @param args to insert into formatted text
      */
     public static final void eprint(String text, Object... args) {
-        m_outErr.print(Fmt.S(text, args));
+        outErr.print(Fmt.S(text, args));
     }
 
     /**

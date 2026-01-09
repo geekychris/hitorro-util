@@ -57,9 +57,9 @@ public class Farm<I, O, T> {
     // if set to a positive value, we use a keep alive thread to ensure threads
     // are reborn if they
     // die
-    private long m_millisDelay = -1;
+    private long millisDelay = -1;
 
-    private Thread m_keepAliveThread = null;
+    private Thread keepAliveThread = null;
 
     private Farm() {
         // do Nothing
@@ -116,7 +116,7 @@ public class Farm<I, O, T> {
     }
 
     public void useKeepAliveThread(long millisDelay) {
-        m_millisDelay = millisDelay;
+        this.millisDelay = millisDelay;
     }
 
     /**
@@ -127,12 +127,12 @@ public class Farm<I, O, T> {
         for (int i = 0; i < m_producers.length; i++) {
             m_producers[i].start();
         }
-        if (m_millisDelay != -1) {
-            FarmKeepAlive alive = new FarmKeepAlive(this, m_millisDelay);
+        if (millisDelay != -1) {
+            FarmKeepAlive alive = new FarmKeepAlive(this, millisDelay);
 
-            m_keepAliveThread = new Thread(m_threadGroup, alive, m_name);
-            m_keepAliveThread.setDaemon(true);
-            m_keepAliveThread.start();
+            keepAliveThread = new Thread(m_threadGroup, alive, m_name);
+            keepAliveThread.setDaemon(true);
+            keepAliveThread.start();
         }
     }
 

@@ -42,12 +42,12 @@ public class MethodAnnotation extends BaseAnnotation {
 
     public MethodAnnotation(Method m, Map<Class, Class> constraint) {
         m_method = m;
-        ClassAnoUtil.loadAnnotation(m_anno, m.getAnnotations(), constraint);
+        ClassAnoUtil.loadAnnotation(anno, m.getAnnotations(), constraint);
     }
 
     public MethodAnnotation(Method m, HTPredicate<Class> annotationConstraint) {
         m_method = m;
-        ClassAnoUtil.loadAnnotation(m_anno, m.getAnnotations(), annotationConstraint);
+        ClassAnoUtil.loadAnnotation(anno, m.getAnnotations(), annotationConstraint);
     }
 
     public Method getMethod() {
@@ -122,7 +122,7 @@ public class MethodAnnotation extends BaseAnnotation {
      */
     public Map<Class, Class> getClassIdentityMap() {
         if (m_identityMap == null) {
-            m_identityMap = ClassAnnotations.getClassIdentityMap(m_anno);
+            m_identityMap = ClassAnnotations.getClassIdentityMap(anno);
         }
         return m_identityMap;
     }

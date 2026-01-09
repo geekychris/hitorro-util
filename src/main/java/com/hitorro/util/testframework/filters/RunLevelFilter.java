@@ -31,7 +31,7 @@ import com.hitorro.util.testframework.TestCaseWrapper;
 
 public class RunLevelFilter implements HTPredicate<TestCaseWrapper> {
 
-    RunLevel m_suiteLevel = RunLevel.Never;
+    RunLevel suiteLevel = RunLevel.Never;
 
 
     public RunLevelFilter(RunLevel suiteLevel) {
@@ -58,7 +58,7 @@ public class RunLevelFilter implements HTPredicate<TestCaseWrapper> {
         RunLevel testcaseLevel = t.testDef.runlevel();
 
         if (testcaseLevel != RunLevel.Never) {
-            if (m_suiteLevel.ordinal() >= testcaseLevel.ordinal()) {
+            if (suiteLevel.ordinal() >= testcaseLevel.ordinal()) {
                 match = true;
             }
         }
@@ -68,11 +68,11 @@ public class RunLevelFilter implements HTPredicate<TestCaseWrapper> {
 
 
     public RunLevel getSuiteRunLevel() {
-        return m_suiteLevel;
+        return suiteLevel;
     }
 
 
     public void setSuiteRunLevel(RunLevel suiteLevel) {
-        m_suiteLevel = suiteLevel;
+        this.suiteLevel = suiteLevel;
     }
 }

@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public class LongFromBytesProperty extends PropertyKey<Long> {
     private long m_defaultValue = 0;
-    private boolean m_haveDefault = false;
+    private boolean haveDefault = false;
 
     public LongFromBytesProperty(String key, String description) {
         super(key, description);
@@ -42,14 +42,14 @@ public class LongFromBytesProperty extends PropertyKey<Long> {
         super(ano.keyName(), ano.description());
         if (ano.defaultValue() != null) {
             m_defaultValue = Integer.parseInt(ano.defaultValue());
-            m_haveDefault = true;
+            haveDefault = true;
         }
     }
 
     public LongFromBytesProperty(String key, String description, int defaultValue) {
         this(key, description);
         m_defaultValue = defaultValue;
-        m_haveDefault = true;
+        haveDefault = true;
     }
 
     public String getPropertyType() {
@@ -58,7 +58,7 @@ public class LongFromBytesProperty extends PropertyKey<Long> {
 
     public long getLongValue(Map<String, String> map) {
         String sValue = getValueFromConfig(map);
-        if (sValue == null && m_haveDefault) {
+        if (sValue == null && haveDefault) {
             // we don't validate a default value because our validation just checks for integerness
             return m_defaultValue;
         }

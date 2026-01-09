@@ -44,7 +44,7 @@ public class JDBCIterator<E> extends AbstractIterator<E> {
     private boolean m_hasNext = false;
     private E m_returnMe;
     private Connection m_connection = null;
-    private int m_rowsRetrieved = 0;
+    private int rowsRetrieved = 0;
 
     private JDBCIterator() {
 
@@ -93,7 +93,7 @@ public class JDBCIterator<E> extends AbstractIterator<E> {
     }
 
     public int getRowsRetrieved() {
-        return m_rowsRetrieved;
+        return rowsRetrieved;
     }
 
     public boolean hasNext() {
@@ -103,7 +103,7 @@ public class JDBCIterator<E> extends AbstractIterator<E> {
     private boolean hasNextAux() {
         try {
             if (m_rs.next()) {
-                m_rowsRetrieved++;
+                rowsRetrieved++;
                 m_returnMe = m_adapter.apply(m_rs);
             } else {
                 m_adapter.close();

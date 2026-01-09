@@ -37,25 +37,25 @@ public class JUnitListener implements TestListener {
     private String m_class;
     private String m_name;
     private String m_email;
-    private String m_runLevel;
+    private String runLevel;
     private String m_description;
     private String m_error;
     private Timer m_timer = new Timer(this.getClass().toString());
     private Float m_time = new Float(0.000);
 
-    private int m_errorCount = 0;
+    private int errorCount = 0;
 
-    private boolean m_allFields;
+    private boolean allFields;
 
 
     public JUnitListener(Response resp, boolean dumpAllFields) {
         m_response = resp;
-        m_allFields = dumpAllFields;
+        allFields = dumpAllFields;
         addHeader();
     }
 
     public int getErrorCount() {
-        return m_errorCount;
+        return errorCount;
     }
 
     public ResponseShape getAllFields() {
@@ -75,7 +75,7 @@ public class JUnitListener implements TestListener {
     }
 
     public void addHeader() {
-        if (m_allFields) {
+        if (allFields) {
             m_response.setResponseShape(getAllFields());
         } else {
             m_response.setResponseShape(getFields());
@@ -91,7 +91,7 @@ public class JUnitListener implements TestListener {
             m_error = "failure";
         }
         m_response.addInfo(InfoLevel.Error, Fmt.S("Error running test %s with exception %s %e", t, arg1, arg1));
-        m_errorCount++;
+        errorCount++;
     }
 
 
@@ -103,7 +103,7 @@ public class JUnitListener implements TestListener {
             m_error = "failure";
         }
         m_response.addInfo(InfoLevel.Error, Fmt.S("Failure running test %s with exception %s %e", arg0, arg1, arg1));
-        m_errorCount++;
+        errorCount++;
     }
 
 
@@ -113,7 +113,7 @@ public class JUnitListener implements TestListener {
 
         Log.test.info("Test %s finished", arg0);
 
-        if (m_allFields) {
+        if (allFields) {
             m_response.addRow(m_name, m_email, m_class, m_error, m_description, m_time);
         } else {
             m_response.addRow(m_name, m_email, m_error);
@@ -132,7 +132,7 @@ public class JUnitListener implements TestListener {
     private void aquireBasicInfo(Test t) {
         m_class = "N/A";
         m_email = "N/A";
-        m_runLevel = "N/A";
+        runLevel = "N/A";
         m_description = "N/A";
         m_error = "success";
         if (t instanceof TestCase) {
@@ -155,7 +155,7 @@ public class JUnitListener implements TestListener {
         TestCaseWrapper wrapper = new TestCaseWrapper(clazz);
         if (wrapper.testDef != null) {
             m_email = wrapper.testDef.email();
-            m_runLevel = wrapper.testDef.runlevel().toString();
+            runLevel = wrapper.testDef.runlevel().toString();
             m_description = wrapper.testDef.description();
         }
     }

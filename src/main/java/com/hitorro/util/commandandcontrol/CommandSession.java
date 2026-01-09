@@ -59,18 +59,18 @@ public class CommandSession implements Runnable {
     protected static final String StartupScript = "startup.command";
     private static ResponseShape header = initList();
     private static Map<String, String> substMap = new HashMap<String, String>();
-    public LineTerminator m_lineTerminator = LineTerminator.SemiColon;
-    protected String m_prompt = "HT>";
+    public LineTerminator lineTerminator = LineTerminator.SemiColon;
+    protected String prompt = "HT>";
     @SuppressWarnings("unused")
     protected Socket m_socket;
     protected int m_counter = 0;
     protected InputStream m_is;
     protected OutputStream m_os;
-    protected OutputStream m_scriptOs;
-    protected String m_promptInteractive = "%s>";
+    protected OutputStream scriptOs;
+    protected String promptInteractive = "%s>";
     // if a telnet session
-    protected boolean m_closeConnectionOnExit = true;
-    protected File m_scriptFile = null;
+    protected boolean closeConnectionOnExit = true;
+    protected File scriptFile = null;
     protected boolean m_exit = false;
     protected Map<String, Object> m_sessionVars = new HashMap<String, Object>();
     protected Command interactiveCommand = null;
@@ -133,10 +133,10 @@ public class CommandSession implements Runnable {
 
     private static void copyCommandToFile(String command,
                                           CommandSession session) {
-        if (session.m_scriptOs != null) {
+        if (session.scriptOs != null) {
             try {
-                session.m_scriptOs.write(command.getBytes());
-                session.m_scriptOs.write(com.hitorro.util.core.Constants.NewLineChar);
+                session.scriptOs.write(command.getBytes());
+                session.scriptOs.write(com.hitorro.util.core.Constants.NewLineChar);
             } catch (IOException e) {
                 com.hitorro.util.core.Log.util.error("Exception %s %e", e, e);
             }
@@ -195,29 +195,29 @@ public class CommandSession implements Runnable {
 
     private static OutputStream getTeedOS(CommandSession session) {
         if (session.m_os != null) {
-            if (session.m_scriptFile == null) {
-                session.m_scriptOs = null;
+            if (session.scriptFile == null) {
+                session.scriptOs = null;
                 return session.m_os;
             }
 
             try {
-                session.m_scriptOs = FileUtil.getBufferedFileOutputStream(
-                        session.m_scriptFile, true);
-                return new TeeOutputStream(session.m_os, session.m_scriptOs);
+                session.scriptOs = FileUtil.getBufferedFileOutputStream(
+                        session.scriptFile, true);
+                return new TeeOutputStream(session.m_os, session.scriptOs);
             } catch (FileNotFoundException e) {
                 return session.m_os;
             }
         } else {
-            if (session.m_scriptFile != null) {
+            if (session.scriptFile != null) {
 
 
                 try {
-                    session.m_scriptOs = FileUtil.getBufferedFileOutputStream(
-                            session.m_scriptFile, true);
+                    session.scriptOs = FileUtil.getBufferedFileOutputStream(
+                            session.scriptFile, true);
                 } catch (FileNotFoundException e) {
                     com.hitorro.util.core.Log.util.error("Exception %s %e", e, e);
                 }
-                return session.m_scriptOs;
+                return session.scriptOs;
             }
         }
         return null;
@@ -225,9 +225,9 @@ public class CommandSession implements Runnable {
 
     private static void printPrompt(PrintWriter pw, CommandSession session) {
         if (session.m_counter > 0) {
-            pw.write(Fmt.S(session.m_promptInteractive, session.m_counter));
+            pw.write(Fmt.S(session.promptInteractive, session.m_counter));
         } else {
-            pw.write(session.m_prompt);
+            pw.write(session.prompt);
         }
 
         pw.flush();
@@ -347,14 +347,14 @@ public class CommandSession implements Runnable {
     }
 
     public void setSession(InputStream is, OutputStream os) {
-        m_prompt = BaseCommandLine.getCommandLine().commandLine;
+        prompt = BaseCommandLine.getCommandLine().commandLine;
         m_is = is;
         m_os = os;
         init();
     }
 
     public void setPrompt(String prompt) {
-        m_prompt = prompt;
+        this.prompt = prompt;
     }
 
     public int getDoubleDecimalPlaces() {
@@ -458,7 +458,7 @@ public class CommandSession implements Runnable {
         } catch (PropaccessError e) {
             com.hitorro.util.core.Log.commands.error("The following exception occured %s %e", e, e);
         } finally {
-            if (this.m_closeConnectionOnExit) {
+            if (this.closeConnectionOnExit) {
                 com.hitorro.util.core.Log.commands.debug("About to flush and close connection");
                 try {
                     m_os.flush();
@@ -558,11 +558,11 @@ public class CommandSession implements Runnable {
     }
 
     public File getScript() {
-        return m_scriptFile;
+        return scriptFile;
     }
 
     public void setScript(File scr) {
-        m_scriptFile = scr;
+        scriptFile = scr;
     }
 
     private boolean executeCommand(PrintWriter pw, String sIn,
@@ -574,7 +574,7 @@ public class CommandSession implements Runnable {
         builder.append(sIn);
         String s = builder.toString().trim();
 
-        if (session.m_lineTerminator == CommandSession.LineTerminator.DoubleReturn) {
+        if (session.lineTerminator == CommandSession.LineTerminator.DoubleReturn) {
             if (sIn.trim().length() == 0) {
                 // its a double return or at least a blank line return
             } else {
@@ -582,7 +582,7 @@ public class CommandSession implements Runnable {
                 session.m_counter++;
                 return false;
             }
-        } else if (session.m_lineTerminator == CommandSession.LineTerminator.SemiColon) {
+        } else if (session.lineTerminator == CommandSession.LineTerminator.SemiColon) {
             if (s.endsWith(";")) {
                 s = s.substring(0, s.length() - 1);
             } else {
@@ -664,7 +664,7 @@ public class CommandSession implements Runnable {
 
         StringBuilder builder = new StringBuilder();
         String commandStr = StringUtil.strcat(command.getCommand(), " ", command.getRawArgs());
-        if (session.m_lineTerminator == LineTerminator.SemiColon) {
+        if (session.lineTerminator == LineTerminator.SemiColon) {
             commandStr = StringUtil.strcat(commandStr, ";");
         }
         writePromptCommand(pw, session, commandStr);
@@ -674,7 +674,7 @@ public class CommandSession implements Runnable {
 
     protected void writePromptCommand(final PrintWriter pw, final CommandSession session, final String commandStr) {
         if (pw != null) {
-            pw.print(session.m_prompt);
+            pw.print(session.prompt);
             pw.print(commandStr);
         }
     }
@@ -744,7 +744,7 @@ public class CommandSession implements Runnable {
         Response resp = getResponse(pw, session);
         if (pw != null) {
             if (printCommand) {
-                pw.print(session.m_prompt);
+                pw.print(session.prompt);
                 pw.println(command);
             }
             pw.println();

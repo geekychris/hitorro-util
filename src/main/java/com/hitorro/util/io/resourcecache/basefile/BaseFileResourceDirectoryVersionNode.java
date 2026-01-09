@@ -41,13 +41,13 @@ public class BaseFileResourceDirectoryVersionNode extends BaseFileDirectoryVersi
     private static final String LinkFileName = ".requiresLink.txt";
     private BaseFileResourceCache cache;
     private String m_resource;
-    private boolean m_requiresLink = false;
-    private boolean m_currentLink = false;
-    private BaseFile m_linkFile;
-    private boolean m_isTemp = true;
-    private int m_useCount = 0;
-    private BaseFile m_currentLinkDir = null;
-    private BaseFile m_versionedLinkDir = null;
+    private boolean requiresLink = false;
+    private boolean currentLink = false;
+    private BaseFile linkFile;
+    private boolean isTemp = true;
+    private int useCount = 0;
+    private BaseFile currentLinkDir = null;
+    private BaseFile versionedLinkDir = null;
 
     public BaseFileResourceDirectoryVersionNode() {
 
@@ -66,65 +66,65 @@ public class BaseFileResourceDirectoryVersionNode extends BaseFileDirectoryVersi
     }
 
     public void setTemp(boolean flag) {
-        m_isTemp = false;
+        isTemp = false;
     }
 
     public void setOpenResourceVersionLink(boolean versioned, boolean current) throws IOException {
-        m_requiresLink = versioned;
-        this.m_currentLink = current;
-        if (m_requiresLink) {
+        requiresLink = versioned;
+        this.currentLink = current;
+        if (requiresLink) {
             //ensure link file exists.
-            if (!m_linkFile.exists()) {
-                m_linkFile.writeString(Long.toString(System.currentTimeMillis()));
+            if (!linkFile.exists()) {
+                linkFile.writeString(Long.toString(System.currentTimeMillis()));
             }
         } else {
-            if (m_linkFile.exists()) {
-                m_linkFile.delete();
+            if (linkFile.exists()) {
+                linkFile.delete();
             }
         }
         ensureLink();
     }
 
     public BaseFile getCurrentLink() {
-        return m_currentLinkDir;
+        return currentLinkDir;
     }
 
     public BaseFile getVersionedLink() {
-        return m_versionedLinkDir;
+        return versionedLinkDir;
     }
 
     public void ensureLink() throws IOException {
-        if (!m_isTemp) {
+        if (!isTemp) {
             BaseFile open = cache.getOpenResourceDir();
 
             //only if we are not temp do we
-            if (m_currentLink) {
-                if (m_currentLinkDir == null) {
+            if (currentLink) {
+                if (currentLinkDir == null) {
                     // ensure we have the current link.
                     BaseFile current = open.getChild("current");
                     current.mkdir();
 
-                    m_currentLinkDir = current.getChild(this.m_resource);
+                    currentLinkDir = current.getChild(this.m_resource);
                 }
-                m_currentLinkDir.delete();
+                currentLinkDir.delete();
                 if (this.getDirectory().supportsSoftLink()) {
-                    this.getDirectory().linkTo(m_currentLinkDir);
+                    this.getDirectory().linkTo(currentLinkDir);
                 }
 
             }
 
-            if (m_versionedLinkDir == null) {
+            if (versionedLinkDir == null) {
                 BaseFile versioned = open.getChild("versioned");
                 versioned.mkdir();
 
                 BaseFile versionResource = versioned.getChild(this.m_resource);
                 versionResource.mkdir();
-                m_versionedLinkDir = versionResource.getChild(getName());
+                versionedLinkDir = versionResource.getChild(getName());
             }
-            m_versionedLinkDir.delete();
-            if (this.m_requiresLink) {
+            versionedLinkDir.delete();
+            if (this.requiresLink) {
                 if (this.getDirectory().supportsSoftLink()) {
-                    this.getDirectory().linkTo(m_versionedLinkDir);
+                    this.getDirectory().linkTo(versionedLinkDir);
                 }
             }
 
@@ -138,19 +138,19 @@ public class BaseFileResourceDirectoryVersionNode extends BaseFileDirectoryVersi
     }
 
     private void setLink(BaseFile directory) {
-        m_linkFile = directory.getChild(LinkFileName);
+        linkFile = directory.getChild(LinkFileName);
     }
 
     public int getUseCount() {
-        return m_useCount;
+        return useCount;
     }
 
     public void incrementUseCount() {
-        m_useCount++;
+        useCount++;
     }
 
     public void derementUseCount() {
-        m_useCount--;
+        useCount--;
     }
 
     public String getResource() {
@@ -161,10 +161,10 @@ public class BaseFileResourceDirectoryVersionNode extends BaseFileDirectoryVersi
         os.writeInt(SerializationVersion);
         super.serialize(os);
         os.writeString(m_resource);
-        os.writeBoolean(m_requiresLink);
-        os.writeBoolean(m_currentLink);
-        if (m_linkFile != null) {
-            os.writeString(m_linkFile.getAbsolutePath());
+        os.writeBoolean(requiresLink);
+        os.writeBoolean(currentLink);
+        if (linkFile != null) {
+            os.writeString(linkFile.getAbsolutePath());
         } else {
             os.writeString(null);
         }
@@ -175,11 +175,11 @@ public class BaseFileResourceDirectoryVersionNode extends BaseFileDirectoryVersi
         int version = os.readInt();
         super.deserialize(os);
         m_resource = os.readString();
-        m_requiresLink = os.readBoolean();
-        m_currentLink = os.readBoolean();
+        requiresLink = os.readBoolean();
+        currentLink = os.readBoolean();
         String s = os.readString();
         if (s != null) {
-            m_linkFile = BaseFileSystem.getBaseFileFromPath(s);
+            linkFile = BaseFileSystem.getBaseFileFromPath(s);
         }
     }
 

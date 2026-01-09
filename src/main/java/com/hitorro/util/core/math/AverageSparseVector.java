@@ -39,9 +39,9 @@ public class AverageSparseVector {
     }
 
     public void add(SparseVector v1) {
-        for (int i = 0; i < v1.m_elementCount; i++) {
-            long pos = v1.m_indexParticipants[i];
-            double val = v1.m_doubleValues[i];
+        for (int i = 0; i < v1.elementCount; i++) {
+            long pos = v1.indexParticipants[i];
+            double val = v1.doubleValues[i];
             val += m_map.get(pos);
             m_map.put(pos, val);
         }

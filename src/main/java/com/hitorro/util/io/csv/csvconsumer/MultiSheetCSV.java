@@ -38,13 +38,13 @@ import java.util.Map;
  */
 public class MultiSheetCSV implements MultiSheetCSVReaderInterface {
     private File m_dir;
-    private String m_fileExtension;
+    private String fileExtension;
     private Map<String, File> m_map = new HashMap<String, File>();
 
 
     public MultiSheetCSV(File directory, String fileExtension) {
         m_dir = directory;
-        m_fileExtension = fileExtension;
+        this.fileExtension = fileExtension;
         init();
     }
 
@@ -66,7 +66,7 @@ public class MultiSheetCSV implements MultiSheetCSVReaderInterface {
     }
 
     private void init() {
-        File files[] = m_dir.listFiles(new FilenameExtensionFilter(m_fileExtension, true));
+        File files[] = m_dir.listFiles(new FilenameExtensionFilter(fileExtension, true));
         for (File f : files) {
             String name = FileUtil.getFileNameSansExtension(f);
             m_map.put(name.toLowerCase(), f);

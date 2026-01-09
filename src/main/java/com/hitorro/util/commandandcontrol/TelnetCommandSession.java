@@ -246,12 +246,12 @@ public class TelnetCommandSession extends CommandSession implements Shell {
     private String getPrompt() {
         String s;
         if (this.m_counter > 0) {
-            s = Fmt.S(this.m_promptInteractive, m_counter);
+            s = Fmt.S(this.promptInteractive, m_counter);
         } else {
             if (getLineNumber() == -1) {
-                s = Fmt.S("%s>", this.m_prompt);
+                s = Fmt.S("%s>", this.prompt);
             } else {
-                s = Fmt.S("%s-%s>", this.m_prompt, getLineNumber());
+                s = Fmt.S("%s-%s>", this.prompt, getLineNumber());
             }
         }
         return s;

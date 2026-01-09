@@ -44,11 +44,11 @@ public class TagFinder {
     private int m_close;
     // given <!DOCTYPE ....> the entity name length would be 8 (we scan for the space)
     private int m_entityNameLength;
-    private int m_attrNameStart;
-    private int m_attrNameLength;
-    private int m_attributeValueStart;
-    private int m_attributeValueEnd;
-    private int m_attrStart;
+    private int attrNameStart;
+    private int attrNameLength;
+    private int attributeValueStart;
+    private int attributeValueEnd;
+    private int attrStart;
 
     public void set(String buffer, int maxPos) {
         m_buffer = buffer;
@@ -88,7 +88,7 @@ public class TagFinder {
     }
 
     public void resetAttributeScan() {
-        m_attrStart = m_open + m_entityNameLength + 1;
+        attrStart = m_open + m_entityNameLength + 1;
     }
 
     /**
@@ -104,7 +104,7 @@ public class TagFinder {
 
         while (true) {
             if (getNextAttribute()) {
-                if (StringUtil.subStringEqualsIgnoreCase(m_buffer, m_attrNameStart, m_attrNameLength, attr)) {
+                if (StringUtil.subStringEqualsIgnoreCase(m_buffer, attrNameStart, attrNameLength, attr)) {
                     return true;
                 }
             } else {
@@ -121,7 +121,7 @@ public class TagFinder {
      * @return
      */
     public String getAttributeName() {
-        return m_buffer.substring(m_attrNameStart, m_attrNameStart + m_attrNameLength);
+        return m_buffer.substring(attrNameStart, attrNameStart + attrNameLength);
     }
 
     /**
@@ -130,10 +130,10 @@ public class TagFinder {
      * @return
      */
     public String getAttributeValue() {
-        if (m_attributeValueStart == -1) {
+        if (attributeValueStart == -1) {
             return "";
         }
-        return m_buffer.substring(m_attributeValueStart, m_attributeValueEnd);
+        return m_buffer.substring(attributeValueStart, attributeValueEnd);
     }
 
     /**
@@ -143,10 +143,10 @@ public class TagFinder {
      * @throws ParseException
      */
     public boolean getNextAttribute() {
-        this.m_attributeValueStart = 0;
-        this.m_attributeValueEnd = 0;
-        this.m_attrNameStart = 0;
-        m_attrNameLength = 0;
+        this.attributeValueStart = 0;
+        this.attributeValueEnd = 0;
+        this.attrNameStart = 0;
+        attrNameLength = 0;
         boolean inQuotes = false;
         int state = 0;
         // 0=whitespace
@@ -156,7 +156,7 @@ public class TagFinder {
         // 4 = value
         char c = ' ';
         String key = null;
-        for (int i = m_attrStart + 1; i < m_close; i++) {
+        for (int i = attrStart + 1; i < m_close; i++) {
             c = m_buffer.charAt(i);
             switch (state) {
                 case 0:
@@ -165,8 +165,8 @@ public class TagFinder {
                         // tis not white space enter next state
                         state = 1;
                         // just put this char as its part of the key
-                        if (m_attrNameStart == 0) {
-                            m_attrNameStart = i;
+                        if (attrNameStart == 0) {
+                            attrNameStart = i;
                         }
 
                     }
@@ -177,10 +177,10 @@ public class TagFinder {
                         // have hit white space end of key
                         // now look for equals
                         state = 2;
-                        this.m_attrNameLength = i - m_attrNameStart;
+                        this.attrNameLength = i - attrNameStart;
                     } else if (c == '=') {
                         // now look for white space following key
-                        this.m_attrNameLength = i - m_attrNameStart;
+                        this.attrNameLength = i - attrNameStart;
                         state = 3;
                     } else {
 
@@ -192,18 +192,18 @@ public class TagFinder {
                         // do nothing
                     } else if (c == '=') {
                         // have hit equals following key
-                        this.m_attrNameLength = i - m_attrNameStart;
+                        this.attrNameLength = i - attrNameStart;
                         // now look for white space following key
                         state = 3;
                     } else {
                         // case where there is no value
                         state = 1;
-                        this.m_attributeValueStart = -1;
-                        this.m_attributeValueEnd = -1;
-                        if (m_attrNameLength == 0) {
-                            this.m_attrNameLength = i - m_attrNameStart;
+                        this.attributeValueStart = -1;
+                        this.attributeValueEnd = -1;
+                        if (attrNameLength == 0) {
+                            this.attrNameLength = i - attrNameStart;
                         }
-                        m_attrStart = i - 1;
+                        attrStart = i - 1;
                         return true;
                     }
 
@@ -218,7 +218,7 @@ public class TagFinder {
                         if (c == '\'' || c == '\"') {
                             inQuotes = true;
                         } else {
-                            this.m_attributeValueStart = i;
+                            this.attributeValueStart = i;
                         }
 
                     }
@@ -230,36 +230,36 @@ public class TagFinder {
                     } else {
                         if (!inQuotes) {
                             if (c == ' ') {
-                                this.m_attributeValueEnd = i - 1;
-                                m_attrStart = i;
+                                this.attributeValueEnd = i - 1;
+                                attrStart = i;
                                 return true;
                             } else {
-                                if (m_attributeValueStart == 0) {
-                                    this.m_attributeValueStart = i;
+                                if (attributeValueStart == 0) {
+                                    this.attributeValueStart = i;
                                 }
                             }
 
                         } else {
-                            if (m_attributeValueStart == 0) {
-                                this.m_attributeValueStart = i;
+                            if (attributeValueStart == 0) {
+                                this.attributeValueStart = i;
                             }
                         }
                     }
             }
         }
-        m_attrStart = m_buffer.length();
+        attrStart = m_buffer.length();
         // deal with end of array case
         if (state == 1) {
 
             state = 2;
-            this.m_attributeValueStart = -1;
-            this.m_attributeValueEnd = -1;
+            this.attributeValueStart = -1;
+            this.attributeValueEnd = -1;
 
             return true;
         }
         if (state == 4) {
             if (inQuotes == false) {
-                m_attributeValueEnd = m_close - 1;
+                attributeValueEnd = m_close - 1;
                 return true;
             } else {
                 // XXX ERROR?

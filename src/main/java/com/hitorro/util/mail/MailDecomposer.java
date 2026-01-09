@@ -47,12 +47,12 @@ import java.util.*;
 public class MailDecomposer {
     protected File m_outputDir;
     protected List m_files;
-    private File m_mimeFile;
+    private File mimeFile;
     private int m_counter;
     private Map m_map;
 
     public MailDecomposer(File mimeFile, File outputDir) {
-        m_mimeFile = mimeFile;
+        this.mimeFile = mimeFile;
         m_outputDir = outputDir;
         m_counter = 1;
         m_files = new Vector();
@@ -154,7 +154,7 @@ public class MailDecomposer {
         Session session = Session.getInstance(props, null);
         session.setDebug(true);
         try {
-            InputStream is = FileUtil.getBufferedFileInputStream(m_mimeFile);
+            InputStream is = FileUtil.getBufferedFileInputStream(mimeFile);
 
             MimeMessage msg = new MimeMessage(session, is);
 

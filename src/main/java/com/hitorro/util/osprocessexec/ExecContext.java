@@ -42,24 +42,24 @@ public class ExecContext {
     private static BlockingQueue<Runnable> m_workQueue = new PriorityBlockingQueue<Runnable>(20);
 
     private static ThreadPoolExecutor s_exec = new ThreadPoolExecutor(5, 20, 100, TimeUnit.SECONDS, m_workQueue, m_factory);
-    WaitOnProcessRunner m_procThread = null;
-    private boolean m_hasCompleted = false;
+    WaitOnProcessRunner procThread = null;
+    private boolean hasCompleted = false;
     private int m_exitCode = -1;
     private OutputStream m_outputStream = null;
-    private OutputStream m_errorStream = null;
+    private OutputStream errorStream = null;
     private InputStream m_inputStream = null;
     private String m_program = null;
     private String[] m_args = null;
-    private CopyRunner m_errorWriter = null;
-    private CopyRunner m_outputWriter = null;
-    private CopyRunner m_inputReader = null;
+    private CopyRunner errorWriter = null;
+    private CopyRunner outputWriter = null;
+    private CopyRunner inputReader = null;
     private Process m_process = null;
 
     private Object m_lock = new Object();
-    private TerminationKey m_terminationKey = null;
+    private TerminationKey terminationKey = null;
 
     public ExecContext(TerminationKey key) {
-        m_terminationKey = key;
+        terminationKey = key;
     }
 
     public Process getProcess() {
@@ -79,7 +79,7 @@ public class ExecContext {
     }
 
     public void setErrorFile(File errFile) throws FileNotFoundException {
-        m_errorStream = new FileOutputStream(errFile);
+        errorStream = new FileOutputStream(errFile);
     }
 
     public void setInputFile(File inputFile) throws FileNotFoundException {
@@ -91,7 +91,7 @@ public class ExecContext {
     }
 
     public void setError(OutputStream os) {
-        m_errorStream = os;
+        errorStream = os;
     }
 
     public void setInput(InputStream is) {
@@ -123,9 +123,9 @@ public class ExecContext {
             createIOThreads();
             if (m_process != null) {
                 // should set input stream and output stream!!!
-                m_procThread = new WaitOnProcessRunner(this);
-                s_exec.execute(m_procThread);
-                while (m_hasCompleted != true) {
+                procThread = new WaitOnProcessRunner(this);
+                s_exec.execute(procThread);
+                while (hasCompleted != true) {
                     // determine if we timed out.
                     long currTime = System.currentTimeMillis();
                     if (currTime > endTime) {
@@ -183,9 +183,9 @@ public class ExecContext {
             createIOThreads();
             if (m_process != null) {
                 // should set input stream and output stream!!!
-                m_procThread = new WaitOnProcessRunner(this);
-                s_exec.execute(m_procThread);
-                while (m_hasCompleted != true) {
+                procThread = new WaitOnProcessRunner(this);
+                s_exec.execute(procThread);
+                while (hasCompleted != true) {
                     // determine if we timed out.
                     long currTime = System.currentTimeMillis();
                     if (currTime > endTime) {
@@ -230,8 +230,8 @@ public class ExecContext {
         createIOThreads();
         if (m_process != null) {
             // should set input stream and output stream!!!
-            m_procThread = new WaitOnProcessRunner(this);
-            s_exec.execute(m_procThread);
+            procThread = new WaitOnProcessRunner(this);
+            s_exec.execute(procThread);
             return true;
         } else {
             Log.util.debug("Process was null in ExecContext %s", m_program);
@@ -240,7 +240,7 @@ public class ExecContext {
     }
 
     public boolean completed() {
-        return m_hasCompleted;
+        return hasCompleted;
     }
 
     public int getExitCode() {
@@ -256,17 +256,17 @@ public class ExecContext {
 
         // processes input is my output
         if (m_outputStream != null) {
-            m_outputWriter = createOutputThread(m_process.getInputStream(), m_outputStream);
+            outputWriter = createOutputThread(m_process.getInputStream(), m_outputStream);
         }
 
         //process error output is my error input
-        if (m_errorStream != null) {
-            m_errorWriter = createOutputThread(m_process.getErrorStream(), m_errorStream);
+        if (errorStream != null) {
+            errorWriter = createOutputThread(m_process.getErrorStream(), errorStream);
         }
 
         //process output is my input
         if (m_inputStream != null) {
-            m_inputReader = createInputThread(m_process.getOutputStream(), m_inputStream);
+            inputReader = createInputThread(m_process.getOutputStream(), m_inputStream);
         }
     }
 
@@ -282,10 +282,10 @@ public class ExecContext {
                 e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
         }
-        attemptToStopThread(m_outputWriter);
-        attemptToStopThread(m_errorWriter);
-        attemptToStopThread(m_inputReader);
-        attemptToStopThread(m_procThread);
+        attemptToStopThread(outputWriter);
+        attemptToStopThread(errorWriter);
+        attemptToStopThread(inputReader);
+        attemptToStopThread(procThread);
     }
 
     private void attemptToStopThread(Runnable t) {
@@ -333,12 +333,12 @@ public class ExecContext {
 
     public void notifyComplete(int exitCode) {
         m_exitCode = exitCode;
-        m_hasCompleted = true;
+        hasCompleted = true;
         synchronized (m_lock) {
             Log.util.debug("Notifying ExecContext");
             m_lock.notify();
-            if (m_terminationKey != null) {
-                m_terminationKey.complete(m_exitCode);
+            if (terminationKey != null) {
+                terminationKey.complete(m_exitCode);
             }
             Log.util.debug("Notified ExecContext");
         }

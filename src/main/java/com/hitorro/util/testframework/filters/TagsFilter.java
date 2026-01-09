@@ -34,7 +34,7 @@ import com.hitorro.util.testframework.TestCaseWrapper;
 public class TagsFilter implements HTPredicate<TestCaseWrapper> {
 
 
-    private String m_targetTag;
+    private String targetTag;
 
 
     public TagsFilter(String tag) {
@@ -57,9 +57,9 @@ public class TagsFilter implements HTPredicate<TestCaseWrapper> {
 
         String testcaseTags[] = testcase.testDef.tags();
 
-        if (StringUtil.nullOrEmptyOrBlankString(m_targetTag)) {
+        if (StringUtil.nullOrEmptyOrBlankString(targetTag)) {
             match = true;
-        } else if (ArrayUtil.getFirstIndexInStringArray(testcaseTags, m_targetTag, false) >= 0) {
+        } else if (ArrayUtil.getFirstIndexInStringArray(testcaseTags, targetTag, false) >= 0) {
             match = true;
         }
 
@@ -68,11 +68,11 @@ public class TagsFilter implements HTPredicate<TestCaseWrapper> {
 
 
     public String getTag() {
-        return m_targetTag;
+        return targetTag;
     }
 
 
     public void setTargetTag(String tag) {
-        m_targetTag = tag;
+        targetTag = tag;
     }
 }

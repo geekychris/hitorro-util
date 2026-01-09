@@ -30,12 +30,12 @@ import java.io.InputStream;
  * streams.
  */
 public class LengthConstrainedInputStream extends InputStream {
-    private long m_bytesToRead;
+    private long bytesToRead;
     private InputStream m_is;
 
     public LengthConstrainedInputStream(InputStream is, long bytesToRead) {
         m_is = is;
-        m_bytesToRead = bytesToRead;
+        this.bytesToRead = bytesToRead;
     }
 
     public int read() throws IOException {
@@ -58,25 +58,25 @@ public class LengthConstrainedInputStream extends InputStream {
      */
     public int read(byte b[], int off, int len) throws IOException {
         int read = 0;
-        if (m_bytesToRead < len) {
-            len = (int) m_bytesToRead;
+        if (bytesToRead < len) {
+            len = (int) bytesToRead;
         }
-        if (m_bytesToRead == 0) {
+        if (bytesToRead == 0) {
             return -1;
         }
         read = m_is.read(b, off, len);
         if (read == -1) {
             return -1;
         }
-        m_bytesToRead -= read;
+        bytesToRead -= read;
         return read;
     }
 
     public long skip(long n) throws IOException {
-        if (m_bytesToRead < n) {
-            n = (int) m_bytesToRead;
+        if (bytesToRead < n) {
+            n = (int) bytesToRead;
         }
-        m_bytesToRead = 0;
+        bytesToRead = 0;
         return m_is.skip(n);
     }
 

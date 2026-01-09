@@ -33,12 +33,12 @@ import java.io.PrintWriter;
 public class ConsoleResponse extends Response {
     private static final char PadChar = ' ';
     StringBuilder m_builder = new StringBuilder();
-    private boolean m_endCalled = false;
+    private boolean endCalled = false;
     private PrintWriter m_os;
-    private int m_paddingFromHeader;
-    private int m_columnSize[];
-    private String m_columnSeperator = "";
-    private String m_endOfLineSeperator = "";
+    private int paddingFromHeader;
+    private int columnSize[];
+    private String columnSeperator = "";
+    private String endOfLineSeperator = "";
 
     public ConsoleResponse() {
         m_os = new PrintWriter(System.out);
@@ -46,14 +46,14 @@ public class ConsoleResponse extends Response {
 
     public ConsoleResponse(PrintWriter os, int paddingFromHeader) {
         m_os = os;
-        m_paddingFromHeader = paddingFromHeader;
+        this.paddingFromHeader = paddingFromHeader;
     }
 
     public void setCommandSession(CommandSession cs) {
-        m_columnSeperator = cs.getVarAsString("columseperator");
-        m_columnSeperator = StringUtil.ifNullOrEmptyReplace(m_columnSeperator, "");
-        m_endOfLineSeperator = cs.getVarAsString("rowseperator");
-        m_endOfLineSeperator = StringUtil.ifNullOrEmptyReplace(m_endOfLineSeperator, "");
+        columnSeperator = cs.getVarAsString("columseperator");
+        columnSeperator = StringUtil.ifNullOrEmptyReplace(columnSeperator, "");
+        endOfLineSeperator = cs.getVarAsString("rowseperator");
+        endOfLineSeperator = StringUtil.ifNullOrEmptyReplace(endOfLineSeperator, "");
     }
 
     @Override
@@ -88,13 +88,13 @@ public class ConsoleResponse extends Response {
     }
 
     public void addHeaderArray(String headers[]) {
-        m_columnSize = new int[headers.length];
+        columnSize = new int[headers.length];
 
         for (int i = 0; i < headers.length; i++) {
             Object o = headers[i];
             int l = m_builder.length();
-            StringUtil.pad(o, PadChar, m_paddingFromHeader, m_builder);
-            m_columnSize[i] = m_builder.length() - l;
+            StringUtil.pad(o, PadChar, paddingFromHeader, m_builder);
+            columnSize[i] = m_builder.length() - l;
         }
     }
 
@@ -105,25 +105,25 @@ public class ConsoleResponse extends Response {
     @Override
     public void addRowArray(Object elements[]) {
         m_builder.setLength(0);
-        int min = Math.min(elements.length, m_columnSize.length);
+        int min = Math.min(elements.length, columnSize.length);
         for (int i = 0; i < min; i++) {
             Object o = elements[i];
             if (i > 0) {
-                m_builder.append(m_columnSeperator);
+                m_builder.append(columnSeperator);
             }
-            StringUtil.padToLength(o, PadChar, m_columnSize[i], m_builder);
+            StringUtil.padToLength(o, PadChar, columnSize[i], m_builder);
         }
         m_os.print(m_builder.toString());
-        m_os.print(m_endOfLineSeperator);
+        m_os.print(endOfLineSeperator);
         m_os.print(Constants.CarriageReturnLineFeed);
     }
 
     @Override
     public void end() {
-        if (m_endCalled) {
+        if (endCalled) {
             return;
         }
-        m_endCalled = true;
+        endCalled = true;
         m_os.flush();
     }
 }

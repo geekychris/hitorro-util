@@ -34,9 +34,9 @@ import java.util.Map;
  */
 public class ClassAnnotations {
     private Class m_c;
-    private List<Annotation> m_classLevelAnnotation = new ArrayList<Annotation>();
-    private List<MethodAnnotation> m_methodAnno = new ArrayList<MethodAnnotation>();
-    private ClassAnnotations m_contraintAnnotation = null;
+    private List<Annotation> classLevelAnnotation = new ArrayList<Annotation>();
+    private List<MethodAnnotation> methodAnno = new ArrayList<MethodAnnotation>();
+    private ClassAnnotations contraintAnnotation = null;
     private List<MemberVarAnnotations> memberVarAnnos = new ArrayList<MemberVarAnnotations>();
     private List<BeanStyleMethodAnnotation> beanStyleMethodAnnotations;
     private Map<Class, Class> m_classLevelAnnotationIdentityMap = null;
@@ -94,7 +94,7 @@ public class ClassAnnotations {
      * @return a listFiles of Annotations
      */
     public List<Annotation> getClassAnnotations() {
-        return m_classLevelAnnotation;
+        return classLevelAnnotation;
     }
 
     /**
@@ -104,7 +104,7 @@ public class ClassAnnotations {
      * @return a listFiles of MethodAnnotations
      */
     public List<MethodAnnotation> getMethodAnnotations() {
-        return m_methodAnno;
+        return methodAnno;
     }
 
     /**
@@ -125,10 +125,10 @@ public class ClassAnnotations {
     public void init(Class c, ClassAnnotations contraintAnnotation) {
         m_c = c;
         MemberVarAnnotations.addToListIfHasAnnotationFromClass(c, memberVarAnnos);
-        m_contraintAnnotation = contraintAnnotation;
+        this.contraintAnnotation = contraintAnnotation;
 
         // load class level annotation.  If a constraint was
-        ClassAnoUtil.loadAnnotation(m_classLevelAnnotation, c.getAnnotations(),
+        ClassAnoUtil.loadAnnotation(classLevelAnnotation, c.getAnnotations(),
                 getConstraintClassLevelAnnotationIdentityMap());
 
         // now load the annotations for the methods
@@ -142,7 +142,7 @@ public class ClassAnnotations {
                 MethodAnnotation ma = new MethodAnnotation(m, methodConstraint);
                 if (ma.getAnnotations() != null && ma.getAnnotations().size() > 0) {
                     // has method with annotation
-                    m_methodAnno.add(ma);
+                    methodAnno.add(ma);
                 }
             }
         }
@@ -153,8 +153,8 @@ public class ClassAnnotations {
     }
 
     private Map<Class, Class> getMethodConstraint() {
-        if (m_contraintAnnotation != null) {
-            List<MethodAnnotation> anos = m_contraintAnnotation.getMethodAnnotations();
+        if (this.contraintAnnotation != null) {
+            List<MethodAnnotation> anos = this.contraintAnnotation.getMethodAnnotations();
             if (anos != null && anos.size() > 0) {
                 MethodAnnotation ma = anos.get(0);
                 return ma.getClassIdentityMap();
@@ -164,8 +164,8 @@ public class ClassAnnotations {
     }
 
     private Map<Class, Class> getConstraintClassLevelAnnotationIdentityMap() {
-        if (m_contraintAnnotation != null) {
-            return this.m_contraintAnnotation.getClassLevelAnnotationIdentityMap();
+        if (this.contraintAnnotation != null) {
+            return this.contraintAnnotation.getClassLevelAnnotationIdentityMap();
         }
         return null;
     }
@@ -177,7 +177,7 @@ public class ClassAnnotations {
      */
     private Map<Class, Class> getClassLevelAnnotationIdentityMap() {
         if (m_classLevelAnnotationIdentityMap == null) {
-            if (m_contraintAnnotation == null) {
+            if (this.contraintAnnotation == null) {
                 // constraint object is me!
                 m_classLevelAnnotationIdentityMap = getClassIdentityMap(getClassAnnotations());
             }

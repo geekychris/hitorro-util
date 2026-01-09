@@ -60,13 +60,13 @@ public class JavaExecWrapper {
     private static final String JreParams = "jreparams";
     private static final FilenameFilter s_jarFilter = new OrCollection(new FilenameExtensionFilter("jar", true),
             new FilenameExtensionFilter("zip", true));
-    File m_ptBinPath;
-    File m_ptHomePath;
+    File ptBinPath;
+    File ptHomePath;
     File m_jreRoot;
     private String m_classPath;
-    private boolean m_debugEnabled = false;
+    private boolean debugEnabled = false;
     private String m_port = "60000";
-    private boolean m_suspend = false;
+    private boolean suspend = false;
     private Map<String, String> m_args;
     private List<String> m_jreParams;
     private String m_class;
@@ -79,8 +79,8 @@ public class JavaExecWrapper {
                            String className,
                            List<String> jreParams,
                            Map<String, String> args) {
-        m_ptBinPath = binPath;
-        m_ptHomePath = homePath;
+        ptBinPath = binPath;
+        ptHomePath = homePath;
         m_jreRoot = jreRoot;
         m_class = className;
         m_args = args;
@@ -111,20 +111,20 @@ public class JavaExecWrapper {
     }
 
     public void setDebug(boolean enable, String port, boolean suspend) {
-        m_suspend = suspend;
+        this.suspend = suspend;
         m_port = port;
-        m_debugEnabled = enable;
+        debugEnabled = enable;
     }
 
     public boolean init() throws IOException {
         Map<String, String> map = new HashMap<String, String>();
-        m_args.put("HT_BIN", m_ptBinPath.getCanonicalPath());
-        m_args.put("HT_HOME", m_ptHomePath.getCanonicalPath());
+        m_args.put("HT_BIN", ptBinPath.getCanonicalPath());
+        m_args.put("HT_HOME", ptHomePath.getCanonicalPath());
 
         map.put(Java, com.hitorro.util.core.Platform.getPlatform().getJava(m_jreRoot).getCanonicalPath());
         map.put(Classpath, getClassPath());
-        if (m_debugEnabled) {
-            map.put(Debug, getDebugString(m_port, m_suspend));
+        if (debugEnabled) {
+            map.put(Debug, getDebugString(m_port, suspend));
         } else {
             map.put(Debug, "");
         }
@@ -143,9 +143,9 @@ public class JavaExecWrapper {
         StringBuilder b = new StringBuilder();
         com.hitorro.util.core.Platform.getPlatform().getJavaClassPath(b, m_jreRoot, s_jarFilter);
         // ht's third party
-        ClassUtil.getExpandedClassPath(b, new File(m_ptBinPath, "lib"), s_jarFilter);
+        ClassUtil.getExpandedClassPath(b, new File(ptBinPath, "lib"), s_jarFilter);
         b.append(com.hitorro.util.core.Env.getPathSeperator());
-        b.append(new File(m_ptBinPath, "build").getCanonicalPath());
+        b.append(new File(ptBinPath, "build").getCanonicalPath());
         return b.toString();
     }
 

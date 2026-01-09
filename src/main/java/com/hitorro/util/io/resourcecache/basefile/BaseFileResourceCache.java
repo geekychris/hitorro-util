@@ -55,18 +55,18 @@ public class BaseFileResourceCache {
     protected List<ResourceToPoll> resourcesToPoll = new ArrayList<ResourceToPoll>();
     protected BaseFile openResourceDir;
     private BaseFile m_rootDir;
-    private BaseFile m_rootTmp;
-    private int m_keepVersions = 3;
+    private BaseFile rootTmp;
+    private int keepVersions = 3;
 
     public BaseFileResourceCache(BaseFile dataRoot, BaseFile openResourceDir) throws IOException {
         String root = Root.apply();
         this.openResourceDir = openResourceDir;
         m_rootDir = dataRoot.getChild(root);
         m_rootDir.mkdir();
-        m_rootTmp = dataRoot.getChild(Fmt.S("%s.tmp", root));
-        m_rootTmp.mkdir();
+        rootTmp = dataRoot.getChild(Fmt.S("%s.tmp", root));
+        rootTmp.mkdir();
 
-        m_keepVersions = MaxKeep.apply();
+        keepVersions = MaxKeep.apply();
         scanDirsForVersions();
     }
 
@@ -128,7 +128,7 @@ public class BaseFileResourceCache {
         }
 
         String name = Fmt.S("%s/%s.%s.%s.%s", resource, major, minor, patch, currentTime);
-        BaseFile dir = m_rootTmp.getChild(name);
+        BaseFile dir = rootTmp.getChild(name);
         if (!dir.mkdir()) {
             Log.resourcecache.error("Unable to create temporary");
         }
@@ -200,7 +200,7 @@ public class BaseFileResourceCache {
     }
 
     public BaseFile getRootTmp() {
-        return m_rootTmp;
+        return rootTmp;
     }
 
     private void scanDirsForVersions() throws IOException {
@@ -334,7 +334,7 @@ public class BaseFileResourceCache {
     }
 
     private void purgeOldVersions(VersionTree<BaseFileResourceDirectoryVersionNode> vt, BaseFileResourceDirectoryVersionNode node) throws IOException {
-        List<BaseFileResourceDirectoryVersionNode> oldNodes = vt.getNodesMatchingVersion(node, this.m_keepVersions);
+        List<BaseFileResourceDirectoryVersionNode> oldNodes = vt.getNodesMatchingVersion(node, this.keepVersions);
         if (!ListUtil.nullOrEmpty(oldNodes)) {
             for (BaseFileResourceDirectoryVersionNode n : oldNodes) {
                 if (n.getUseCount() == 0) {
