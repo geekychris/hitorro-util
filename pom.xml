@@ -28,6 +28,13 @@
     </repositories>
 
     <dependencies>
+        <!-- Jakarta Persistence API -->
+        <dependency>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        
         <!-- https://mvnrepository.com/artifact/org.codehaus.groovy/groovy-all -->
 
         <!-- https://mvnrepository.com/artifact/io.lettuce/lettuce-core -->

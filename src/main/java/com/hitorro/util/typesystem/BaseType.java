@@ -27,6 +27,8 @@ import com.hitorro.util.typesystem.annotation.ImplClassMeta;
 import com.hitorro.util.typesystem.annotation.TypeClassMetaInfo;
 import com.hitorro.util.typesystem.listeners.BaseOnTriggerGeneric;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
@@ -36,7 +38,11 @@ import java.lang.ref.WeakReference;
         isPersisted = false,
         schemaVersion = 1)
 
+@MappedSuperclass
 public abstract class BaseType<T extends BaseSession> implements HTSerializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "system_id")
     protected Long id;
     protected boolean stale = false;
     protected int commitCount = 0;

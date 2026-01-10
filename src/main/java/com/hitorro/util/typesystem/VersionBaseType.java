@@ -23,19 +23,24 @@ package com.hitorro.util.typesystem;
 
 import com.hitorro.util.io.StoreException;
 
+import jakarta.persistence.*;
+
 import java.io.IOException;
 
 /**
  */
+@MappedSuperclass
 public abstract class VersionBaseType<T extends BaseSession> extends BaseType<T> {
     private transient boolean markedFlush = false;
 
     private transient int versionStampSnapshot;
 
-    private int versionStamp;
+    @Version
+    @Column(name = "versionStamp")
+    private Integer versionStamp;
 
     public int getVersionStamp() {
-        return versionStamp;
+        return versionStamp != null ? versionStamp : 0;
     }
 
     public void setVersionStamp(int version) {
@@ -44,7 +49,7 @@ public abstract class VersionBaseType<T extends BaseSession> extends BaseType<T>
 
 
     public void snapshotVersionStamp() {
-        versionStampSnapshot = versionStamp;
+        versionStampSnapshot = versionStamp != null ? versionStamp : 0;
     }
 
     public void recoverSnapshotVersionStamp() {
@@ -66,7 +71,7 @@ public abstract class VersionBaseType<T extends BaseSession> extends BaseType<T>
     public void serialize(HTObjectOutputStream os)
             throws IOException, StoreException {
         super.serialize(os);
-        os.writeInt(versionStamp);
+        os.writeInt(versionStamp != null ? versionStamp : 0);
     }
 
     public void deserialize(HTObjectInputStream os)
