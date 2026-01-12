@@ -44,11 +44,19 @@ public abstract class BaseType<T extends BaseSession> implements HTSerializable 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "system_id")
     protected Long id;
+    
+    @Column(name = "stale")
     protected boolean stale = false;
+    
+    @Column(name = "commitCount")
     protected int commitCount = 0;
+    
     // NEVER PERSIST THIS, THIS IS FOR session management
+    @Transient
     protected transient WeakReference<T> session;
+    
     // NOT TO BE PERSISTED
+    @Transient
     protected long tempSerializationID;
 
     public int getCommitCount() {
