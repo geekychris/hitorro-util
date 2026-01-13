@@ -23,6 +23,7 @@ package com.hitorro.util.cmdline;
 
 import com.hitorro.jsontypesystem.JVS;
 import com.hitorro.util.commandandcontrol.CommandSession;
+import com.hitorro.util.commandandcontrol.SshListener;
 import com.hitorro.util.commandandcontrol.TerminalListener;
 import com.hitorro.util.core.*;
 import com.hitorro.util.core.classes.ClassUtil;
@@ -76,13 +77,15 @@ public abstract class BaseCommandLine<T> {
     }
 
     /**
-     * Logging may need two parts to the setup, once before the system is fully up, that needs to allow logging even
+     * Logging may need two parts to the setup, once before the system is fully up,
+     * that needs to allow logging even
      * without all the logging facilities available.
      */
     protected abstract void setupPrimordialLogging();
 
     /**
-     * Assumes that we are now mostly configured and we can now setup logging properly
+     * Assumes that we are now mostly configured and we can now setup logging
+     * properly
      */
     protected abstract void setupLogging();
 
@@ -91,14 +94,16 @@ public abstract class BaseCommandLine<T> {
     /**
      * load or reload properties.
      *
-     * @param runDiff if true then we assume we have a prior load of the properties and we should diff against the prior
+     * @param runDiff if true then we assume we have a prior load of the properties
+     *                and we should diff against the prior
      *                version to identify any changes.
      * @return Command being executed
      */
     public abstract JVS reloadJVSProps(boolean runDiff);
 
     /**
-     * Get my PID since java doesnt let you do that, we use our swig wrapper todo it.
+     * Get my PID since java doesnt let you do that, we use our swig wrapper todo
+     * it.
      */
 
     /**
@@ -107,14 +112,16 @@ public abstract class BaseCommandLine<T> {
     protected abstract void initConfigChangeWatching();
 
     /**
-     * Do we want log watching to be enabled which will allow us to compresss and remove old logs.
+     * Do we want log watching to be enabled which will allow us to compresss and
+     * remove old logs.
      *
      * @return
      */
     protected abstract boolean setupLogWatching();
 
     /**
-     * public method purely for the purposes of debugging.  Here you can have an eclipse debug project that
+     * public method purely for the purposes of debugging. Here you can have an
+     * eclipse debug project that
      * specifically
      *
      * @param args
@@ -133,6 +140,7 @@ public abstract class BaseCommandLine<T> {
 
         setupLogging();
         startupDebugTerminal();
+        startupSshTerminal();
         // get global id of system
         com.hitorro.util.core.Env.getGlobalId();
         initCommandLine();
@@ -144,8 +152,7 @@ public abstract class BaseCommandLine<T> {
         }
     }
 
-
-    //******* TERMINAL STUFF ********
+    // ******* TERMINAL STUFF ********
 
     private void setupCmdArgs(final String[] args, final String commandIn) {
         this.command = commandIn;
@@ -164,7 +171,8 @@ public abstract class BaseCommandLine<T> {
     }
 
     /**
-     * Subclass is able to define the startup and shutdown steps that the service compContext issues.
+     * Subclass is able to define the startup and shutdown steps that the service
+     * compContext issues.
      *
      * @return
      */
@@ -246,12 +254,32 @@ public abstract class BaseCommandLine<T> {
     public void startupDebugTerminal() {
         try {
             Properties props = new Properties();
-            props.load(FileUtil.fsInputStream.apply(new File(com.hitorro.util.core.Env.getConfigDir(), "telnetd.properties")));
+            props.load(FileUtil.fsInputStream
+                    .apply(new File(com.hitorro.util.core.Env.getConfigDir(), "telnetd.properties")));
             props.put("std.port", Integer.toString(TerminalListener.PortNumber.apply()));
             myTD = TelnetD.createTelnetD(props);
             myTD.start();
         } catch (Exception e) {
             com.hitorro.util.core.Log.util.error("Unable to startup terminal with error %s, %e", e, e);
+        }
+    }
+
+    /**
+     * Start SSH server for remote command and control access
+     */
+    public void startupSshTerminal() {
+        try {
+            SshListener sshListener = new SshListener();
+            if (sshListener.isEnabled()) {
+                Thread sshThread = new Thread(sshListener, "SSH-Listener");
+                sshThread.setDaemon(true);
+                sshThread.start();
+                com.hitorro.util.core.Log.util.info("SSH server started on port %s", sshListener.getPort());
+            } else {
+                com.hitorro.util.core.Log.util.info("SSH server is disabled");
+            }
+        } catch (Exception e) {
+            com.hitorro.util.core.Log.util.error("Unable to startup SSH terminal with error %s, %e", e, e);
         }
     }
 }

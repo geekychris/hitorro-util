@@ -48,7 +48,7 @@ public class CommandMap {
             m_command = row.substring(0, index);
             m_rawArgs = row.substring(index + 1);
             try {
-                CommandArgs.parseArgs(m_rawArgs, true, true, m_map);
+                CommandArgs.parseArgs(m_rawArgs, false, true, m_map);
             } catch (ParseException e) {
                 Log.commands.error("Unable to parse command %s %e", e, e);
             } catch (PropaccessError e) {

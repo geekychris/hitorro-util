@@ -70,6 +70,8 @@ public class CommandSession implements Runnable {
     protected String promptInteractive = "%s>";
     // if a telnet session
     protected boolean closeConnectionOnExit = true;
+    protected TerminalInputHandler terminalInputHandler = null;
+    protected boolean characterMode = false;
     protected File scriptFile = null;
     protected boolean m_exit = false;
     protected Map<String, Object> m_sessionVars = new HashMap<String, Object>();
@@ -91,7 +93,8 @@ public class CommandSession implements Runnable {
     }
 
     /**
-     * Mechanism to execute a command and output to the log file without needing too much setup by others.
+     * Mechanism to execute a command and output to the log file without needing too
+     * much setup by others.
      *
      * @param action
      * @param params
@@ -110,7 +113,8 @@ public class CommandSession implements Runnable {
                 return true;
             }
             CommandSession cs = new CommandSession();
-            cs.m_os = FileUtil.getBufferedFileOutputStream(FileUtil.getUniqueFileName(com.hitorro.util.core.Env.getLogDir(), "startupscriptlog"));
+            cs.m_os = FileUtil.getBufferedFileOutputStream(
+                    FileUtil.getUniqueFileName(com.hitorro.util.core.Env.getLogDir(), "startupscriptlog"));
             dc.execute(action, jvs, logResponse, cs, RestOperations.Get);
             logResponse.end();
         } catch (ParseException exc) {
@@ -132,7 +136,7 @@ public class CommandSession implements Runnable {
     }
 
     private static void copyCommandToFile(String command,
-                                          CommandSession session) {
+            CommandSession session) {
         if (session.scriptOs != null) {
             try {
                 session.scriptOs.write(command.getBytes());
@@ -210,7 +214,6 @@ public class CommandSession implements Runnable {
         } else {
             if (session.scriptFile != null) {
 
-
                 try {
                     session.scriptOs = FileUtil.getBufferedFileOutputStream(
                             session.scriptFile, true);
@@ -234,20 +237,15 @@ public class CommandSession implements Runnable {
     }
 
     @CommandDef(command = "history.list", description = "Dump the history buffer", resultMapper = KeyValuePairMapping.class)
-    public static List<com.hitorro.util.core.GenericKeyValue> historyList(@DebugArgAno(keyName = "session",
-            description = "session",
-            defaultValue = "",
-            argType = ArgType.Session) CommandSession session) {
+    public static List<com.hitorro.util.core.GenericKeyValue> historyList(
+            @DebugArgAno(keyName = "session", description = "session", defaultValue = "", argType = ArgType.Session) CommandSession session) {
         return session.getCommandsAsKeyValue();
     }
 
     @CommandDef(command = "history.clear", description = "Clear the history")
-    public static boolean historyClear(@DebugArgAno(keyName = "session",
-            description = "session",
-            defaultValue = "",
-            argType = ArgType.Session) CommandSession session,
-                                       @DebugArgAno(propType = BooleanProperty.class, keyName = "deletefile",
-                                               description = "include file based history", defaultValue = "") boolean includingFile) {
+    public static boolean historyClear(
+            @DebugArgAno(keyName = "session", description = "session", defaultValue = "", argType = ArgType.Session) CommandSession session,
+            @DebugArgAno(propType = BooleanProperty.class, keyName = "deletefile", description = "include file based history", defaultValue = "") boolean includingFile) {
         session.clearHistory(includingFile);
         return true;
     }
@@ -279,7 +277,8 @@ public class CommandSession implements Runnable {
     }
 
     /**
-     * May have either a temporary or permanent session change (via set) that defines that we have a csv file to output
+     * May have either a temporary or permanent session change (via set) that
+     * defines that we have a csv file to output
      * to.
      *
      * @return
@@ -291,7 +290,8 @@ public class CommandSession implements Runnable {
         }
         String permcsv = o.toString();
         if (!StringUtil.nullOrEmptyString(permcsv)) {
-            //because this is per command, we have to write out a different csv file per invocation of this call.
+            // because this is per command, we have to write out a different csv file per
+            // invocation of this call.
             String path = FileUtil.getFilePath(permcsv);
             permcsv = FileUtil.getFileNameSansExtension(permcsv);
             permcsv = Fmt.S("%s/%s-%s.csv", path, permcsv, System.currentTimeMillis());
@@ -350,6 +350,8 @@ public class CommandSession implements Runnable {
         prompt = BaseCommandLine.getCommandLine().commandLine;
         m_is = is;
         m_os = os;
+        terminalInputHandler = new TerminalInputHandler(is, os);
+        terminalInputHandler.setCharacterMode(characterMode);
         init();
     }
 
@@ -366,7 +368,23 @@ public class CommandSession implements Runnable {
     }
 
     /**
-     * Look for a script file in the following places: using its literal path. in the home/scripts directory in the
+     * Set character mode for terminal input.
+     * In character mode, commands execute on Enter without requiring semicolon.
+     * In line mode, semicolon is required as terminator.
+     * 
+     * @param characterMode true for character mode (SSH), false for line mode
+     *                      (telnet)
+     */
+    public void setCharacterMode(boolean characterMode) {
+        this.characterMode = characterMode;
+        if (terminalInputHandler != null) {
+            terminalInputHandler.setCharacterMode(characterMode);
+        }
+    }
+
+    /**
+     * Look for a script file in the following places: using its literal path. in
+     * the home/scripts directory in the
      * bin/scripts directory
      *
      * @param candidate
@@ -383,7 +401,6 @@ public class CommandSession implements Runnable {
         if (home.exists()) {
             return home;
         }
-
 
         File bin = new File(getBin(), scriptDir);
         if (bin.exists()) {
@@ -431,13 +448,14 @@ public class CommandSession implements Runnable {
         List<com.hitorro.util.core.GenericKeyValue> list = new ArrayList<com.hitorro.util.core.GenericKeyValue>();
         int i = 0;
         for (CommandMap map : m_commands) {
-            list.add(new com.hitorro.util.core.GenericKeyValue(Integer.toString(i++), StringUtil.strcat(map.getCommand(), " ", map.getRawArgs())));
+            list.add(new com.hitorro.util.core.GenericKeyValue(Integer.toString(i++),
+                    StringUtil.strcat(map.getCommand(), " ", map.getRawArgs())));
         }
         return list;
     }
 
     public void executeRawCommandAux(String command, JVS map,
-                                     Response resp, String rawArgs) throws PropaccessError {
+            Response resp, String rawArgs) throws PropaccessError {
         Command debugCommand = CommandRegistry.getRegistry().get(command);
         if (debugCommand == null) {
             CommandRegistry.listCommands(resp, this);
@@ -476,22 +494,68 @@ public class CommandSession implements Runnable {
     }
 
     public void processTerminal(StringBuilder builder,
-                                CommandSession session) throws IOException, PropaccessError {
+            CommandSession session) throws IOException, PropaccessError {
         com.hitorro.util.core.Log.commands.debug("Processing standard terminal response.");
 
-        InputStreamReader reader = new InputStreamReader(session.m_is);
+        // Use TerminalInputHandler if available, otherwise fall back to BufferedReader
+        if (session.terminalInputHandler != null) {
+            while (session.m_exit == false) {
+                // Build prompt string with line number (like telnet)
+                String promptStr;
+                if (session.m_counter > 0) {
+                    promptStr = Fmt.S(session.promptInteractive, session.m_counter);
+                } else {
+                    // Include line number (history count) in prompt
+                    int lineNumber = session.m_commands.size();
+                    promptStr = Fmt.S("%s-%s>", session.prompt, lineNumber);
+                }
 
-        BufferedReader in = new BufferedReader(reader);
-        while (session.m_exit == false) {
-            PrintWriter pw = getWriter(session);
-            String s = in.readLine();
-            exec(s, builder, pw, session, true);
+                // Print prompt before reading (for both character and line mode)
+                try {
+                    session.m_os.write(promptStr.getBytes());
+                    session.m_os.flush();
+                } catch (IOException e) {
+                    com.hitorro.util.core.Log.commands.error("Error writing prompt: %s %e", e, e);
+                }
+
+                // Read command (pass prompt for history redrawing)
+                String s = session.terminalInputHandler.readCommand(promptStr);
+
+                com.hitorro.util.core.Log.commands.info("SSH command received: [%s]", s);
+
+                // Get writer for output (with autoFlush enabled)
+                OutputStream osMod = getTeedOS(session);
+                PrintWriter pw = null;
+                if (osMod != null) {
+                    pw = new PrintWriter(osMod, true); // true = autoFlush
+                }
+
+                com.hitorro.util.core.Log.commands.info("About to exec command: [%s], pw=%s", s, pw);
+
+                exec(s, builder, pw, session, true);
+
+                // Flush the PrintWriter to ensure all output is written
+                if (pw != null) {
+                    pw.flush();
+                }
+
+                com.hitorro.util.core.Log.commands.info("Command executed: [%s]", s);
+            }
+        } else {
+            // Fallback to old line-based reading
+            InputStreamReader reader = new InputStreamReader(session.m_is);
+            BufferedReader in = new BufferedReader(reader);
+            while (session.m_exit == false) {
+                PrintWriter pw = getWriter(session);
+                String s = in.readLine();
+                exec(s, builder, pw, session, true);
+            }
         }
         com.hitorro.util.core.Log.commands.debug("About to exit session");
     }
 
     protected boolean exec(String s, StringBuilder builder, PrintWriter pw,
-                           CommandSession session, boolean addToHistory) throws PropaccessError {
+            CommandSession session, boolean addToHistory) throws PropaccessError {
         boolean executed = false;
         if (s == null) {
             // End of command stream; equivalent to "exit" command
@@ -566,7 +630,7 @@ public class CommandSession implements Runnable {
     }
 
     private boolean executeCommand(PrintWriter pw, String sIn,
-                                   StringBuilder builder, CommandSession session, boolean addToHistory) throws PropaccessError {
+            StringBuilder builder, CommandSession session, boolean addToHistory) throws PropaccessError {
         if (builder.length() > 0) {
             builder.append(" ");
         }
@@ -627,14 +691,15 @@ public class CommandSession implements Runnable {
     }
 
     /**
-     * Look in the history buffer for a previously executed command and execute it. If no number or an invalid index is
+     * Look in the history buffer for a previously executed command and execute it.
+     * If no number or an invalid index is
      * provided, the history is printed.
      *
      * @param pw
      * @param commandIn
      */
     private boolean executePling(PrintWriter pw, String commandIn,
-                                 CommandSession session, boolean addToHistory) throws PropaccessError {
+            CommandSession session, boolean addToHistory) throws PropaccessError {
         String number = "0";
         CommandMap command = null;
         if (commandIn.startsWith("!!")) {
@@ -680,7 +745,7 @@ public class CommandSession implements Runnable {
     }
 
     private void shellExecute(String command, String rest,
-                              PrintWriter pw, StringBuilder builder, CommandSession session) {
+            PrintWriter pw, StringBuilder builder, CommandSession session) {
         if (!StringUtil.nullOrEmptyOrBlankString(rest)) {
             File f = new File(rest);
             if (FileUtil.nullOrNotExist(f)) {
@@ -706,7 +771,7 @@ public class CommandSession implements Runnable {
     }
 
     private boolean executeIterator(StringBuilder builder, Iterator lr,
-                                    CommandSession session) throws PropaccessError {
+            CommandSession session) throws PropaccessError {
         while (lr.hasNext()) {
             PrintWriter pw2 = getWriter(session);
 
@@ -720,7 +785,8 @@ public class CommandSession implements Runnable {
         return true;
     }
 
-    private boolean executeIteratorToResponse(Iterator lr, CommandSession session, Response response) throws PropaccessError {
+    private boolean executeIteratorToResponse(Iterator lr, CommandSession session, Response response)
+            throws PropaccessError {
         while (lr.hasNext()) {
             PrintWriter pw2 = getWriter(session);
 
@@ -739,8 +805,8 @@ public class CommandSession implements Runnable {
     }
 
     protected void executeCommandAux(PrintWriter pw, String command,
-                                     JVS args, boolean printCommand,
-                                     CommandSession session, String rawArgs, boolean addToHistory) throws PropaccessError {
+            JVS args, boolean printCommand,
+            CommandSession session, String rawArgs, boolean addToHistory) throws PropaccessError {
         Response resp = getResponse(pw, session);
         if (pw != null) {
             if (printCommand) {
@@ -756,7 +822,6 @@ public class CommandSession implements Runnable {
         }
         session.executeRawCommandAux(command, args, resp, rawArgs);
 
-
         if (pw != null) {
             pw.println();
             pw.flush();
@@ -764,7 +829,8 @@ public class CommandSession implements Runnable {
     }
 
     /**
-     * Get the response and associate it with a session, so that such things as the console can setup column seperators
+     * Get the response and associate it with a session, so that such things as the
+     * console can setup column seperators
      * etc
      *
      * @param pw
@@ -794,4 +860,3 @@ public class CommandSession implements Runnable {
         SingleReturn, DoubleReturn, SemiColon
     }
 }
-

@@ -43,22 +43,24 @@ public class UserHistoryBuffer {
     private String username;
     private File bufferFile;
     private Object lock;
-    private HashSet<String> set = MapUtil.makeHashSet(new String[]{"assume", "quit", "history.list"});
+    private HashSet<String> set = MapUtil.makeHashSet(new String[] { "assume", "quit", "history.list" });
 
-    public UserHistoryBuffer(File directory, String username, int limit, CommandSession session) throws FileNotFoundException, UnsupportedEncodingException {
+    public UserHistoryBuffer(File directory, String username, int limit, CommandSession session)
+            throws FileNotFoundException, UnsupportedEncodingException {
         session.m_commands.clear();
         FileUtil.ensureDirectoryExists(directory);
         bufferFile = new File(directory, Fmt.S("history-%s-%s.txt", Env.getNodeId(), username));
         if (bufferFile.exists() && bufferFile.isFile()) {
-            List<String> list = IOUtil.getTailStringListFromFile(limit, FileUtil.getBufferedFileInputStream(bufferFile));
+            List<String> list = IOUtil.getTailStringListFromFile(limit,
+                    FileUtil.getBufferedFileInputStream(bufferFile));
 
-            try {
-                for (String row : list) {
+            for (String row : list) {
+                try {
                     session.m_commands.add(new CommandMap(row));
+                } catch (Exception e) {
+                    // Skip malformed history entries
+                    com.hitorro.util.core.Log.commands.debug("Skipping malformed history entry: %s", row);
                 }
-            }
-            catch (Exception e) {
-                System.out.println();
             }
         }
         lock = lockBox.getLock(bufferFile);
@@ -77,8 +79,10 @@ public class UserHistoryBuffer {
             return false;
         }
         synchronized (lock) {
-            // use a file level VM global lock that means that only one writer can write a buffer of the same name at a time.
-            // this does mean that concurrent telnet commands will apply their buffer together.
+            // use a file level VM global lock that means that only one writer can write a
+            // buffer of the same name at a time.
+            // this does mean that concurrent telnet commands will apply their buffer
+            // together.
             OutputStream os = FileUtil.getBufferedFileOutputStream(bufferFile, true);
             if (StringUtil.nullOrEmptyString(rawArgs)) {
                 os.write(command.getBytes());
@@ -93,5 +97,3 @@ public class UserHistoryBuffer {
         return true;
     }
 }
-
-
