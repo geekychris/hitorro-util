@@ -510,9 +510,10 @@ public class CommandSession implements Runnable {
                     promptStr = Fmt.S("%s-%s>", session.prompt, lineNumber);
                 }
 
-                // Print prompt before reading (for both character and line mode)
+                // Print prompt in green (like telnet) before reading
                 try {
-                    session.m_os.write(promptStr.getBytes());
+                    // ANSI codes: green text, then reset after prompt
+                    session.m_os.write(("\u001B[32m" + promptStr + "\u001B[0m").getBytes());
                     session.m_os.flush();
                 } catch (IOException e) {
                     com.hitorro.util.core.Log.commands.error("Error writing prompt: %s %e", e, e);

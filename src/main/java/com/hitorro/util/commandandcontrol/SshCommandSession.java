@@ -100,6 +100,14 @@ public class SshCommandSession implements Command {
     }
 
     private void printWelcomeBanner() throws IOException {
+        // ANSI color codes for SSH terminal
+        final String RESET = "\u001B[0m";
+        final String RED = "\u001B[31m";
+        final String GREEN = "\u001B[32m";
+        final String YELLOW = "\u001B[33m";
+        final String BLUE = "\u001B[34m";
+        final String BOLD = "\u001B[1m";
+
         // Print ASCII art
         String[] welcome = com.hitorro.util.commandandcontrol.telnet.shell.Welcome.getPicture(46);
         for (String line : welcome) {
@@ -107,11 +115,16 @@ public class SshCommandSession implements Command {
         }
         out.write("\r\n".getBytes());
 
-        // Print colored banner (without colors for SSH - just plain text)
-        out.write("HiTorro////Command Shell\r\n\r\n".getBytes());
+        // Print colored banner (matching telnet colors)
+        out.write((BOLD + RED + "HiTorro" +
+                BLUE + "/" +
+                GREEN + "/" +
+                YELLOW + "/" +
+                RED + "/" +
+                GREEN + "Command Shell" + RESET + "\r\n\r\n").getBytes());
 
-        // Print welcome message with connection info
-        String connected = "Welcome " + remoteAddress + "\r\n\r\n";
+        // Print welcome message with connection info in green
+        String connected = GREEN + "Welcome " + remoteAddress + RESET + "\r\n\r\n";
         out.write(connected.getBytes());
         out.flush();
     }
