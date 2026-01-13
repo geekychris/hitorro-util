@@ -218,6 +218,12 @@ public class TerminalInputHandler {
                 continue;
             }
 
+            // Handle tab completion
+            if (ch == '\t') {
+                handleTabCompletion();
+                continue;
+            }
+
             // Handle line endings
             if (ch == CR || ch == LF) {
                 // Skip LF if it follows CR (Windows-style CRLF)
@@ -303,5 +309,86 @@ public class TerminalInputHandler {
      */
     public OutputStream getOutputStream() {
         return out;
+    }
+
+    /**
+     * Handle tab completion for command names.
+     * Attempts to complete the current command based on registered commands.
+     */
+    private void handleTabCompletion() throws IOException {
+        String current = commandBuffer.toString().trim();
+
+        // Only complete if we're at the beginning (no spaces = command name completion)
+        if (current.contains(" ")) {
+            // For now, don't handle argument completion
+            return;
+        }
+
+        // Get matching commands from registry
+        java.util.List<String> matches = new java.util.ArrayList<>();
+        CommandRegistry registry = CommandRegistry.getRegistry();
+
+        for (Command cmd : registry.getCommands()) {
+            String cmdName = cmd.getCommand();
+            if (cmdName.startsWith(current)) {
+                matches.add(cmdName);
+            }
+        }
+
+        if (matches.isEmpty()) {
+            // No matches - do nothing
+            return;
+        } else if (matches.size() == 1) {
+            // Single match - complete it
+            String completion = matches.get(0).substring(current.length());
+            commandBuffer.append(completion);
+            if (echoEnabled) {
+                out.write(completion.getBytes());
+                out.flush();
+            }
+        } else {
+            // Multiple matches - find common prefix
+            String commonPrefix = findCommonPrefix(matches);
+            if (commonPrefix.length() > current.length()) {
+                // Complete to common prefix
+                String completion = commonPrefix.substring(current.length());
+                commandBuffer.setLength(0);
+                commandBuffer.append(commonPrefix);
+                if (echoEnabled) {
+                    out.write(completion.getBytes());
+                    out.flush();
+                }
+            } else {
+                // Show all matches
+                if (echoEnabled) {
+                    out.write("\r\n".getBytes());
+                    for (String match : matches) {
+                        out.write((match + "\r\n").getBytes());
+                    }
+                    // Redraw prompt and current command
+                    out.write(("\u001B[32m" + "prompt>" + "\u001B[0m" + commandBuffer.toString()).getBytes());
+                    out.flush();
+                }
+            }
+        }
+    }
+
+    /**
+     * Find the longest common prefix among a list of strings.
+     */
+    private String findCommonPrefix(java.util.List<String> strings) {
+        if (strings.isEmpty()) {
+            return "";
+        }
+        String prefix = strings.get(0);
+        for (int i = 1; i < strings.size(); i++) {
+            while (!strings.get(i).startsWith(prefix)) {
+                prefix = prefix.substring(0, prefix.length() - 1);
+                if (prefix.isEmpty()) {
+                    return "";
+                }
+            }
+        }
+        return prefix;
     }
 }

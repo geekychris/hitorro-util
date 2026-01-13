@@ -70,6 +70,9 @@ public class CommandRegistry {
         return s_Command_registry;
     }
 
+	public Collection<Command>getCommands () {
+		return m_map.values();
+	}
     private static List<Command> getDebugCommands(Object interogateMe, Class classToInterogate) {
         List<Command> commands = new ArrayList();
 
