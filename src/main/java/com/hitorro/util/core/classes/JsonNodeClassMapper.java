@@ -66,7 +66,7 @@ public class JsonNodeClassMapper<T> implements Mapper<JsonNode, T> {
         }
         Class c = ClassUtil.getClassForName(parts[0], Object.class);
         if (c == null) {
-            throw new PropertyKeyValidationException("Property is not a boolean", key, sValue);
+            throw new PropertyKeyValidationException("Property unable to find class", key, sValue);
         }
         try {
             Field field = c.getField(parts[1]);
