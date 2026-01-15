@@ -47,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Create bucket 'test' via MinIO Console: http://localhost:9001
  */
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class MinioS3Test {
+public class MinioS3Manual {
     
     // MinIO configuration (local S3-compatible storage)
     private static final String MINIO_ENDPOINT = "http://localhost:9000";

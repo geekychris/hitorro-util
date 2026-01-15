@@ -51,7 +51,7 @@ import java.util.UUID;
  * 
  * Then create bucket 'test' via MinIO Console: http://localhost:9001
  */
-public class SimpleMinioS3Test {
+public class SimpleMinioS3Manual {
     
     // MinIO configuration
     private static final String MINIO_ENDPOINT = "http://localhost:9000";

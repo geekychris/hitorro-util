@@ -52,7 +52,7 @@ import java.util.*;
  * 
  * Or use web console at http://localhost:9001
  */
-public class SimpleHitorroS3Test {
+public class SimpleHitorroS3Manual {
     
     // MinIO configuration - CHANGE THESE to match your setup
     private static final String MINIO_ENDPOINT = "http://localhost:9000";

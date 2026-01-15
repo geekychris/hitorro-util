@@ -35,7 +35,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Comprehensive test for Hitorro S3 abstraction with MinIO.
+ * MANUAL TEST for Hitorro S3 abstraction with MinIO.
+ * 
+ * <p><b>NOT run automatically by Maven.</b> Requires MinIO to be running.
+ * Run manually via: mvn exec:java -Dexec.mainClass="..." -Dexec.classpathScope=test
  * 
  * Demonstrates TWO authentication methods:
  * 1. Root username/password credentials
@@ -66,7 +69,7 @@ import java.util.regex.Pattern;
  *   --expiry-duration 2400h
  * </pre>
  */
-public class HitorroS3AbstractionTest {
+public class HitorroS3AbstractionManual {
     
     // MinIO configuration
     private static final String MINIO_ENDPOINT = "http://localhost:9000";
