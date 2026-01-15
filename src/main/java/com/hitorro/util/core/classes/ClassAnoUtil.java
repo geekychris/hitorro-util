@@ -24,10 +24,12 @@ package com.hitorro.util.core.classes;
 import com.hitorro.util.core.ArrayUtil;
 import com.hitorro.util.core.opers.HTPredicate;
 import com.hitorro.util.core.string.StringUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,7 @@ import java.util.Map;
  *
  */
 public class ClassAnoUtil {
+    private static final Logger logger = LoggerFactory.getLogger(ClassAnoUtil.class);
     //********************** CLASS ***************************
 
     /**
@@ -152,12 +155,19 @@ public class ClassAnoUtil {
                                             HTPredicate<Class> annotationConstraint,
                                             List<MethodAnnotation> list) {
         int cnt = 0;
-        for (Method m : c.getDeclaredMethods()) {
-            MethodAnnotation ma = new MethodAnnotation(m, annotationConstraint);
-            if (methodConstraint == null || methodConstraint.test(ma)) {
-                cnt++;
-                list.add(ma);
+        try {
+            for (Method m : c.getDeclaredMethods()) {
+                MethodAnnotation ma = new MethodAnnotation(m, annotationConstraint);
+                if (methodConstraint == null || methodConstraint.test(ma)) {
+                    cnt++;
+                    list.add(ma);
+                }
             }
+        } catch (NoClassDefFoundError e) {
+            // Class references unavailable types (e.g., Jetty not on classpath)
+            // Skip this class gracefully - services can still load without debug commands
+            logger.warn("Skipping method scanning for {} due to missing dependency: {}", 
+                    c.getName(), e.getMessage());
         }
 
         return cnt;
@@ -165,11 +175,17 @@ public class ClassAnoUtil {
 
     public static MethodAnnotation getMemberFunction(Class c, HTPredicate<MethodAnnotation> methodConstraint,
                                                      HTPredicate<Class> annotationConstraint) {
-        for (Method m : c.getDeclaredMethods()) {
-            MethodAnnotation ma = new MethodAnnotation(m, annotationConstraint);
-            if (methodConstraint == null || methodConstraint.test(ma)) {
-                return ma;
+        try {
+            for (Method m : c.getDeclaredMethods()) {
+                MethodAnnotation ma = new MethodAnnotation(m, annotationConstraint);
+                if (methodConstraint == null || methodConstraint.test(ma)) {
+                    return ma;
+                }
             }
+        } catch (NoClassDefFoundError e) {
+            // Class references unavailable types (e.g., Jetty not on classpath)
+            logger.warn("Skipping method scanning for {} due to missing dependency: {}", 
+                    c.getName(), e.getMessage());
         }
 
         return null;

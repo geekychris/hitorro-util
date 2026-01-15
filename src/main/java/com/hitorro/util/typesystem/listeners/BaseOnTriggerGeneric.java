@@ -26,7 +26,8 @@ import com.hitorro.util.typesystem.*;
 
 /**
  */
-public class BaseOnTriggerGeneric implements com.hitorro.util.typesystem.OnTrigger {
+public class
+BaseOnTriggerGeneric implements com.hitorro.util.typesystem.OnTrigger {
     boolean initialized = false;
 
     public boolean execute(com.hitorro.util.typesystem.OnTrigger.TriggerType key, com.hitorro.util.typesystem.TypeIntf type, Object o) {
