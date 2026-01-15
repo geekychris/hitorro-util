@@ -95,6 +95,30 @@
                 </exclusion>
             </exclusions>
         </dependency>
+
+        <!-- Hadoop AWS module for S3A support with AWS SDK v2 -->
+        <dependency>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-aws</artifactId>
+            <version>3.4.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-servlet</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-webapp</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- AWS SDK v2 Bundle (required by hadoop-aws 3.4.x for S3A) -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>bundle</artifactId>
+            <version>2.29.29</version>
+        </dependency>
         <!-- Needed for some unit tests?
         -->
         <dependency>

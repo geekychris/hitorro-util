@@ -55,7 +55,10 @@ public abstract class BaseFileSystem<F extends BaseFile, S extends BaseFileSyste
 
     private static HashMap<String, ProtocolAdapter> getInitialAdapters() {
         HashMap<String, ProtocolAdapter> a = new HashMap();
-        registerFS(a, new S3PropertyFactory());
+        S3PropertyFactory s3Factory = new S3PropertyFactory();
+        registerFS(a, s3Factory);
+        // Register legacy s3:// protocol for backward compatibility
+        a.put("s3", s3Factory);
         registerFS(a, new HDFSPropertyFactory());
         registerFS(a, new FTPPropertyFactory());
         registerFS(a, new FilePropertyFactory());

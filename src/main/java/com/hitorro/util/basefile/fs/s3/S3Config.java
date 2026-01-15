@@ -24,12 +24,31 @@ package com.hitorro.util.basefile.fs.s3;
 import com.hitorro.util.basefile.fs.configfactories.FileSystemConfig;
 
 /**
- *
+ * Configuration object for S3 filesystem.
+ * 
+ * Example usage:
+ * <pre>
+ * S3Config config = new S3Config();
+ * config.bucket = "my-bucket";
+ * config.accessKey = "AKIAIOSFODNN7EXAMPLE";
+ * config.secretAccessKey = "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY";
+ * config.region = "us-east-1";  // optional
+ * 
+ * HTS3FileSystem fs = config.getFileSystem();
+ * </pre>
  */
 public class S3Config extends FileSystemConfig<HTS3FileSystem> {
+    /** S3 bucket name (without s3a:// prefix) */
     public String bucket;
+    
+    /** AWS secret access key */
     public String secretAccessKey;
+    
+    /** AWS access key ID */
     public String accessKey;
+    
+    /** AWS region (e.g., "us-east-1"), optional */
+    public String region;
 
     public HTS3FileSystem getFileSystem() {
         return new HTS3FileSystem(this);
