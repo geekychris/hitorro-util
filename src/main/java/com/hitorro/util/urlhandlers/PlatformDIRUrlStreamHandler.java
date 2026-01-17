@@ -37,8 +37,15 @@ public class PlatformDIRUrlStreamHandler extends URLStreamHandler {
     }
 
     public static void register() {
-        PlatformBinUrlStreamHandlerFactory factory = new PlatformBinUrlStreamHandlerFactory();
-        URL.setURLStreamHandlerFactory(factory);
+        try {
+            PlatformBinUrlStreamHandlerFactory factory = new PlatformBinUrlStreamHandlerFactory();
+            URL.setURLStreamHandlerFactory(factory);
+        } catch (Error e) {
+            // Factory already set (e.g., by Spring Boot/Tomcat). This is acceptable in Spring Boot environments.
+            // The custom protocols (htbin://, hthome://) may not work, but the application can still function.
+            // Log at debug level to avoid alarming users in Spring Boot applications.
+            System.err.println("Note: URL stream handler factory already registered. Custom URL protocols (htbin://, hthome://) may not be available.");
+        }
     }
 
     public URLConnection openConnection(URL url) throws IOException {

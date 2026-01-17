@@ -56,7 +56,7 @@ public class UserHistoryBuffer {
 
             for (String row : list) {
                 try {
-                    session.m_commands.add(new CommandMap(row));
+                    session.m_commands.add(new CommandMap(row, false));
                 } catch (Exception e) {
                     // Skip malformed history entries
                     com.hitorro.util.core.Log.commands.debug("Skipping malformed history entry: %s", row);
