@@ -54,7 +54,10 @@ public class TestServerService {
 
     public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
         service = this;
-        LocalEventHub.get().addEventListener(m_handler, ServiceContext.ServerUp);
+        // Only register the event listener if test.runonstartup is enabled
+        if (TestUtil.RunOnStartup.apply()) {
+            LocalEventHub.get().addEventListener(m_handler, ServiceContext.ServerUp);
+        }
         startsWith.add("com.hitorro.");
         return null;
     }

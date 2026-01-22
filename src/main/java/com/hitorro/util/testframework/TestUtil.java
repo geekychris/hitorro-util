@@ -57,6 +57,8 @@ public class TestUtil {
     public static BooleanProperty Shutdown = new BooleanProperty("shutdown", "shutdown after finished", false);
 
     public static BooleanProperty EnableService = new BooleanProperty("test.enableservice", "shutdown after finished", false);
+    
+    public static BooleanProperty RunOnStartup = new BooleanProperty("test.runonstartup", "run tests on server startup", false);
 
     public static IntegerProperty WatchdogSeconds = new IntegerProperty("watchdogseconds", "How long the watchdog will wait", 5 * 60);
 
