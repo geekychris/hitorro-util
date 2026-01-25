@@ -12,6 +12,7 @@
     <url>http://maven.apache.org</url>
     <description>Hitorro utility library - standalone project</description>
     <properties>
+        <hitorro.deploy.repo.path>${user.home}/code/hitorro-maven</hitorro.deploy.repo.path>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tapestry-release-version>5.3.1</tapestry-release-version>
         <jersey.version>1.0.2</jersey.version>
@@ -24,6 +25,11 @@
         <repository>
             <id>maven central</id>
             <url>https://repo.maven.apache.org/maven2/</url>
+        </repository>
+        <repository>
+            <id>hitorro-maven</id>
+            <name>Hitorro Maven Repository</name>
+            <url>https://raw.githubusercontent.com/geekychris/hitorro-maven/main</url>
         </repository>
     </repositories>
 
@@ -411,5 +417,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>hitorro-local</id>
+            <name>Hitorro Local Maven Repository</name>
+            <url>file://${hitorro.deploy.repo.path}</url>
+        </repository>
+        <snapshotRepository>
+            <id>hitorro-local-snapshots</id>
+            <name>Hitorro Local Maven Snapshot Repository</name>
+            <url>file://${hitorro.deploy.repo.path}</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
