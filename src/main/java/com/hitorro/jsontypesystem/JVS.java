@@ -295,24 +295,27 @@ public class JVS implements VS {
 		}
 	}
 
-	public void addLangTextTemporaryReLook(com.hitorro.util.json.keys.propaccess.Propaccess field, String text, String lang) {
+	public JVS addLangTextTemporaryReLook(com.hitorro.util.json.keys.propaccess.Propaccess field, String text, String lang) {
 		// the addLangText doesnt work....seems dooing a title.mls[] append does not append correctly
 		ObjectNode node = JsonNodeFactory.instance.objectNode();
 		node.put("text", text).put("lang", lang);
 		ArrayNode an = JsonNodeFactory.instance.arrayNode();
 		an.add(node);
 		set(field, an);
+		return this;
 	}
 
-	public void addLangText(com.hitorro.util.json.keys.propaccess.Propaccess field, String text, String lang) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS addLangText(com.hitorro.util.json.keys.propaccess.Propaccess field, String text, String lang) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
 		ObjectNode node = JsonNodeFactory.instance.objectNode();
 		node.put("text", text).put("lang", lang);
 		append(field, node);
+		return this;
 	}
 
-	public void setDates(Date published, Date modified) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS setDates(Date published, Date modified) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
 		set(createdKey, DateResolution.json.getFormatted(published));
 		set(modifiedKey, DateResolution.json.getFormatted(modified));
+		return this;
 	}
 
 	public Type getType() {
@@ -329,9 +332,10 @@ public class JVS implements VS {
 		return this;
 	}
 
-	public void setId(String domain, String id) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS setId(String domain, String id) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
 		set(domainKey, domain);
 		set(didKey, id);
+		return this;
 	}
 
 	/**
@@ -339,8 +343,9 @@ public class JVS implements VS {
 	 *
 	 * @param access
 	 */
-	public void overidePaContext(com.hitorro.util.json.keys.propaccess.PAContext access) {
+	public JVS overidePaContext(com.hitorro.util.json.keys.propaccess.PAContext access) {
 		this.propaccessContext = access;
+		return this;
 	}
 
 	public boolean exists(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {

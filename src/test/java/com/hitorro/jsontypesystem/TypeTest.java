@@ -1,4 +1,4 @@
-package ht.jsontypesystem;
+package com.hitorro.jsontypesystem;
 
 import com.hitorro.jsontypesystem.JVS;
 import com.hitorro.jsontypesystem.propreaders.JVSProperties;
