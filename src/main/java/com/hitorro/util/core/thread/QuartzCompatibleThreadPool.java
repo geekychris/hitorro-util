@@ -249,8 +249,11 @@ public class QuartzCompatibleThreadPool implements ThreadPool {
                 parent = threadGroup.getParent();
             }
             threadGroup = new EnhancedThreadGroup(parent, "HTSimpleThreadPool");
+            // Note: ThreadGroup.setDaemon() is deprecated for removal
             if (isMakeThreadsDaemons()) {
-                threadGroup.setDaemon(true);
+                @SuppressWarnings("removal")
+                Runnable setDaemon = () -> threadGroup.setDaemon(true);
+                setDaemon.run();
             }
         }
 

@@ -25,7 +25,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.hitorro.jsontypesystem.dynamic.DynamicFieldMapper;
 import com.hitorro.util.json.keys.propaccess.PAContext;
+import com.hitorro.util.json.keys.propaccess.Part;
 import com.hitorro.util.json.keys.propaccess.Propaccess;
+import com.hitorro.util.json.keys.propaccess.PropaccessError;
 import com.hitorro.util.json.keys.propaccess.VS;
 
 public class PAContextTyped extends PAContext {
@@ -37,6 +39,33 @@ public class PAContextTyped extends PAContext {
 
     protected boolean attemptCreation(final JsonNode node, final Propaccess.SetMode setMode) {
         return (node == null || node.isNull());
+    }
+
+    @Override
+    public JsonNode getObjectOrArrayIfMissing(VS jvs, JsonNode parent, JsonNode node,
+                                              Propaccess pa, int index, boolean secondStage, Propaccess.SetMode setMode) throws PropaccessError {
+        // Check if this is an indexed field with a non-numeric index (like a language code)
+        // This is called with secondStage=true when traversing into an array element (e.g., mls[en].text)
+        if (attemptCreation(node, setMode) && parent != null && parent.isArray()) {
+            Part part = pa.get(index);
+            if (part.isIndexed() && !part.isNumeric()) {
+                // This is a language-style indexed lookup that didn't find an existing element
+                Field f = type.getField(pa, index);
+                if (f != null) {
+                    IndexSeeker is = f.getType().getIndexSeeker();
+                    if (is != null) {
+                        // Create element using IndexSeeker (e.g., {"lang": "fr"})
+                        JsonNode newElement = is.createElement(part.getIndexAsValue());
+                        if (newElement != null) {
+                            // Append to parent array and return the new element
+                            ((ArrayNode) parent).add(newElement);
+                            return newElement;
+                        }
+                    }
+                }
+            }
+        }
+        return super.getObjectOrArrayIfMissing(jvs, parent, node, pa, index, secondStage, setMode);
     }
 
     public int translateIndexPos(VS jvs, ArrayNode node, Propaccess pa, int depth) {

@@ -406,7 +406,7 @@ public class ConfigurationParameter {
         } else if (cp.getType() == TypeInteger) {
             int val = pnode.getAttributeInt(Value);
             // bleh - convertToPdf to object
-            Integer value = new Integer(val);
+            Integer value = Integer.valueOf(val);
             return value;
         } else if (cp.getType() == TypeVector) {
             Vector vval = getVectorParameter(pnode, cp);

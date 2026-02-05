@@ -54,6 +54,8 @@ public class OutputOutputStream extends COutputStream {
         return -1;
     }
 
+    @SuppressWarnings("removal") // finalize() is deprecated for removal; consider using try-with-resources
+    @Override
     protected final void finalize() throws IOException {
         // saw this weird case when the finalizer was getting a null pointer exception here
         // I suspect that if the constructor above fails, the VM still calls the finalizer

@@ -153,7 +153,7 @@ public class MailAgent {
             if (Log.mail.isDebugEnabled()) {
                 props.put("mail.debug", "true");
             }
-            SecurityManager security = System.getSecurityManager();
+            // Note: SecurityManager is deprecated for removal in future JDK versions
             Authenticator auth = null;
             if (_userName != null) {
                 if (_auth) {

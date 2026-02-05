@@ -182,6 +182,8 @@ public class CSVFileWriter implements CSVWriter {
         _printer.println();
     }
 
+    @SuppressWarnings("removal") // finalize() is deprecated for removal; consider using try-with-resources
+    @Override
     protected void finalize()
             throws Throwable {
         close();

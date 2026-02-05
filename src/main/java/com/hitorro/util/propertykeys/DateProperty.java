@@ -96,7 +96,7 @@ public class DateProperty extends PropertyKey<Date> {
 
     public long getTimeMillis(Map<String, String> map) {
         Date bval = apply(map);
-        return new Long(bval.getTime());
+        return bval.getTime();
     }
 
     public void validate(Map<String, String> map)

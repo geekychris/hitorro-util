@@ -230,7 +230,10 @@ public class DumpThreads extends com.hitorro.util.commandandcontrol.Command {
         g.enumerate(threads, false);
         g.enumerate(groups, false);
         String thisGroupsName = g.getName();
-        set.addRow("Group", parentGroup, thisGroupsName, "N/A", "N/A", g.isDaemon() ? "Yes" : "No", "N/A");
+        // Note: ThreadGroup.isDaemon() is deprecated for removal
+        @SuppressWarnings("removal")
+        boolean isDaemon = g.isDaemon();
+        set.addRow("Group", parentGroup, thisGroupsName, "N/A", "N/A", isDaemon ? "Yes" : "No", "N/A");
 
         for (int i = 0; i < num_threads; i++) {
             printThreadInfoSet(set, parentGroup, threads[i]);

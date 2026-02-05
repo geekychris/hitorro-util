@@ -46,7 +46,7 @@ import java.util.List;
  * Test mechanism that deals with running a test or a suite of tests.
  */
 public class TestUtil {
-    public static StringProperty Level = new StringProperty("level", "unit test run-level", "smoke");
+    public static StringProperty Level = new StringProperty("level", "unit test run-level", "full");
     public static StringListFromDelimitedKey Test = new StringListFromDelimitedKey("test", "specific unit test or tests that test a regexp string", ",", null);
     public static StringListFromDelimitedKey Tags = new StringListFromDelimitedKey("tags", "filter unit tests via string tags", ",", null);
     public static StringListFromDelimitedKey Packages = new StringListFromDelimitedKey("package", "listFiles of packages that are to be included", ",", null);

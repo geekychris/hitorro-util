@@ -77,6 +77,8 @@ public class InputInputStream extends CInputStream {
     protected final void seekInternal(long position) throws IOException {
     }
 
+    @SuppressWarnings("removal") // finalize() is deprecated for removal; consider using try-with-resources
+    @Override
     protected final void finalize() throws IOException {
         close();            // close the file
     }

@@ -21,10 +21,21 @@
  */
 package com.hitorro.jsontypesystem;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.hitorro.util.json.JsonInitable;
 import com.hitorro.util.json.keys.propaccess.Propaccess;
 
 public interface IndexSeeker extends JsonInitable {
     int getIndex(ArrayNode node, Propaccess access, int depth, String value, JVS jvs);
+
+    /**
+     * Create a new element initialized for the given index value.
+     * For example, IsoLanguageSeeker creates {"lang": "fr"} for index value "fr".
+     * @param indexValue The value from the path, e.g. "en", "de", "fr"
+     * @return A new JsonNode initialized with the index key, or null if not supported
+     */
+    default JsonNode createElement(String indexValue) {
+        return null;
+    }
 }

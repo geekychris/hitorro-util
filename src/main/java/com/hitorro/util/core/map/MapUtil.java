@@ -390,9 +390,9 @@ public class MapUtil {
         Map<String, Integer> map = new HashMap<String, Integer>();
         for (int i = 0; i < header.length; i++) {
             if (lowerCase) {
-                map.put(header[i].toLowerCase(), new Integer(i));
+                map.put(header[i].toLowerCase(), Integer.valueOf(i));
             } else {
-                map.put(header[i], new Integer(i));
+                map.put(header[i], Integer.valueOf(i));
             }
 
         }

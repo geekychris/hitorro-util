@@ -82,6 +82,8 @@ public final class FSInputStream extends CInputStream {
     protected final void seekInternal(long position) {
     }
 
+    @SuppressWarnings("removal") // finalize() is deprecated for removal; consider using try-with-resources
+    @Override
     protected final void finalize() throws IOException {
         close();            // close the file
     }

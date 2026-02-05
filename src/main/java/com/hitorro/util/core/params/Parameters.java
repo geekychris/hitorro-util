@@ -121,7 +121,7 @@ public class Parameters {
         } else if (cp.getType() == ParameterMeta.TypeInteger) {
             int val = pnode.getAttributeInt(ParameterMeta.Value);
             // bleh - convertToPdf to object
-            Integer value = new Integer(val);
+            Integer value = Integer.valueOf(val);
             return value;
         } else if (cp.getType() == ParameterMeta.TypeVector) {
             Vector vval = getVectorParameter(pnode, cp);

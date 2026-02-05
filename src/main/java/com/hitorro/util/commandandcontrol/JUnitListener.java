@@ -41,7 +41,7 @@ public class JUnitListener implements TestListener {
     private String m_description;
     private String m_error;
     private Timer m_timer = new Timer(this.getClass().toString());
-    private Float m_time = new Float(0.000);
+    private Float m_time = Float.valueOf(0.000f);
 
     private int errorCount = 0;
 

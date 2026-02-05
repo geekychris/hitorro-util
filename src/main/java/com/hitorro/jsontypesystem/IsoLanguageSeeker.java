@@ -23,6 +23,8 @@ package com.hitorro.jsontypesystem;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.json.keys.StringProperty;
 import com.hitorro.util.json.keys.propaccess.Propaccess;
 
@@ -54,5 +56,12 @@ public class IsoLanguageSeeker implements IndexSeeker {
     @Override
     public boolean init(final JsonNode node) {
         return false;
+    }
+
+    @Override
+    public JsonNode createElement(String indexValue) {
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
+        node.put("lang", indexValue);
+        return node;
     }
 }

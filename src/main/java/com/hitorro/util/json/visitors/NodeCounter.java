@@ -99,7 +99,7 @@ public class NodeCounter implements JSONVisitor {
             iter.advance();
             String key = iter.key();
             int val = iter.value();
-            list.add(new GenericKeyValue(key, new Integer(val)));
+            list.add(new GenericKeyValue(key, Integer.valueOf(val)));
         }
         return list;
     }

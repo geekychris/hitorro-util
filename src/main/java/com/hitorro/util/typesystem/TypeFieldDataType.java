@@ -36,7 +36,7 @@ public enum TypeFieldDataType {
 
     Long("long", Long.class, 64, false, null) {
         public Object readObject(HTObjectInputStream hois) throws IOException {
-            return new Long(hois.readLong());
+            return java.lang.Long.valueOf(hois.readLong());
         }
 
         public void writeObject(HTObjectOutputStream hoos, Object o) throws IOException {
@@ -70,7 +70,7 @@ public enum TypeFieldDataType {
     },
     Short("short", Short.class, 16, false, TypeFieldDataType.Int) {
         public Object readObject(HTObjectInputStream hois) throws IOException {
-            return new Short(hois.readShort());
+            return java.lang.Short.valueOf(hois.readShort());
         }
 
         public void writeObject(HTObjectOutputStream hoos, Object o) throws IOException {
@@ -88,7 +88,7 @@ public enum TypeFieldDataType {
 
     Byte("byte", Byte.class, 8, false, TypeFieldDataType.Int) {
         public Object readObject(HTObjectInputStream hois) throws IOException {
-            return new Byte(hois.readByte());
+            return java.lang.Byte.valueOf(hois.readByte());
         }
 
         public void writeObject(HTObjectOutputStream hoos, Object o) throws IOException {
@@ -106,7 +106,7 @@ public enum TypeFieldDataType {
 
     Double("double", Double.class, 64, true, null) {
         public Object readObject(HTObjectInputStream hois) throws IOException {
-            return new Double(hois.readDouble());
+            return java.lang.Double.valueOf(hois.readDouble());
         }
 
         public void writeObject(HTObjectOutputStream hoos, Object o) throws IOException {
@@ -123,7 +123,7 @@ public enum TypeFieldDataType {
     },
     Float("float", Float.class, 32, true, Double) {
         public Object readObject(HTObjectInputStream hois) throws IOException {
-            return new Float(hois.readFloat());
+            return java.lang.Float.valueOf(hois.readFloat());
         }
 
         public void writeObject(HTObjectOutputStream hoos, Object o) throws IOException {
