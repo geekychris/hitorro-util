@@ -82,15 +82,20 @@ public class CommandSession implements Runnable {
     private int m_decimalPlaces = 4;
 
     public CommandSession() {
-        substMap.put("csvfile", "");
-        try {
-            assumeUser("system");
-        } catch (FileNotFoundException e) {
-            com.hitorro.util.core.Log.commands.error("Unable to open cli buffer for user system %s %e", e, e);
-        } catch (UnsupportedEncodingException e) {
-            com.hitorro.util.core.Log.commands.error("Unable to open cli buffer for user system %s %e", e, e);
-        }
+        this(true);
     }
+	public CommandSession(boolean assumeUser) {
+		if (assumeUser)
+		{substMap.put("csvfile", "");
+			try {
+				assumeUser("system");
+			} catch (FileNotFoundException e) {
+				com.hitorro.util.core.Log.commands.error("Unable to open cli buffer for user system %s %e", e, e);
+			} catch (UnsupportedEncodingException e) {
+				com.hitorro.util.core.Log.commands.error("Unable to open cli buffer for user system %s %e", e, e);
+			}}
+
+	}
 
     /**
      * Mechanism to execute a command and output to the log file without needing too
