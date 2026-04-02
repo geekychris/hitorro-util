@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "core_url.schema.json",
+  "title": "url",
+  "type": "string",
+  "format": "uri",
+  "x-hitorro-name": "url",
+  "x-hitorro-primitivetype": "url"
+}

@@ -22,22 +22,36 @@
 package com.hitorro.jsontypesystem;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hitorro.jsontypesystem.schema.Name2SchemaJsonMapper;
+import com.hitorro.jsontypesystem.schema.TypeSchemaRegistry;
 import com.hitorro.util.basefile.Name2JsonMapper;
+import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.core.Env;
+import com.hitorro.util.core.Log;
 import com.hitorro.util.core.events.cache.HashCache;
 import com.hitorro.util.core.iterator.Mapper;
 import com.hitorro.util.core.string.StringUtil;
-
 
 /**
  *
  */
 public class JsonTypeSystem {
 
+    /**
+     * When true, the type system loads type configs from .schema.json files
+     * (config/schemas/) instead of native .json files (config/types/).
+     * Set via system property "hitorro.typesystem.useJsonSchema=true" or
+     * by calling {@link #setUseJsonSchema(boolean)} before first type access.
+     */
+    public static boolean useJsonSchema =
+            "true".equalsIgnoreCase(System.getProperty("hitorro.typesystem.useJsonSchema"));
+
     public static HashCache<String, JsonNode> jsonTypeConfig =
             new HashCache<>(0, true,
                     null, "typesconfig",
                     new Name2JsonMapper(Env.getBinConfigBaseFile().getChild("types"), "core"));
+
+    private static HashCache<String, JsonNode> schemaTypeConfig = null;
 
     public static HashCache<String, Type> typeCache =
             new HashCache<>(0, true,
@@ -46,6 +60,8 @@ public class JsonTypeSystem {
 
     private static JsonTypeSystem me = null;
 
+    private volatile TypeSchemaRegistry schemaRegistry;
+
     public static JsonTypeSystem getMe() {
         if (me == null) {
             me = new JsonTypeSystem();
@@ -53,10 +69,42 @@ public class JsonTypeSystem {
         return me;
     }
 
-    public Type getType(String name) {
-        if (StringUtil.nullOrEmptyString(name)) {
-            return null;
+    /**
+     * Enable or disable JSON Schema-based type loading.
+     * Must be called before any types are loaded to take effect.
+     */
+    public static void setUseJsonSchema(boolean enable) {
+        useJsonSchema = enable;
+        if (enable) {
+            Log.util.info("Type system switched to JSON Schema loading mode");
         }
+    }
+
+    /**
+     * Get the schema-based config cache, creating it on first access.
+     */
+    static HashCache<String, JsonNode> getSchemaTypeConfig() {
+        if (schemaTypeConfig == null) {
+            BaseFile schemasDir = Env.getBinConfigBaseFile().getChild("schemas");
+            schemaTypeConfig = new HashCache<>(0, true,
+                    null, "typesconfig-schema",
+                    new Name2SchemaJsonMapper(schemasDir, "core"));
+        }
+        return schemaTypeConfig;
+    }
+
+    public TypeSchemaRegistry getSchemaRegistry() {
+        if (schemaRegistry == null) {
+            synchronized (this) {
+                if (schemaRegistry == null) {
+                    schemaRegistry = new TypeSchemaRegistry();
+                }
+            }
+        }
+        return schemaRegistry;
+    }
+
+    public Type getType(String name) {
         if (StringUtil.nullOrEmptyString(name)) {
             return null;
         }
@@ -67,7 +115,24 @@ public class JsonTypeSystem {
 
 class Name2TypeMapper implements Mapper<String, Type> {
     public Type apply(String s) {
-        JsonNode node = JsonTypeSystem.jsonTypeConfig.get(s.toLowerCase());
+        String key = s.toLowerCase();
+        JsonNode node = null;
+
+        if (JsonTypeSystem.useJsonSchema) {
+            node = JsonTypeSystem.getSchemaTypeConfig().get(key);
+            if (node != null) {
+                Log.util.debug("Type '%s' loaded from JSON Schema", key);
+            } else {
+                // Fall back to native config — schema file may not exist for this type
+                node = JsonTypeSystem.jsonTypeConfig.get(key);
+                if (node != null) {
+                    Log.util.debug("Type '%s' not found in schemas, fell back to native config", key);
+                }
+            }
+        } else {
+            node = JsonTypeSystem.jsonTypeConfig.get(key);
+        }
+
         if (node == null) {
             return null;
         }

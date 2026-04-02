@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "core_mls.schema.json",
+  "title": "mls",
+  "type": "object",
+  "x-hitorro-name": "mls",
+  "properties": {
+    "mls": {
+      "type": "array",
+      "items": {"$ref": "core_mlselem.schema.json"}
+    }
+  }
+}

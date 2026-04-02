@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "core_string.schema.json",
+  "title": "string",
+  "type": "string",
+  "x-hitorro-name": "string",
+  "x-hitorro-primitivetype": "string"
+}

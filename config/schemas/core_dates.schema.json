@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "core_dates.schema.json",
+  "title": "dates",
+  "type": "object",
+  "x-hitorro-name": "dates",
+  "properties": {
+    "created": {
+      "$ref": "core_date.schema.json",
+      "x-hitorro-groups": [
+        {"name": "index", "method": "date", "tags": ["basic"]}
+      ]
+    },
+    "modified": {
+      "$ref": "core_date.schema.json",
+      "x-hitorro-groups": [
+        {"name": "index", "method": "date", "tags": ["basic"]}
+      ]
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "core_sysobject.schema.json",
+  "title": "sysobject",
+  "type": "object",
+  "x-hitorro-name": "sysobject",
+  "properties": {
+    "id": {
+      "$ref": "core_id.schema.json"
+    },
+    "times": {
+      "$ref": "core_dates.schema.json"
+    },
+    "title": {
+      "$ref": "core_mls.schema.json"
+    },
+    "body": {
+      "$ref": "core_mls.schema.json"
+    },
+    "description": {
+      "$ref": "core_mls.schema.json"
+    }
+  }
+}

@@ -13,6 +13,9 @@
     <description>Hitorro utility library - standalone project</description>
     <properties>
         <hitorro.deploy.repo.path>${user.home}/code/hitorro-maven</hitorro.deploy.repo.path>
+        <!-- Runtime config root — where Env.getBinConfigBaseFile() resolves to.
+             Override with -Dhitorro.runtime.config.dir=/path/to/config for non-standard layouts. -->
+        <hitorro.runtime.config.dir>${project.basedir}/../config</hitorro.runtime.config.dir>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <tapestry-release-version>5.3.1</tapestry-release-version>
         <jersey.version>1.0.2</jersey.version>
@@ -414,6 +417,55 @@
                         <HT_HOME>${session.executionRootDirectory}</HT_HOME>
                     </systemPropertyVariables>
                 </configuration>
+            </plugin>
+
+            <!-- Sync type configs and schemas from hitorro-util to the root config directory.
+                 hitorro-util/config/ is the source of truth for core types and JSON schemas.
+                 The root config/ directory is the runtime location used by Env.getBinConfigBaseFile(). -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions>
+                    <execution>
+                        <id>sync-type-schemas</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${hitorro.runtime.config.dir}/schemas</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>config/schemas</directory>
+                                    <includes>
+                                        <include>*.schema.json</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sync-core-type-configs</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${hitorro.runtime.config.dir}/types</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>config/types</directory>
+                                    <includes>
+                                        <include>core_*.json</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

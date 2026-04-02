@@ -21,6 +21,7 @@
  */
 package com.hitorro.jsontypesystem;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.testframework.TestPlus;
@@ -29,330 +30,345 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Disabled;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 
 @DisplayName("JVS (JSON Value System) Tests")
 class JVSTest implements TestPlus {
 
-    @Nested
-    @DisplayName("Construction")
-    class Construction {
-
-        @Test
-        @DisplayName("Should create JVS from JSON node")
-        void shouldCreateJvsFromJsonNode() {
-            ObjectNode node = JsonNodeFactory.instance.objectNode();
-            node.put("name", "test");
-
-            com.hitorro.jsontypesystem.JVS jvs = new com.hitorro.jsontypesystem.JVS(node);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should create empty JVS")
-        void shouldCreateEmptyJvs() {
-            com.hitorro.jsontypesystem.JVS jvs = new com.hitorro.jsontypesystem.JVS();
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should read JVS from JSON string")
-        void shouldReadJvsFromJsonString() {
-            String jsonString = "{\"key\":\"value\",\"number\":42}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonString);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle simple JSON objects")
-        void shouldHandleSimpleJsonObjects() {
-            String jsonString = "{\"name\":\"John\",\"age\":30}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonString);
-
-            assertThat(jvs).isNotNull();
-        }
-    }
-
-    @Nested
-    @DisplayName("Property Access")
-    class PropertyAccess {
-
-        @Test
-        @DisplayName("Should have type key property")
-        void shouldHaveTypeKeyProperty() {
-            assertThat(com.hitorro.jsontypesystem.JVS.typeKey).isNotNull();
-            assertThat(com.hitorro.jsontypesystem.JVS.typeKey.getKey()).isEqualTo("type");
-        }
-
-        @Test
-        @DisplayName("Should have predefined property accessors")
-        void shouldHavePredefinedPropertyAccessors() {
-            assertThat(com.hitorro.jsontypesystem.JVS.didKey).isNotNull();
-            assertThat(com.hitorro.jsontypesystem.JVS.idKey).isNotNull();
-            assertThat(com.hitorro.jsontypesystem.JVS.createdKey).isNotNull();
-            assertThat(com.hitorro.jsontypesystem.JVS.modifiedKey).isNotNull();
-            assertThat(com.hitorro.jsontypesystem.JVS.titleKey).isNotNull();
-            assertThat(com.hitorro.jsontypesystem.JVS.bodyKey).isNotNull();
-            assertThat(com.hitorro.jsontypesystem.JVS.domainKey).isNotNull();
-            assertThat(com.hitorro.jsontypesystem.JVS.docKey).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should have variable delimiters")
-        void shouldHaveVariableDelimiters() {
-            assertThat(com.hitorro.jsontypesystem.JVS.VariableStart).isEqualTo("${");
-            assertThat(com.hitorro.jsontypesystem.JVS.VariableEnd).isEqualTo("}");
-        }
-    }
-
-    @Nested
-    @DisplayName("Comparators and Functions")
-    class ComparatorsAndFunctions {
-
-        @Test
-        @DisplayName("Should have identity comparator")
-        void shouldHaveIdentityComparator() {
-            assertThat(com.hitorro.jsontypesystem.JVS.identityComparator).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should have key generator function")
-        void shouldHaveKeyGeneratorFunction() {
-            assertThat(com.hitorro.jsontypesystem.JVS.keyGenerator).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Identity comparator should compare JVS objects by ID")
-        void identityComparatorShouldCompareJvsObjectsById() {
-            com.hitorro.jsontypesystem.JVS jvs1 = com.hitorro.jsontypesystem.JVS.read("{\"id\":{\"id\":\"id1\"}}");
-            com.hitorro.jsontypesystem.JVS jvs2 = com.hitorro.jsontypesystem.JVS.read("{\"id\":{\"id\":\"id2\"}}");
-
-            int result = com.hitorro.jsontypesystem.JVS.identityComparator.compare(jvs1, jvs2);
-
-            // Should compare lexicographically
-            assertThat(result).isNotZero();
-        }
-    }
-
-    @Nested
-    @DisplayName("JSON Operations")
-    class JsonOperations {
-
-        @Test
-        @DisplayName("Should handle complex nested JSON")
-        void shouldHandleComplexNestedJson() {
-            String complexJson = """
-                {
-                    "id": {
-                        "did": "doc123",
-                        "id": "id456"
-                    },
-                    "title": {
-                        "mls": "Test Title"
-                    },
-                    "metadata": {
-                        "author": "John Doe",
-                        "tags": ["test", "sample"]
-                    }
-                }
-                """;
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(complexJson);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle arrays in JSON")
-        void shouldHandleArraysInJson() {
-            String jsonWithArray = "{\"items\":[1,2,3,4,5]}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonWithArray);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle boolean values")
-        void shouldHandleBooleanValues() {
-            String jsonWithBooleans = "{\"active\":true,\"deleted\":false}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonWithBooleans);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle null values")
-        void shouldHandleNullValues() {
-            String jsonWithNull = "{\"field\":null,\"other\":\"value\"}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(jsonWithNull);
-
-            assertThat(jvs).isNotNull();
-        }
-    }
-
-    @Nested
-    @DisplayName("Edge Cases")
-    class EdgeCases {
-
-        @Test
-        @DisplayName("Should handle empty JSON object")
-        void shouldHandleEmptyJsonObject() {
-            String emptyJson = "{}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(emptyJson);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle very large JSON")
-        void shouldHandleVeryLargeJson() {
-            StringBuilder largeJson = new StringBuilder("{");
-            for (int i = 0; i < 1000; i++) {
-                if (i > 0) largeJson.append(",");
-                largeJson.append("\"field").append(i).append("\":\"value").append(i).append("\"");
-            }
-            largeJson.append("}");
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(largeJson.toString());
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle special characters in strings")
-        void shouldHandleSpecialCharactersInStrings() {
-            String specialCharsJson = "{\"text\":\"Hello\\nWorld\\t!\",\"quote\":\"He said \\\"Hi\\\"\"}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(specialCharsJson);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle unicode characters")
-        void shouldHandleUnicodeCharacters() {
-            String unicodeJson = "{\"greeting\":\"Hello 世界\",\"emoji\":\"🎉\"}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(unicodeJson);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle numbers of various types")
-        void shouldHandleNumbersOfVariousTypes() {
-            String numbersJson = "{\"int\":42,\"float\":3.14,\"negative\":-100,\"exp\":1.5e10}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(numbersJson);
-
-            assertThat(jvs).isNotNull();
-        }
-    }
-
-    @Nested
-    @DisplayName("Type System Integration")
-    class TypeSystemIntegration {
-
-        @Test
-        @DisplayName("Should handle document with type field")
-        @Disabled("Requires type system initialization with config files")
-        void shouldHandleDocumentWithTypeField() {
-            String typedJson = "{\"type\":\"document\",\"content\":\"test\"}";
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(typedJson);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle timestamps")
-        void shouldHandleTimestamps() {
-            String timestampedJson = """
-                {
-                    "times": {
-                        "created": "2023-01-01T00:00:00Z",
-                        "modified": "2023-01-02T00:00:00Z"
-                    }
-                }
-                """;
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(timestampedJson);
-
-            assertThat(jvs).isNotNull();
-        }
-    }
-
-    @Nested
-    @DisplayName("Real World Scenarios")
-    class RealWorldScenarios {
-
-        @Test
-        @DisplayName("Should handle user profile document")
-        @Disabled("Requires type system initialization with config files")
-        void shouldHandleUserProfileDocument() {
-            String userProfile = """
-                {
-                    "type": "user_profile",
-                    "id": {
-                        "id": "user_123",
-                        "domain": "users"
-                    },
-                    "title": {
-                        "mls": "John Doe Profile"
-                    },
-                    "data": {
-                        "email": "john@example.com",
-                        "age": 30,
-                        "interests": ["coding", "music", "travel"]
-                    },
-                    "times": {
-                        "created": "2023-01-01",
-                        "modified": "2023-06-15"
-                    }
-                }
-                """;
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(userProfile);
-
-            assertThat(jvs).isNotNull();
-        }
-
-        @Test
-        @DisplayName("Should handle article document")
-        @Disabled("Requires type system initialization with config files")
-        void shouldHandleArticleDocument() {
-            String article = """
-                {
-                    "type": "article",
-                    "id": {
-                        "id": "article_001"
-                    },
-                    "title": {
-                        "mls": "Introduction to JVS"
-                    },
-                    "body": {
-                        "mls": "This is the article content..."
-                    },
-                    "metadata": {
-                        "author": "Jane Smith",
-                        "publishDate": "2023-07-01",
-                        "tags": ["tutorial", "JVS", "JSON"]
-                    }
-                }
-                """;
-
-            com.hitorro.jsontypesystem.JVS jvs = com.hitorro.jsontypesystem.JVS.read(article);
-
-            assertThat(jvs).isNotNull();
-        }
-    }
+	@Nested
+	@DisplayName("Construction")
+	class Construction {
+
+		@Test
+		@DisplayName("Should create JVS from JSON node")
+		void shouldCreateJvsFromJsonNode() {
+			ObjectNode node = JsonNodeFactory.instance.objectNode();
+			node.put("name", "test");
+
+			JVS jvs = new JVS(node);
+
+			assertThat(jvs).isNotNull();
+		}
+
+		@Test
+		@DisplayName("Should create empty JVS")
+		void shouldCreateEmptyJvs() {
+			JVS jvs = new JVS();
+
+			assertThat(jvs).isNotNull();
+		}
+
+		@Test
+		@DisplayName("Should read JVS from JSON string")
+		void shouldReadJvsFromJsonString() {
+			String jsonString = "{\"key\":\"value\",\"number\":42}";
+
+			JVS jvs = JVS.read(jsonString);
+
+			assertThat(jvs).isNotNull();
+		}
+	}
+
+	@Nested
+	@DisplayName("Property Access - get/set/getString")
+	class PropertyAccess {
+
+		@Test
+		@DisplayName("Should get and set simple string values")
+		void shouldGetAndSetSimpleStringValues() {
+			JVS jvs = new JVS();
+			jvs.set("name", "hello");
+
+			assertThat(jvs.getString("name")).isEqualTo("hello");
+		}
+
+		@Test
+		@DisplayName("Should get and set nested path values")
+		void shouldGetAndSetNestedPathValues() {
+			JVS jvs = new JVS();
+			jvs.set("outer.inner", "deep");
+
+			assertThat(jvs.getString("outer.inner")).isEqualTo("deep");
+		}
+
+		@Test
+		@DisplayName("Should return null for missing path")
+		void shouldReturnNullForMissingPath() {
+			JVS jvs = new JVS();
+
+			assertThat(jvs.get("nonexistent")).isNull();
+		}
+
+		@Test
+		@DisplayName("Should return null for null path")
+		void shouldReturnNullForNullPath() {
+			JVS jvs = new JVS();
+
+			assertThat(jvs.get((String) null)).isNull();
+		}
+
+		@Test
+		@DisplayName("Should handle predefined property accessors")
+		void shouldHavePredefinedPropertyAccessors() {
+			assertThat(JVS.typeKey).isNotNull();
+			assertThat(JVS.didKey).isNotNull();
+			assertThat(JVS.idKey).isNotNull();
+			assertThat(JVS.createdKey).isNotNull();
+			assertThat(JVS.modifiedKey).isNotNull();
+			assertThat(JVS.titleKey).isNotNull();
+			assertThat(JVS.bodyKey).isNotNull();
+			assertThat(JVS.domainKey).isNotNull();
+			assertThat(JVS.docKey).isNotNull();
+		}
+
+		@Test
+		@DisplayName("Should have variable delimiters")
+		void shouldHaveVariableDelimiters() {
+			assertThat(JVS.VariableStart).isEqualTo("${");
+			assertThat(JVS.VariableEnd).isEqualTo("}");
+		}
+	}
+
+	@Nested
+	@DisplayName("getBoolean")
+	class GetBoolean {
+
+		@Test
+		@DisplayName("Should return true for boolean true")
+		void shouldReturnTrueForTrue() {
+			JVS jvs = JVS.read("{\"flag\":true}");
+
+			assertThat(jvs.getBoolean("flag")).isTrue();
+		}
+
+		@Test
+		@DisplayName("Should return false for boolean false")
+		void shouldReturnFalseForFalse() {
+			JVS jvs = JVS.read("{\"flag\":false}");
+
+			assertThat(jvs.getBoolean("flag")).isFalse();
+		}
+
+		@Test
+		@DisplayName("Should return false for missing path")
+		void shouldReturnFalseForMissing() {
+			JVS jvs = new JVS();
+
+			assertThat(jvs.getBoolean("nonexistent")).isFalse();
+		}
+	}
+
+	@Nested
+	@DisplayName("isEmpty")
+	class IsEmpty {
+
+		@Test
+		@DisplayName("Should return true for empty JVS")
+		void shouldReturnTrueForEmpty() {
+			JVS jvs = new JVS();
+
+			assertThat(jvs.isEmpty()).isTrue();
+		}
+
+		@Test
+		@DisplayName("Should return false for non-empty JVS")
+		void shouldReturnFalseForNonEmpty() {
+			JVS jvs = JVS.read("{\"key\":\"value\"}");
+
+			assertThat(jvs.isEmpty()).isFalse();
+		}
+	}
+
+	@Nested
+	@DisplayName("remove")
+	class Remove {
+
+		@Test
+		@DisplayName("Should remove field by path")
+		void shouldRemoveFieldByPath() {
+			JVS jvs = JVS.read("{\"a\":\"1\",\"b\":\"2\"}");
+
+			jvs.remove("a");
+
+			assertThat(jvs.get("a")).isNull();
+			assertThat(jvs.getString("b")).isEqualTo("2");
+		}
+	}
+
+	@Nested
+	@DisplayName("clone")
+	class Clone {
+
+		@Test
+		@DisplayName("Should create independent copy")
+		void shouldCreateIndependentCopy() {
+			JVS original = JVS.read("{\"key\":\"value\"}");
+
+			JVS cloned = original.clone();
+			cloned.set("key", "changed");
+
+			assertThat(original.getString("key")).isEqualTo("value");
+			assertThat(cloned.getString("key")).isEqualTo("changed");
+		}
+	}
+
+	@Nested
+	@DisplayName("exists")
+	class Exists {
+
+		@Test
+		@DisplayName("Should return true when path exists")
+		void shouldReturnTrueWhenExists() {
+			JVS jvs = JVS.read("{\"a\":{\"b\":\"val\"}}");
+
+			assertThat(jvs.exists("a.b")).isTrue();
+		}
+
+		@Test
+		@DisplayName("Should return false when path does not exist")
+		void shouldReturnFalseWhenNotExists() {
+			JVS jvs = JVS.read("{\"a\":\"val\"}");
+
+			assertThat(jvs.exists("b")).isFalse();
+		}
+	}
+
+	@Nested
+	@DisplayName("getStringList")
+	class GetStringList {
+
+		@Test
+		@DisplayName("Should return string list from array")
+		void shouldReturnStringList() {
+			JVS jvs = JVS.read("{\"tags\":[\"a\",\"b\",\"c\"]}");
+
+			List<String> result = jvs.getStringList("tags");
+
+			assertThat(result).containsExactly("a", "b", "c");
+		}
+	}
+
+	@Nested
+	@DisplayName("getKeys")
+	class GetKeys {
+
+		@Test
+		@DisplayName("Should return object keys")
+		void shouldReturnObjectKeys() {
+			JVS jvs = JVS.read("{\"obj\":{\"x\":1,\"y\":2,\"z\":3}}");
+
+			List<String> keys = jvs.getKeys("obj");
+
+			assertThat(keys).containsExactlyInAnyOrder("x", "y", "z");
+		}
+
+		@Test
+		@DisplayName("Should return null for non-object")
+		void shouldReturnNullForNonObject() {
+			JVS jvs = JVS.read("{\"val\":\"string\"}");
+
+			assertThat(jvs.getKeys("val")).isNull();
+		}
+	}
+
+	@Nested
+	@DisplayName("pathContainsKey")
+	class PathContainsKey {
+
+		@Test
+		@DisplayName("Should return true when key exists in object at path")
+		void shouldReturnTrueWhenKeyExists() {
+			JVS jvs = JVS.read("{\"obj\":{\"target\":\"found\"}}");
+
+			assertThat(jvs.pathContainsKey("obj", "target")).isTrue();
+		}
+
+		@Test
+		@DisplayName("Should return false when key missing")
+		void shouldReturnFalseWhenKeyMissing() {
+			JVS jvs = JVS.read("{\"obj\":{\"other\":\"val\"}}");
+
+			assertThat(jvs.pathContainsKey("obj", "target")).isFalse();
+		}
+	}
+
+	@Nested
+	@DisplayName("Comparators and Functions")
+	class ComparatorsAndFunctions {
+
+		@Test
+		@DisplayName("Should have identity comparator")
+		void shouldHaveIdentityComparator() {
+			assertThat(JVS.identityComparator).isNotNull();
+		}
+
+		@Test
+		@DisplayName("Should have key generator function")
+		void shouldHaveKeyGeneratorFunction() {
+			assertThat(JVS.keyGenerator).isNotNull();
+		}
+
+		@Test
+		@DisplayName("Identity comparator should compare JVS objects by ID")
+		void identityComparatorShouldCompareJvsObjectsById() {
+			JVS jvs1 = JVS.read("{\"id\":{\"id\":\"id1\"}}");
+			JVS jvs2 = JVS.read("{\"id\":{\"id\":\"id2\"}}");
+
+			int result = JVS.identityComparator.compare(jvs1, jvs2);
+
+			assertThat(result).isNotZero();
+		}
+	}
+
+	@Nested
+	@DisplayName("Merge via JVS")
+	class MergeViaJVS {
+
+		@Test
+		@DisplayName("Should merge override into base")
+		void shouldMergeOverrideIntoBase() {
+			JVS base = JVS.read("{\"a\":\"1\"}");
+			JVS override = JVS.read("{\"b\":\"2\"}");
+
+			base.merge(override);
+
+			assertThat(base.getString("a")).isEqualTo("1");
+			assertThat(base.getString("b")).isEqualTo("2");
+		}
+	}
+
+	@Nested
+	@DisplayName("Variable resolution via JVS")
+	class VariableResolution {
+
+		@Test
+		@DisplayName("Should resolve JSON variable")
+		void shouldResolveJsonVariable() {
+			JVS jvs = JVS.read("{\"name\":\"World\"}");
+
+			String result = jvs.resolveJsonVariable("Hello ${name}");
+
+			assertThat(result).isEqualTo("Hello World");
+		}
+
+		@Test
+		@DisplayName("Should return original when no variable")
+		void shouldReturnOriginalWhenNoVariable() {
+			JVS jvs = JVS.read("{}");
+
+			String result = jvs.resolveJsonVariable("Hello World");
+
+			assertThat(result).isEqualTo("Hello World");
+		}
+
+		@Test
+		@DisplayName("Should return null for null input")
+		void shouldReturnNullForNullInput() {
+			JVS jvs = JVS.read("{}");
+
+			assertThat(jvs.resolveJsonVariable(null)).isNull();
+		}
+	}
 }

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "core_date.schema.json",
+  "title": "date",
+  "type": "string",
+  "format": "date-time",
+  "x-hitorro-name": "date",
+  "x-hitorro-primitivetype": "date"
+}

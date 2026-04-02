@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "core_id.schema.json",
+  "title": "id",
+  "type": "object",
+  "x-hitorro-name": "id",
+  "properties": {
+    "domain": {
+      "$ref": "core_string.schema.json"
+    },
+    "did": {
+      "$ref": "core_string.schema.json"
+    },
+    "id": {
+      "$ref": "core_string.schema.json",
+      "x-hitorro-dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.MultiValueMergerDM",
+        "fields": [".domain", ".did"]
+      },
+      "x-hitorro-groups": [
+        {"name": "index", "method": "identifier", "tags": ["basic"]}
+      ]
+    },
+    "id_hash": {
+      "type": "array",
+      "items": {"$ref": "core_long.schema.json"},
+      "x-hitorro-dynamic": {
+        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "mapper": {"class": "com.hitorro.jsontypesystem.dynamic.mappers.FPHashMapper"},
+        "fields": [".id"]
+      }
+    }
+  }
+}

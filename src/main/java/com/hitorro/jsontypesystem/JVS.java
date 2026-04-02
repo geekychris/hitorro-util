@@ -37,7 +37,10 @@ import com.hitorro.util.json.JSONUtil;
 import com.hitorro.util.json.String2JsonMapper;
 import com.hitorro.util.json.keys.JsonInitableProperty;
 import com.hitorro.util.json.keys.StringProperty;
+import com.hitorro.util.json.keys.propaccess.PAContext;
 import com.hitorro.util.json.keys.propaccess.Propaccess;
+import com.hitorro.util.json.keys.propaccess.PropaccessError;
+import com.hitorro.util.json.keys.propaccess.PropaccessIterator;
 import com.hitorro.util.json.keys.propaccess.VS;
 import com.hitorro.util.json.mapper.Json2StringMapper;
 
@@ -50,37 +53,36 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class JVS implements VS {
+
+	// Well-known keys
 	public static final StringProperty typeKey = new StringProperty("type", "", null);
-	public static final Propaccess didKey = new com.hitorro.util.json.keys.propaccess.Propaccess("id.did");
-	public static final com.hitorro.util.json.keys.propaccess.Propaccess idKey = new com.hitorro.util.json.keys.propaccess.Propaccess("id.id");
-	public static final com.hitorro.util.json.keys.propaccess.Propaccess createdKey = new com.hitorro.util.json.keys.propaccess.Propaccess("times.created");
-	public static final String VariableEnd = "}";
-	public static final com.hitorro.util.json.keys.propaccess.Propaccess modifiedKey = new com.hitorro.util.json.keys.propaccess.Propaccess("times.modified");
-	public static final com.hitorro.util.json.keys.propaccess.Propaccess titleKey = new com.hitorro.util.json.keys.propaccess.Propaccess("title.mls");
-	public static final com.hitorro.util.json.keys.propaccess.Propaccess bodyKey = new com.hitorro.util.json.keys.propaccess.Propaccess("body.mls" +
-			"");
-	public static final Propaccess domainKey = new com.hitorro.util.json.keys.propaccess.Propaccess("id.domain");
+	public static final Propaccess didKey = new Propaccess("id.did");
+	public static final Propaccess idKey = new Propaccess("id.id");
+	public static final Propaccess createdKey = new Propaccess("times.created");
+	public static final Propaccess modifiedKey = new Propaccess("times.modified");
+	public static final Propaccess titleKey = new Propaccess("title.mls");
+	public static final Propaccess bodyKey = new Propaccess("body.mls");
+	public static final Propaccess domainKey = new Propaccess("id.domain");
+	public static final Propaccess docKey = new Propaccess("doc");
+
+	// Variable resolution constants
 	public static final String VariableStart = "${";
-	public static com.hitorro.util.json.keys.propaccess.Propaccess docKey = new com.hitorro.util.json.keys.propaccess.Propaccess("doc");
-	public static Comparator<JVS> identityComparator = new Comparator<JVS>() {
-		@Override
-		public int compare(final JVS o1, final JVS o2) {
-			return o1.getId().compareTo(o2.getId());
-		}
-	};
-	public static Function<JVS, String> keyGenerator = new Function<JVS, String>() {
-		@Override
-		public String apply(final JVS o) {
-			return o.getId();
-		}
-	};
+	public static final String VariableEnd = "}";
+
+	// Comparators and functions
+	public static Comparator<JVS> identityComparator = (o1, o2) -> o1.getId().compareTo(o2.getId());
+	public static Function<JVS, String> keyGenerator = JVS::getId;
+
+	// Propaccess cache for string-path methods
+	private static final ConcurrentHashMap<String, Propaccess> paCache = new ConcurrentHashMap<>();
+
 	private JsonNode root;
 	private Type type;
-	// this should be an accessor that uses dynamic fields
-	private com.hitorro.util.json.keys.propaccess.PAContext propaccessContext = com.hitorro.util.json.keys.propaccess.PAContext.AlwaysCreate;
+	private PAContext propaccessContext = PAContext.AlwaysCreate;
 
 	public JVS(JsonNode root) {
 		this.root = root;
@@ -100,78 +102,23 @@ public class JVS implements VS {
 		root = JsonNodeFactory.instance.objectNode();
 		try {
 			set(typeKey, type.getName());
-		} catch (com.hitorro.util.json.keys.propaccess.PropaccessError propaccessError) {
-			//
+		} catch (PropaccessError propaccessError) {
+			Log.util.error("Failed to set type on new JVS", propaccessError);
 		}
+	}
+
+	private static Propaccess cachedPropaccess(String path) {
+		Propaccess cached = paCache.get(path);
+		if (cached == null) {
+			cached = new Propaccess(path);
+			paCache.put(path, cached);
+		}
+		return new Propaccess(cached);
 	}
 
 	public static JVS read(String json) {
 		String2JsonMapper mapper = new String2JsonMapper();
 		return new JVS(mapper.apply(json));
-	}
-
-	public static final JsonNode resolveVariableAux(TextNode e, JVS master) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		String value = e.textValue();
-		JsonNode n = resolveTextVariableAux(value, master, null);
-		if (n == null) {
-			return e;
-		}
-		return n;
-	}
-
-	/**
-	 * Resolve a string that contains a HiTorro variable
-	 *
-	 * @return
-	 */
-	public static final JsonNode resolveTextVariableAux(String value, JVS master, JVS overide) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		StringBuilder builder = new StringBuilder();
-
-		if (value == null) {
-			Log.util.error("Not given a value to resolve");
-			return null;
-		}
-		int index = value.indexOf(VariableStart);
-		if (index == -1) {
-			return null;
-		}
-		int lastPos = 0;
-		int endIndex = 0;
-		while (index != -1) {
-			builder.append(value, lastPos, index);
-			endIndex = value.indexOf(VariableEnd, index + 1);
-			if (endIndex == -1) {
-				// error case, we dont have a matching }
-				// is break the correct thing?
-				break;
-			} else {
-				String variable = value.substring(index + 2, endIndex).toLowerCase();
-
-				String substValue;
-
-				JsonNode res = null;
-				if (overide != null) {
-					res = overide.get(variable);
-				}
-				if (res == null) {
-					res = master.get(variable);
-				}
-				if (res != null) {
-					if (!res.isTextual()) {
-						//XXX should probably have a check to make sure its the only variable
-						return res;
-					}
-					substValue = res.textValue();
-					builder.append(substValue);
-				}
-				lastPos = endIndex + 1;
-				index = value.indexOf(VariableStart, lastPos + 1);
-			}
-		}
-		// append tail
-		builder.append(value.substring(lastPos));
-		String txt = builder.toString();
-		return JsonNodeFactory.instance.textNode(txt);
 	}
 
 	public static JVS read(File file) throws Exception {
@@ -186,42 +133,7 @@ public class JVS implements VS {
 		return new JVS(jn);
 	}
 
-	public static void resolveVariables(JVS master, JsonNode node) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		if (node.isObject()) {
-			ObjectNode on = (ObjectNode) node;
-
-			String keys[] = new String[on.size()];
-			JsonNode val[] = new JsonNode[on.size()];
-			JSONUtil.populateKeyValue(on, keys, val);
-			int size = keys.length;
-			for (int i = 0; i < size; i++) {
-				if (val[i].isObject() || val[i].isArray()) {
-					resolveVariables(master, val[i]);
-				} else if (val[i].isTextual()) {
-					JsonNode res = resolveVariableAux((TextNode) val[i], master);
-					if (val[i] != res) {
-						on.put(keys[i], res);
-					}
-				}
-			}
-		} else if (node.isArray()) {
-			ArrayNode ar = (ArrayNode) node;
-			int size = ar.size();
-			for (int i = 0; i < size; i++) {
-				JsonNode e = ar.get(i);
-				if (e.isTextual()) {
-					JsonNode res = resolveVariableAux((TextNode) e, master);
-					if (e != res) {
-						ar.set(i, e);
-					}
-				} else if (e.isArray() || e.isObject()) {
-					resolveVariables(master, e);
-				}
-			}
-		}
-	}
-
-	public JVS getJVSChild(com.hitorro.util.json.keys.propaccess.Propaccess pa) {
+	public JVS getJVSChild(Propaccess pa) {
 		JsonNode node = get(pa);
 		if (node != null) {
 			return new JVS(node);
@@ -237,7 +149,7 @@ public class JVS implements VS {
 		setJVSChild(docKey, doc);
 	}
 
-	public void setJVSChild(com.hitorro.util.json.keys.propaccess.Propaccess pa, JVS doc) {
+	public void setJVSChild(Propaccess pa, JVS doc) {
 		set(pa, doc.getJsonNode());
 	}
 
@@ -253,14 +165,13 @@ public class JVS implements VS {
 		if (value == null) {
 			return null;
 		}
-		String v = null;
 		try {
-			JsonNode n = JVS.resolveTextVariableAux(value, this, overide);
+			JsonNode n = JVSVariableResolver.resolveTextVariableAux(value, this, overide);
 			if (n == null) {
 				return value;
 			}
 			return n.textValue();
-		} catch (com.hitorro.util.json.keys.propaccess.PropaccessError propaccessError) {
+		} catch (PropaccessError propaccessError) {
 			return null;
 		}
 	}
@@ -273,7 +184,7 @@ public class JVS implements VS {
 		return new JVS(root.deepCopy());
 	}
 
-	public List<JsonKeyMap> getSubMaps(String root) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public List<JsonKeyMap> getSubMaps(String root) throws PropaccessError {
 		List<JsonKeyMap> list = new ArrayList();
 		JsonNode childKeys = get(root);
 		Iterator<Map.Entry<String, JsonNode>> iter = childKeys.fields();
@@ -284,7 +195,7 @@ public class JVS implements VS {
 		return list;
 	}
 
-	public String getId() throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public String getId() throws PropaccessError {
 		return getString(idKey);
 	}
 
@@ -295,8 +206,12 @@ public class JVS implements VS {
 		}
 	}
 
-	public JVS addLangTextTemporaryReLook(com.hitorro.util.json.keys.propaccess.Propaccess field, String text, String lang) {
-		// the addLangText doesnt work....seems dooing a title.mls[] append does not append correctly
+	/**
+	 * @deprecated Use {@link #addLangText(Propaccess, String, String)} instead.
+	 *             The append issue for empty MLS arrays has been fixed in PAContextTyped.
+	 */
+	@Deprecated
+	public JVS addLangTextTemporaryReLook(Propaccess field, String text, String lang) {
 		ObjectNode node = JsonNodeFactory.instance.objectNode();
 		node.put("text", text).put("lang", lang);
 		ArrayNode an = JsonNodeFactory.instance.arrayNode();
@@ -305,14 +220,14 @@ public class JVS implements VS {
 		return this;
 	}
 
-	public JVS addLangText(com.hitorro.util.json.keys.propaccess.Propaccess field, String text, String lang) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS addLangText(Propaccess field, String text, String lang) throws PropaccessError {
 		ObjectNode node = JsonNodeFactory.instance.objectNode();
 		node.put("text", text).put("lang", lang);
 		append(field, node);
 		return this;
 	}
 
-	public JVS setDates(Date published, Date modified) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS setDates(Date published, Date modified) throws PropaccessError {
 		set(createdKey, DateResolution.json.getFormatted(published));
 		set(modifiedKey, DateResolution.json.getFormatted(modified));
 		return this;
@@ -326,73 +241,68 @@ public class JVS implements VS {
 		return setType(JsonTypeSystem.getMe().getType(type));
 	}
 
-	public JVS setType(Type type) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS setType(Type type) throws PropaccessError {
 		set(typeKey, type.getName());
 		setTypeAux(type);
 		return this;
 	}
 
-	public JVS setId(String domain, String id) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS setId(String domain, String id) throws PropaccessError {
 		set(domainKey, domain);
 		set(didKey, id);
 		return this;
 	}
 
-	/**
-	 * Overide the access compContext with one other than the type accessor
-	 *
-	 * @param access
-	 */
-	public JVS overidePaContext(com.hitorro.util.json.keys.propaccess.PAContext access) {
+	public JVS overidePaContext(PAContext access) {
 		this.propaccessContext = access;
 		return this;
 	}
 
-	public boolean exists(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return exists(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+	public boolean exists(String path) throws PropaccessError {
+		return exists(cachedPropaccess(path));
 	}
 
-	public boolean exists(com.hitorro.util.json.keys.propaccess.Propaccess path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public boolean exists(Propaccess path) throws PropaccessError {
 		return get(path) != null;
 	}
 
-	public JsonNode get(String m, String... path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JsonNode get(String m, String... path) throws PropaccessError {
 		return get(Fmt.S(m, path));
 	}
 
-	public JsonNode get(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JsonNode get(String path) throws PropaccessError {
 		if (path == null) {
 			return null;
 		}
-		return get(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+		return get(cachedPropaccess(path));
 	}
 
-	public int getSize(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return getSize(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+	public int getSize(String path) throws PropaccessError {
+		return getSize(cachedPropaccess(path));
 	}
 
-	public int getSize(com.hitorro.util.json.keys.propaccess.Propaccess pa) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public int getSize(Propaccess pa) throws PropaccessError {
 		return pa.getSize(this, root, propaccessContext);
 	}
 
-	public JsonNode get(com.hitorro.util.json.keys.propaccess.Propaccess pa) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JsonNode get(Propaccess pa) throws PropaccessError {
 		if (pa == null) {
 			return null;
 		}
 		return pa.get(this, root, propaccessContext);
 	}
 
-	public <E> E getObject(com.hitorro.util.json.keys.propaccess.Propaccess pa, JsonInitableProperty<E> initableProp) {
+	public <E> E getObject(Propaccess pa, JsonInitableProperty<E> initableProp) {
 		JsonNode n = get(pa);
 		return initableProp.apply(n);
 	}
 
-	public JVS set(String path, Object value) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		set(new com.hitorro.util.json.keys.propaccess.Propaccess(path), value);
+	public JVS set(String path, Object value) throws PropaccessError {
+		set(cachedPropaccess(path), value);
 		return this;
 	}
 
-	public JVS setIfNotNull(com.hitorro.util.json.keys.propaccess.Propaccess path, Object value) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS setIfNotNull(Propaccess path, Object value) throws PropaccessError {
 		if (value == null) {
 			return this;
 		}
@@ -400,79 +310,91 @@ public class JVS implements VS {
 		return this;
 	}
 
-	public JVS set(com.hitorro.util.json.keys.propaccess.Propaccess path, Object value) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS set(Propaccess path, Object value) throws PropaccessError {
 		path.set(this, root, propaccessContext, JSONUtil.ensureJsonNode(value));
 		return this;
 	}
 
-	public JVS append(com.hitorro.util.json.keys.propaccess.Propaccess path, Object value) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS append(Propaccess path, Object value) throws PropaccessError {
 		path.appendObject(this, root, propaccessContext, JSONUtil.ensureJsonNode(value));
 		return this;
 	}
 
-	public JVS set(com.hitorro.util.json.keys.propaccess.Propaccess path, int depth, JsonNode value) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public JVS set(Propaccess path, int depth, JsonNode value) throws PropaccessError {
 		path.set(this, root, propaccessContext, value, depth);
 		return this;
 	}
 
-	public String getString(String m, String... path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public String getString(String m, String... path) throws PropaccessError {
 		return getString(Fmt.S(m, path));
 	}
 
-	public String getString(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return getString(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+	public String getString(String path) throws PropaccessError {
+		return getString(cachedPropaccess(path));
 	}
 
-	public String getString(com.hitorro.util.json.keys.propaccess.Propaccess path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public String getString(Propaccess path) throws PropaccessError {
 		return JSONUtil.getString(get(path));
 	}
 
-	public Date getDate(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return getDate(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+	public boolean getBoolean(String path) throws PropaccessError {
+		return getBoolean(cachedPropaccess(path));
 	}
 
-	public Date getDate(com.hitorro.util.json.keys.propaccess.Propaccess path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public boolean getBoolean(Propaccess path) throws PropaccessError {
+		JsonNode node = get(path);
+		if (node == null || node.isNull()) {
+			return false;
+		}
+		return node.asBoolean();
+	}
+
+	public Date getDate(String path) throws PropaccessError {
+		return getDate(cachedPropaccess(path));
+	}
+
+	public Date getDate(Propaccess path) throws PropaccessError {
 		return JSONUtil.getDate(get(path));
 	}
 
-	public List<String> getStringList(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return getStringList(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+	public List<String> getStringList(String path) throws PropaccessError {
+		return getStringList(cachedPropaccess(path));
 	}
 
-	public List<String> getStringList(com.hitorro.util.json.keys.propaccess.Propaccess path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public List<String> getStringList(Propaccess path) throws PropaccessError {
 		return JSONUtil.getStringList(get(path));
 	}
 
-	public double getDouble(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return getDouble(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+	public double getDouble(String path) throws PropaccessError {
+		return getDouble(cachedPropaccess(path));
 	}
 
-	public double getDouble(com.hitorro.util.json.keys.propaccess.Propaccess path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public double getDouble(Propaccess path) throws PropaccessError {
 		return JSONUtil.getDouble(get(path), 0.0);
 
 	}
 
-	public long getLong(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return getLong(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+	public long getLong(String path) throws PropaccessError {
+		return getLong(cachedPropaccess(path));
 	}
 
-	public long getLong(com.hitorro.util.json.keys.propaccess.Propaccess path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public long getLong(Propaccess path) throws PropaccessError {
 		return JSONUtil.getLong(get(path), 0);
 	}
 
-	public long[] getLongArray(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return getLongArray(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+	public long[] getLongArray(String path) throws PropaccessError {
+		return getLongArray(cachedPropaccess(path));
 	}
 
-	public long[] getLongArray(com.hitorro.util.json.keys.propaccess.Propaccess path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public long[] getLongArray(Propaccess path) throws PropaccessError {
 		return JSONUtil.getLongArray(get(path));
 	}
 
-	public boolean pathContainsKey(String path, String key) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return pathContainsKey(new com.hitorro.util.json.keys.propaccess.Propaccess(path), key);
+	public boolean pathContainsKey(String path, String key) throws PropaccessError {
+		return pathContainsKey(cachedPropaccess(path), key);
 	}
 
-	public boolean pathContainsKey(com.hitorro.util.json.keys.propaccess.Propaccess path, String key) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public boolean pathContainsKey(Propaccess path, String key) throws PropaccessError {
 		JsonNode node = get(path);
 		if (node == null || !node.isObject()) {
 			return false;
@@ -481,11 +403,11 @@ public class JVS implements VS {
 		return on.has(key);
 	}
 
-	public List<String> getKeys(String path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		return getKeys(new com.hitorro.util.json.keys.propaccess.Propaccess(path));
+	public List<String> getKeys(String path) throws PropaccessError {
+		return getKeys(cachedPropaccess(path));
 	}
 
-	public List<String> getKeys(com.hitorro.util.json.keys.propaccess.Propaccess path) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public List<String> getKeys(Propaccess path) throws PropaccessError {
 		JsonNode node = get(path);
 		if (node == null || !node.isObject()) {
 			return null;
@@ -499,19 +421,33 @@ public class JVS implements VS {
 		return list;
 	}
 
+	public boolean isEmpty() {
+		return !root.fieldNames().hasNext();
+	}
+
+	public JVS remove(String path) throws PropaccessError {
+		set(cachedPropaccess(path), (Object) null);
+		return this;
+	}
+
+	public JVS remove(Propaccess path) throws PropaccessError {
+		set(path, (Object) null);
+		return this;
+	}
+
 	public String getStringRepresentation() {
 		return Json2StringMapper.threadedMapper.get().apply(root);
 	}
 
-	public com.hitorro.util.json.keys.propaccess.PropaccessIterator getPropertyIter() {
-		return new com.hitorro.util.json.keys.propaccess.PropaccessIterator(root);
+	public PropaccessIterator getPropertyIter() {
+		return new PropaccessIterator(root);
 	}
 
-	public Properties getAsProperties() throws com.hitorro.util.json.keys.propaccess.PropaccessError {
+	public Properties getAsProperties() throws PropaccessError {
 		Properties props = new Properties();
-		com.hitorro.util.json.keys.propaccess.PropaccessIterator iter = getPropertyIter();
+		PropaccessIterator iter = getPropertyIter();
 		while (iter.hasNext()) {
-			com.hitorro.util.json.keys.propaccess.Propaccess acc = iter.next();
+			Propaccess acc = iter.next();
 			String s = getString(acc);
 			props.put(acc.toString(), s);
 		}
@@ -522,8 +458,8 @@ public class JVS implements VS {
 		bf.writeJson(root);
 	}
 
-	public void resolveVariables(JVS master) throws com.hitorro.util.json.keys.propaccess.PropaccessError {
-		resolveVariables(master, root);
+	public void resolveVariables(JVS master) throws PropaccessError {
+		JVSVariableResolver.resolveVariables(master, root);
 	}
 
 	public void addMap(Map<String, String> map) {
@@ -531,67 +467,6 @@ public class JVS implements VS {
 	}
 
 	public void merge(JVS overide) {
-		merge(this.root, overide.root);
-	}
-
-
-	private void merge(JsonNode base, JsonNode overide) {
-		if (overide.isObject()) {
-			ObjectNode on = (ObjectNode) overide;
-
-			String[] keys = new String[on.size()];
-			JsonNode[] val = new JsonNode[on.size()];
-			JSONUtil.populateKeyValue(on, keys, val);
-			int size = keys.length;
-			for (int i = 0; i < size; i++) {
-				if (val[i].isObject() || val[i].isArray()) {
-					JsonNode baseChild = base.get(keys[i]);
-					if (baseChild != null) {
-						// merge listChildren
-						merge(baseChild, val[i]);
-					} else {
-						((ObjectNode) base).put(keys[i], val[i]);
-					}
-				} else {
-					((ObjectNode) base).put(keys[i], val[i]);
-				}
-			}
-		} else if (overide.isArray()) {
-			ArrayNode ar = (ArrayNode) overide;
-			// assumption that may break that the base is also an array.
-			ArrayNode tar = (ArrayNode) base;
-			if (tar.size() < ar.size()) {
-				for (int j = tar.size() - 1; j <= ar.size(); j++) {
-					tar.add(JsonNodeFactory.instance.nullNode());
-				}
-			}
-			int size = ar.size();
-			for (int i = 0; i < size; i++) {
-				JsonNode e = ar.get(i);
-
-				if (e.isArray() || e.isObject()) {
-					JsonNode baseChild = tar.get(i);
-					if (baseChild == null) {
-						tar.set(i, e);
-					}
-					merge(baseChild, e);
-				} else {
-					ArrayNode target = (ArrayNode) base;
-					target.set(i, e);
-				}
-			}
-		}
-
+		JVSMerger.merge(this.root, overide.root);
 	}
 }
-
-class JVSChangeNotifier {
-	public void change(com.hitorro.util.json.keys.propaccess.Propaccess access, ConfigChangeType type) {
-
-	}
-
-	public enum ConfigChangeType {
-		Added, Deleted, Updated
-	}
-}
-

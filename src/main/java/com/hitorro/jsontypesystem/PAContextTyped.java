@@ -69,13 +69,15 @@ public class PAContextTyped extends PAContext {
     }
 
     public int translateIndexPos(VS jvs, ArrayNode node, Propaccess pa, int depth) {
+        String indexValue = pa.get(depth).getIndexAsValue();
+        if (indexValue == null || indexValue.isEmpty()) {
+            return -1;
+        }
         Field f = type.getField(pa, depth);
-        {
-            if (f != null) {
-                IndexSeeker is = f.getType().getIndexSeeker();
-                if (is != null) {
-                    return is.getIndex(node, pa, depth, pa.get(depth).getIndexAsValue(), (JVS) jvs);
-                }
+        if (f != null) {
+            IndexSeeker is = f.getType().getIndexSeeker();
+            if (is != null) {
+                return is.getIndex(node, pa, depth, indexValue, (JVS) jvs);
             }
         }
         return -1;

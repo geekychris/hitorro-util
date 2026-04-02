@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "demo_article.schema.json",
+  "title": "article",
+  "x-hitorro-name": "article",
+  "x-hitorro-super": "sysobject",
+  "description": "News article or blog post with author, publication info, and content",
+  "allOf": [
+    {"$ref": "core_sysobject.schema.json"},
+    {
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "core_string.schema.json"
+        },
+        "publication": {
+          "$ref": "core_string.schema.json"
+        },
+        "published_date": {
+          "$ref": "core_date.schema.json"
+        },
+        "category": {
+          "type": "array",
+          "items": {"$ref": "core_string.schema.json"}
+        },
+        "tags": {
+          "type": "array",
+          "items": {"$ref": "core_string.schema.json"}
+        },
+        "content": {
+          "$ref": "core_mls.schema.json"
+        },
+        "excerpt": {
+          "$ref": "core_mls.schema.json"
+        },
+        "source_url": {
+          "$ref": "core_url.schema.json"
+        }
+      }
+    }
+  ]
+}
