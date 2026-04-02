@@ -1,0 +1,5 @@
+{"type":"article","id":{"domain":"test","did":"doc1"},"title":{"mls":[{"text":"Introduction to Search","lang":"en"}]},"body":{"mls":[{"text":"Search engines are fundamental to modern computing.","lang":"en"}]},"tags":["search","intro"]}
+{"type":"article","id":{"domain":"test","did":"doc2"},"title":{"mls":[{"text":"Machine Learning Basics","lang":"en"}]},"body":{"mls":[{"text":"ML algorithms learn from data to make predictions.","lang":"en"}]},"tags":["ml","ai"]}
+{"type":"article","id":{"domain":"test","did":"doc3"},"title":{"mls":[{"text":"Natural Language Processing","lang":"en"}]},"body":{"mls":[{"text":"NLP bridges the gap between human language and computers.","lang":"en"}]},"tags":["nlp","text"]}
+{"type":"document","id":{"domain":"test","did":"doc4"},"title":{"mls":[{"text":"API Reference Guide","lang":"en"}]},"filename":"api-ref.pdf","file_size":1024000}
+{"type":"document","id":{"domain":"test","did":"doc5"},"title":{"mls":[{"text":"Architecture Overview","lang":"en"}]},"filename":"architecture.docx","file_size":512000}

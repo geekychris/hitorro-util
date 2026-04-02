@@ -484,6 +484,44 @@
                             <overwrite>true</overwrite>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>sync-transforms</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${hitorro.runtime.config.dir}/transforms</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>config/transforms</directory>
+                                    <includes>
+                                        <include>*.groovy</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sync-generators</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${hitorro.runtime.config.dir}/generators</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>config/generators</directory>
+                                    <includes>
+                                        <include>*.csv</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

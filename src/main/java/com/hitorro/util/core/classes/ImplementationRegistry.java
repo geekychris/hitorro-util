@@ -143,6 +143,16 @@ public class ImplementationRegistry {
 		loaded = false;
 	}
 
+	/**
+	 * Create a standalone registry that doesn't auto-load from config files.
+	 * Useful for tests that want to control exactly what's registered.
+	 */
+	public static ImplementationRegistry createStandalone() {
+		ImplementationRegistry r = new ImplementationRegistry();
+		r.loaded = true; // prevent ensureLoaded() from hitting the filesystem
+		return r;
+	}
+
 	private synchronized void ensureLoaded() {
 		if (loaded) {
 			return;

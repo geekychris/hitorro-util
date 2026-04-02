@@ -38,7 +38,7 @@ class ImplementationRegistryTest {
 
 	@BeforeEach
 	void setUp() {
-		registry = new ImplementationRegistry();
+		registry = ImplementationRegistry.createStandalone();
 	}
 
 	@AfterEach

@@ -4,31 +4,18 @@ The JSON Type System is the core data modeling layer of HiTorro. Every document,
 
 ## Architecture Overview
 
-```
-                          ┌─────────────────┐
-                          │  JsonTypeSystem  │  singleton, caches Type instances
-                          └────────┬────────┘
-                                   │ getType("core_id")
-                          ┌────────▼────────┐
-                          │    HashCache     │  lazy-loads via mapper
-                          │   (typeCache)    │
-                          └────────┬────────┘
-                                   │
-                ┌──────────────────┼──────────────────┐
-                │ native (default)                     │ schema (debug flag)
-                ▼                                      ▼
-       Name2JsonMapper                        Name2SchemaJsonMapper
-     config/types/*.json                    config/schemas/*.schema.json
-                │                                      │
-                │                          JsonSchema2TypeConverter
-                │                           (schema → native JSON)
-                │                                      │
-                └──────────────┬───────────────────────┘
-                               │
-                               ▼
-                      Type.init(JsonNode)
-                      Field.init(JsonNode)
-                      Group.init(JsonNode)
+```mermaid
+graph TD
+    JTS["JsonTypeSystem<br/><i>singleton, caches Type instances</i>"]
+    HC["HashCache<br/>(typeCache)<br/><i>lazy-loads via mapper</i>"]
+    JTS -->|"getType('core_id')"| HC
+
+    HC --> NATIVE["Name2JsonMapper<br/><i>config/types/*.json</i>"]
+    HC -->|"schema flag"| SCHEMA["Name2SchemaJsonMapper<br/><i>config/schemas/*.schema.json</i>"]
+    SCHEMA --> CONV["JsonSchema2TypeConverter<br/><i>schema → native JSON</i>"]
+
+    NATIVE --> INIT["Type.init(JsonNode)<br/>Field.init(JsonNode)<br/>Group.init(JsonNode)"]
+    CONV --> INIT
 ```
 
 ### Key classes
