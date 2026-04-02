@@ -256,106 +256,228 @@ times(gen.intBetween(2, 5)) { i ->       // random number of iterations
 | `gen` | `DataGenerators` | The data generators instance (see below) |
 | `docIndex` | `int` | Increments with each document processed by the mapper |
 
-## Data Generators
+### Custom functions
 
-Available in scripts as `gen`. Generators draw from CSV files in `config/generators/` and cycle back to the beginning when exhausted.
-
-### Person data
-
-| Method | Example output | Source |
-|--------|---------------|--------|
-| `gen.firstName()` | `"Elena"` | `first_names.csv` (100 names) |
-| `gen.lastName()` | `"Nakamura"` | `last_names.csv` (100 names) |
-| `gen.fullName()` | `"Elena Nakamura"` | combines first + last |
-| `gen.email()` | `"elena.nakamura@techmail.io"` | combines name + `email_domains.csv` |
-
-### Contact & location
-
-| Method | Example output | Source |
-|--------|---------------|--------|
-| `gen.phone()` | `"+1-555-234-5678"` | `phone_numbers.csv` (80 numbers) |
-| `gen.city()` | `"Portland"` | `cities.csv` (80 cities) |
-| `gen.street()` | `"742 Evergreen Terrace"` | `streets.csv` (80 streets) |
-| `gen.address()` | `"742 Evergreen Terrace, Portland"` | combines street + city |
-
-### Business data
-
-| Method | Example output | Source |
-|--------|---------------|--------|
-| `gen.product()` | `"CloudSync Pro"` | `product_names.csv` (80 products) |
-| `gen.company()` | `"Nexus Dynamics"` | `company_names.csv` (60 companies) |
-
-### Text
-
-| Method | Example output | Source |
-|--------|---------------|--------|
-| `gen.lorem()` | `"Lorem ipsum dolor sit amet..."` | `lorem.csv` (30 paragraphs) |
-
-### Built-in generators (no CSV)
-
-| Method | Description |
-|--------|-------------|
-| `gen.uuid()` | Random UUID string |
-| `gen.date()` | Random ISO date within last 5 years |
-| `gen.dateInRange("2024-01-01", "2026-12-31")` | Random date in range |
-| `gen.intBetween(1, 100)` | Random integer (inclusive) |
-| `gen.longBetween(1L, 1000000L)` | Random long |
-| `gen.doubleBetween(0.0, 999.99)` | Random double |
-| `gen.bool()` | Random boolean |
-| `gen.pick("a", "b", "c")` | Random choice from options |
-
-### Custom CSV lists
-
-Add any CSV file to `config/generators/` and access it from a script:
+Since DSL scripts are full Groovy, you can define closures and use them as functions:
 
 ```groovy
-def colors = gen.list("colors")       // loads colors.csv
-set "target.color", colors.next()     // cycles through values
+// Define reusable functions at the top of your script
+def slugify = { String text ->
+    text.toLowerCase()
+        .replaceAll(/[^a-z0-9\s-]/, '')
+        .replaceAll(/\s+/, '-')
+}
+
+def formatPrice = { Number amount, String currency ->
+    def symbol = [USD: '$', EUR: '€', GBP: '£'].getOrDefault(currency, currency)
+    "${symbol}${String.format('%.2f', amount)}"
+}
+
+def excerpt = { String text, int maxLen ->
+    if (text == null || text.length() <= maxLen) return text
+    text.substring(0, text.lastIndexOf(' ', maxLen)) + "..."
+}
+
+// Use them in the transform
+set "target.slug", slugify(gen.fullName())
+set "target.price_display", formatPrice(99.95, "USD")
+set "target.summary", excerpt(gen.lorem(), 120)
 ```
 
-CSV format: first row is a header (skipped), first column is the value.
+Any Groovy code works — collection methods, regex, string manipulation, math, conditional expressions, `collect`, `findAll`, etc.
+
+## Generators
+
+Generators are named objects that produce values on each call to `next()`. They are configurable from the DSL, backed by CSV files, or built-in.
+
+### Architecture
+
+```mermaid
+graph TD
+    REG["GeneratorRegistry"]
+    CSV["CSV files<br/><i>auto-loaded from config/generators/</i>"]
+    BUILTIN["Built-in generators<br/><i>uuid, date, bool, sequence</i>"]
+    DSL["generator DSL<br/><i>defined in scripts</i>"]
+    GEN["gen (DataGenerators)<br/><i>convenience facade</i>"]
+
+    CSV --> REG
+    BUILTIN --> REG
+    DSL --> REG
+    REG --> GEN
+```
+
+On startup, the `GeneratorRegistry` auto-loads every CSV file from `config/generators/` as a cycling generator named after the file (e.g., `first_names.csv` becomes generator `"first_names"`). It also registers built-in generators for uuid, date, timestamp, bool, and sequence.
+
+Scripts can define additional generators or override defaults.
+
+### Defining generators in the DSL
+
+```groovy
+// Random numbers
+generator "age", type: "int", min: 18, max: 65
+generator "price", type: "double", min: 4.99, max: 1299.99
+generator "big_id", type: "long", min: 1000000, max: 9999999
+
+// Random boolean
+generator "active", type: "bool"
+
+// Random choice (each call picks randomly)
+generator "status", type: "pick", values: ["active", "inactive", "pending"]
+
+// Cycling list (wraps around in order: red, green, blue, red, ...)
+generator "color", type: "items", values: ["red", "green", "blue"]
+
+// Pattern-based (# = digit, ? = letter, * = alphanumeric)
+generator "sku", type: "pattern", pattern: "SKU-####-??"
+generator "phone", type: "pattern", pattern: "(###) ###-####"
+
+// Sequences (increment on each call)
+generator "order_num", type: "sequence", start: 1000
+generator "ticket", type: "sequence", prefix: "TKT-"
+
+// Dates
+generator "dob", type: "date", from: "1960-01-01", to: "2005-12-31"
+generator "any_date", type: "date"                    // last 5 years
+
+// UUID, timestamp, constant
+generator "txn_id", type: "uuid"
+generator "ts", type: "timestamp"
+generator "api_version", type: "constant", value: "3.0.1"
+
+// Template — substitutes {name} with values from other generators
+generator "byline", type: "template", template: "{first_names} {last_names}, {company_names}"
+
+// CSV file
+generator "custom_data", file: "my_data.csv"
+
+// Force-override an auto-loaded default
+generator "first_names", type: "items", values: ["Alice", "Bob"], force: true
+```
+
+### Accessing generator values
+
+```groovy
+gen.next("age")              // returns native type: Integer, Double, Boolean, String
+gen.nextString("age")        // always returns String
+gen.get("age")               // returns the Generator object
+
+// Convenience shortcuts (backed by named generators from CSV)
+gen.firstName()   gen.lastName()   gen.fullName()   gen.email()
+gen.phone()       gen.city()       gen.street()     gen.address()
+gen.product()     gen.company()    gen.lorem()
+
+// Built-in shortcuts
+gen.uuid()        gen.date()       gen.bool()       gen.seq()
+gen.intBetween(min, max)           gen.doubleBetween(min, max)
+gen.pick("a", "b", "c")           gen.dateInRange("2024-01-01", "2026-12-31")
+```
+
+### Generator type reference
+
+| Type | Parameters | Output | Example |
+|------|-----------|--------|---------|
+| `int` | `min`, `max` | `Integer` | `42` |
+| `long` | `min`, `max` | `Long` | `1000000L` |
+| `double` | `min`, `max` | `Double` | `99.95` |
+| `bool` | — | `Boolean` | `true` |
+| `pick` | `values` (list) | `String` | `"active"` |
+| `items` | `values` (list) | `String` (cycles) | `"red"` → `"green"` → `"blue"` → `"red"` |
+| `pattern` | `pattern` | `String` | `"SKU-1234-AB"` |
+| `sequence` | `start` or `prefix` | `Integer` or `String` | `1000`, `"TKT-1"` |
+| `date` | `from`, `to` (optional) | `String` (ISO) | `"2024-06-15T..."` |
+| `uuid` | — | `String` | `"a1b2c3d4-..."` |
+| `timestamp` | — | `Long` (millis) | `1712019600000` |
+| `constant` | `value` | any | `"3.0.1"` |
+| `template` | `template` | `String` | `"Dear Alice Smith, Acme Corp"` |
+| CSV file | `file` | `String` (cycles) | next row from CSV |
+
+### Auto-loaded CSV generators
+
+Any `.csv` file in `config/generators/` is automatically registered. The bundled defaults:
+
+| Generator name | File | Count | Content |
+|---------------|------|-------|---------|
+| `first_names` | `first_names.csv` | 100 | Diverse first names |
+| `last_names` | `last_names.csv` | 100 | Diverse surnames |
+| `cities` | `cities.csv` | 80 | Worldwide cities |
+| `streets` | `streets.csv` | 80 | Street addresses |
+| `phone_numbers` | `phone_numbers.csv` | 80 | Various formats |
+| `product_names` | `product_names.csv` | 80 | Product names |
+| `company_names` | `company_names.csv` | 60 | Fictional companies |
+| `email_domains` | `email_domains.csv` | 30 | Email domains |
+| `lorem` | `lorem.csv` | 30 | Lorem paragraphs |
+
+To add your own, drop a CSV file (header row + data rows, first column used) into `config/generators/`.
 
 ## Annotated Script Examples
 
 ### Example 1: Person enrichment (`enrich_person.groovy`)
 
-Takes any document as a template and enriches it into a fully populated person record.
+Takes any document as a template and enriches it into a fully populated person record. Demonstrates: DSL-defined generators, custom functions, MLS, variable-length arrays.
 
 ```groovy
-// Start by preserving the original document structure.
-// target is already a deep copy of source, but copyAll() makes intent explicit.
+// --- Define generators specific to this transform ---
+generator "age", type: "int", min: 18, max: 75
+generator "salary", type: "double", min: 35000.0, max: 250000.0
+generator "emp_id", type: "sequence", prefix: "EMP-"
+generator "dept", type: "pick", values: ["Engineering", "Product", "Sales",
+        "Marketing", "Operations", "Finance", "HR"]
+generator "seniority", type: "pick", values: ["Junior", "Mid-Level", "Senior",
+        "Staff", "Principal"]
+generator "dob", type: "date", from: "1955-01-01", to: "2005-12-31"
+
+// --- Custom functions (plain Groovy closures) ---
+// Since scripts are full Groovy, you can define any function you need.
+
+def formatPhone = { String raw ->
+    def digits = raw.replaceAll(/[^0-9]/, '')
+    if (digits.length() >= 10) {
+        digits = digits[-10..-1]
+        return "(${digits[0..2]}) ${digits[3..5]}-${digits[6..9]}"
+    }
+    return raw
+}
+
+def slugify = { String text ->
+    text.toLowerCase()
+        .replaceAll(/[^a-z0-9\s-]/, '')
+        .replaceAll(/\s+/, '-')
+}
+
+def titleCase = { String text ->
+    text.split(/\s+/).collect { it.capitalize() }.join(' ')
+}
+
+// --- Transform ---
 copyAll()
 
-// Override the type system identity — this becomes a "person" document
-// with a new unique ID in the "synthetic" domain.
 set "target.type", "person"
 set "target.id.domain", "synthetic"
 set "target.id.did", gen.uuid()
 
-// Generate a person's name. We store in local variables because we need
-// the same first/last name in multiple places (fields + MLS title).
-def first = gen.firstName()    // draws from first_names.csv, cycling
+def first = gen.firstName()
 def last = gen.lastName()
+def fullName = titleCase("${first} ${last}")
 
 set "target.first_name", first
 set "target.last_name", last
-set "target.full_name", "${first} ${last}"    // Groovy string interpolation
+set "target.full_name", fullName
+set "target.slug", slugify(fullName)     // custom function: "elena-nakamura"
 
-// Contact info — each generator call advances its cycling list independently,
-// so every document gets a different combination.
 set "target.email", gen.email()
-set "target.phone", gen.phone()
-set "target.birth_date", gen.dateInRange("1960-01-01", "2005-12-31")
+set "target.phone", formatPhone(gen.phone())   // custom function: "(555) 234-5678"
+set "target.birth_date", gen.next("dob")       // DSL-defined generator
 
-// Create MLS (Multi-Language String) structures for title and body.
-// These produce the {"mls": [{"text": "...", "lang": "en"}]} format
-// that the HiTorro type system expects.
-mls "target.title", text: "${first} ${last}", lang: "en"
+// Employment — all from DSL-defined generators
+set "target.employee_id", gen.next("emp_id")   // "EMP-1", "EMP-2", ...
+set "target.department", gen.next("dept")
+set "target.seniority", gen.next("seniority")
+set "target.salary", gen.next("salary")        // native Double, not String
+
+mls "target.title", text: fullName, lang: "en"
 mls "target.body", text: gen.lorem(), lang: "en"
 
-// Variable-length array: each person gets 2-5 random skills.
-// times() with a random count + gen.pick() for each value.
-times(gen.intBetween(2, 5)) { i ->
+times(gen.intBetween(2, 6)) { i ->
     append "target.skills", gen.pick("Java", "Python", "Go", "Rust", "TypeScript",
             "SQL", "Kubernetes", "Machine Learning", "NLP", "Data Engineering")
 }
@@ -366,119 +488,136 @@ set "target.times.created", gen.date()
 set "target.times.modified", gen.date()
 ```
 
-**Key patterns**: local variables for reuse, MLS creation, variable-length arrays via `times` + `intBetween`, string interpolation.
+**Key patterns**: `generator` DSL for typed data, custom closures for formatting/slugifying, `gen.next("name")` preserves native types, sequence generators for IDs.
 
 ### Example 2: Article transform (`article_transform.groovy`)
 
-Transforms any document into an article, preserving source data where appropriate and generating the rest.
+Transforms any document into an article. Demonstrates: template generators, custom functions, conditionals, loops.
 
 ```groovy
+// --- Generators ---
+generator "word_count", type: "int", min: 200, max: 5000
+generator "read_time", type: "int", min: 1, max: 20
+generator "article_seq", type: "sequence", prefix: "ART-"
+generator "rating", type: "double", min: 1.0, max: 5.0
+generator "pub", type: "pick", values: ["Tech Daily", "Innovation Weekly",
+        "The Data Journal", "AI Review", "Open Source Times"]
+// Template generator — substitutes {name} with values from other named generators
+generator "byline", type: "template", template: "{first_names} {last_names}, {company_names}"
+
+// --- Custom functions ---
+def excerpt = { String text, int maxLen ->
+    if (text == null || text.length() <= maxLen) return text
+    def cut = text.lastIndexOf(' ', maxLen)
+    if (cut < 0) cut = maxLen
+    text.substring(0, cut) + "..."
+}
+
+def hashTags = { String... words ->
+    words.collect { "#${it.toLowerCase().replaceAll(/\s+/, '')}" }
+}
+
+// --- Transform ---
 copyAll()
 
 set "target.type", "article"
 set "target.id.domain", "articles"
 set "target.id.did", gen.uuid()
+set "target.article_id", gen.next("article_seq")
 
-set "target.author", gen.fullName()
-set "target.publication", gen.pick("Tech Daily", "Innovation Weekly",
-        "The Data Journal", "AI Review", "Open Source Times")
+// Byline from template generator: "Alice Smith, Acme Corp"
+set "target.author", gen.next("byline")
+set "target.publication", gen.next("pub")
 
-// Conditional logic: check if the source has a title.
-// sourceString() reads from the source JVS — returns null if the path doesn't exist.
+// Conditional: preserve source title or generate one
 def sourceTitle = sourceString("title.mls[0].text")
 when(sourceTitle != null) {
-    // Source has a title — preserve it
     mls "target.title", text: sourceTitle, lang: "en"
 }
 when(sourceTitle == null) {
-    // No title — generate one from product name + lorem snippet
-    mls "target.title", text: "Article: ${gen.product()} — ${gen.lorem().substring(0, 40)}", lang: "en"
+    mls "target.title", text: "Article: ${gen.product()}", lang: "en"
 }
 
-mls "target.body", text: gen.lorem(), lang: "en"
+// Body with computed excerpt using custom function
+def bodyText = gen.lorem()
+mls "target.body", text: bodyText, lang: "en"
+set "target.excerpt", excerpt(bodyText, 120)
 
-set "target.published_date", gen.dateInRange("2024-01-01", "2026-03-31")
-set "target.times.created", gen.date()
-set "target.times.modified", gen.date()
+// Numeric metadata from generators
+set "target.word_count", gen.next("word_count")     // Integer
+set "target.read_time_minutes", gen.next("read_time")
+set "target.rating", gen.next("rating")              // Double
 
-// Generate 1-3 categories
-times(gen.intBetween(1, 3)) {
-    append "target.category", gen.pick("Technology", "Science", "Business",
-            "Health", "Education", "Engineering")
-}
-
-// Carry over source tags if they exist, then add generated ones.
-// loop() iterates the source array — each element is a JsonNode.
-loop("source.tags[]") { tag ->
+// Tags: source tags + generated hash tags using custom function
+loop("source.tags[]") { tag -> append "target.tags", tag }
+hashTags("trending", gen.product(), gen.company()).each { tag ->
     append "target.tags", tag
 }
-times(gen.intBetween(1, 3)) {
-    append "target.tags", gen.pick("trending", "featured", "review",
-            "tutorial", "analysis", "opinion")
-}
-
-set "target.source_url", "https://example.com/articles/${gen.uuid()}"
 ```
 
-**Key patterns**: conditional source-data preservation, loop over source arrays, mixing source data with generated data, `sourceString()` for null-safe reads.
+**Key patterns**: template generator composing other generators, custom functions for text processing, `gen.next()` preserving numeric types, Groovy collection methods (`collect`, `each`).
 
 ### Example 3: Product catalog (`product_catalog.groovy`)
 
-Generates product entries with category-specific fields using conditional branching.
+Generates product entries with category-specific fields. Demonstrates: pattern generators, custom functions for formatting, conditional polymorphism.
 
 ```groovy
+// --- Generators ---
+generator "sku", type: "pattern", pattern: "SKU-####-??"   // "SKU-1234-AB"
+generator "price", type: "double", min: 4.99, max: 1299.99
+generator "stock", type: "int", min: 0, max: 500
+generator "weight", type: "double", min: 0.05, max: 25.0
+generator "rating", type: "double", min: 1.0, max: 5.0
+generator "review_count", type: "int", min: 0, max: 2500
+generator "discount_pct", type: "pick", values: ["0", "5", "10", "15", "20", "25", "30"]
+generator "sw_version", type: "pattern", pattern: "#.#.##"  // "3.1.42"
+
+// --- Custom functions ---
+def formatPrice = { Number amount, String currency ->
+    def symbol = [USD: '$', EUR: '\u20ac', GBP: '\u00a3'].getOrDefault(currency, currency)
+    "${symbol}${String.format('%.2f', amount)}"
+}
+
+def inStock = { int qty -> qty > 0 ? "In Stock (${qty})" : "Out of Stock" }
+
+def generateBarcode = { ->
+    (1..13).collect { gen.intBetween(0, 9) }.join('')   // EAN-13 style
+}
+
+// --- Transform ---
 copyAll()
 
-set "target.type", "product"
-set "target.id.domain", "products"
-set "target.id.did", gen.uuid()
+set "target.sku", gen.next("sku")
+set "target.barcode", generateBarcode()
 
-// Generate core product data into local variables.
-// Using variables lets us reference the same values in multiple places
-// and use them in conditional logic below.
-def productName = gen.product()
-def company = gen.company()
-def price = gen.doubleBetween(9.99, 999.99)
-def category = gen.pick("Electronics", "Home & Garden", "Software",
-        "Office Supplies", "Food & Beverage", "Health & Wellness")
+def price = gen.next("price") as double
+def currency = gen.pick("USD", "EUR", "GBP")
+def stockQty = gen.next("stock") as int
 
-// The work register is scratch space — useful for storing intermediate
-// values that don't belong in the output but might be needed later.
-set "work.price", price
-set "work.category", category
-
-mls "target.title", text: "${productName} by ${company}", lang: "en"
-mls "target.description", text: gen.lorem(), lang: "en"
-
-set "target.product_name", productName
-set "target.manufacturer", company
 set "target.price", price
-set "target.currency", gen.pick("USD", "EUR", "GBP")
+set "target.price_formatted", formatPrice(price, currency)  // "$149.95"
+set "target.stock_quantity", stockQty
+set "target.availability", inStock(stockQty)   // "In Stock (42)" or "Out of Stock"
+set "target.rating", gen.next("rating")
 
-// Category-specific fields: different product types get different metadata.
-// Each when() block only executes if its condition is true.
-// This is how you model polymorphic output based on generated data.
+// Category-specific conditional fields
+def category = gen.pick("Electronics", "Software", "Food & Beverage")
 when(category == "Electronics") {
-    set "target.warranty_months", gen.intBetween(12, 36)
-    set "target.weight_kg", gen.doubleBetween(0.1, 15.0)
+    set "target.weight_kg", gen.next("weight")
 }
 when(category == "Software") {
-    set "target.license", gen.pick("MIT", "Apache-2.0", "Commercial", "Subscription")
-    set "target.version", "${gen.intBetween(1,5)}.${gen.intBetween(0,9)}.${gen.intBetween(0,99)}"
-}
-when(category == "Food & Beverage") {
-    set "target.expiry_date", gen.dateInRange("2026-06-01", "2027-12-31")
+    set "target.version", gen.next("sw_version")   // pattern: "3.1.42"
 }
 
-// Groovy string methods work directly — normalize category for tags
-append "target.tags", category.toLowerCase().replace(" & ", "-").replace(" ", "-")
-append "target.tags", gen.pick("bestseller", "new-arrival", "sale", "premium", "eco-friendly")
-
-set "target.times.created", gen.date()
-set "target.times.modified", gen.date()
+// Computed discount
+def discount = gen.next("discount_pct") as int
+when(discount > 0) {
+    set "target.sale_price", price * (1 - discount / 100.0)
+    set "target.sale_price_formatted", formatPrice(price * (1 - discount / 100.0), currency)
+}
 ```
 
-**Key patterns**: work register for intermediates, category-based conditional fields, Groovy string manipulation, numeric generators for prices/weights.
+**Key patterns**: pattern generators for SKUs/versions, custom functions for formatting and display, conditional polymorphism, `as double` / `as int` for type casting in Groovy.
 
 ## Use Cases
 

@@ -21,177 +21,103 @@
  */
 package com.hitorro.jsontypesystem.datamapper;
 
-import com.hitorro.util.core.Log;
-
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Data generators for synthetic data production. Provides cycling lists loaded from
- * CSV files plus built-in generators for dates, UUIDs, numbers, etc.
+ * Convenience facade over the {@link GeneratorRegistry}. Provides named methods
+ * for common generators (firstName, email, etc.) and delegates to the registry
+ * for everything else.
  *
- * <p>Available from Groovy DSL as {@code gen}:</p>
- * <pre>
- * gen.firstName()       // cycles through first_names.csv
- * gen.lastName()        // cycles through last_names.csv
- * gen.fullName()        // "FirstName LastName"
- * gen.email()           // "firstname.lastname@domain.com"
- * gen.phone()           // cycles through phone_numbers.csv
- * gen.city()            // cycles through cities.csv (city only)
- * gen.address()         // "123 Oak St, CityName, ST"
- * gen.product()         // cycles through product_names.csv
- * gen.company()         // cycles through company_names.csv
- * gen.lorem()           // cycles through lorem.csv
- * gen.uuid()            // random UUID
- * gen.date()            // random date within last 5 years
- * gen.intBetween(1,100) // random int
- * gen.list("myfile")    // get a custom CyclingList by name
- * </pre>
+ * <p>All convenience methods are backed by named generators in the registry.
+ * Scripts can override any default by registering a replacement generator
+ * with the same name.</p>
  */
 public class DataGenerators {
 
-	private final Map<String, CyclingList> lists = new ConcurrentHashMap<>();
-	private final File generatorsDir;
-
-	private CyclingList firstNames;
-	private CyclingList lastNames;
-	private CyclingList cities;
-	private CyclingList streets;
-	private CyclingList phones;
-	private CyclingList products;
-	private CyclingList companies;
-	private CyclingList emailDomains;
-	private CyclingList loremTexts;
+	private final GeneratorRegistry registry;
 
 	public DataGenerators(File generatorsDir) {
-		this.generatorsDir = generatorsDir;
-		loadDefaults();
+		this.registry = new GeneratorRegistry(generatorsDir);
+		registerCompositeDefaults();
 	}
 
-	private void loadDefaults() {
-		firstNames = loadList("first_names.csv");
-		lastNames = loadList("last_names.csv");
-		cities = loadList("cities.csv");
-		streets = loadList("streets.csv");
-		phones = loadList("phone_numbers.csv");
-		products = loadList("product_names.csv");
-		companies = loadList("company_names.csv");
-		emailDomains = loadList("email_domains.csv");
-		loremTexts = loadList("lorem.csv");
+	public DataGenerators(GeneratorRegistry registry) {
+		this.registry = registry;
+		registerCompositeDefaults();
 	}
 
-	private CyclingList loadList(String filename) {
-		File f = new File(generatorsDir, filename);
-		if (!f.exists()) {
-			Log.util.debug("Generator file not found: %s", f.getAbsolutePath());
-			return new CyclingList(java.util.List.of("placeholder"));
+	private void registerCompositeDefaults() {
+		// Composite generators that combine other generators
+		if (!registry.has("full_name")) {
+			registry.register("full_name", Generators.composite(" ",
+					() -> registry.nextString("first_names"),
+					() -> registry.nextString("last_names")));
 		}
-		try {
-			CyclingList list = CyclingList.fromCsv(f);
-			lists.put(filename.replace(".csv", ""), list);
-			return list;
-		} catch (IOException e) {
-			Log.util.error("Failed to load generator file %s: %s", filename, e.getMessage());
-			return new CyclingList(java.util.List.of("placeholder"));
+		if (!registry.has("email_gen")) {
+			registry.register("email_gen", () -> {
+				String first = registry.nextString("first_names");
+				String last = registry.nextString("last_names");
+				String domain = registry.nextString("email_domains");
+				first = first != null ? first.toLowerCase().replace(" ", "") : "user";
+				last = last != null ? last.toLowerCase().replace(" ", "") : "name";
+				domain = domain != null ? domain : "example.com";
+				return first + "." + last + "@" + domain;
+			});
+		}
+		if (!registry.has("address")) {
+			registry.register("address", Generators.composite(", ",
+					() -> registry.nextString("streets"),
+					() -> registry.nextString("cities")));
 		}
 	}
 
 	/**
-	 * Load a custom CyclingList from a CSV file in the generators directory.
+	 * Get the underlying registry for direct generator access and registration.
 	 */
-	public CyclingList list(String name) {
-		return lists.computeIfAbsent(name, n -> {
-			String filename = n.endsWith(".csv") ? n : n + ".csv";
-			File f = new File(generatorsDir, filename);
-			if (!f.exists()) {
-				Log.util.error("Custom generator file not found: %s", f.getAbsolutePath());
-				return new CyclingList(java.util.List.of("placeholder"));
-			}
-			try {
-				return CyclingList.fromCsv(f);
-			} catch (IOException e) {
-				Log.util.error("Failed to load generator %s: %s", filename, e.getMessage());
-				return new CyclingList(java.util.List.of("placeholder"));
-			}
-		});
+	public GeneratorRegistry getRegistry() {
+		return registry;
 	}
 
-	// --- Named generators ---
+	// --- Registry shortcut: get any named generator's value ---
 
-	public String firstName() {
-		return firstNames.next();
+	/**
+	 * Get the next value from a named generator, preserving its native type
+	 * (Integer, Double, String, Boolean, etc.).
+	 */
+	public Object next(String name) {
+		return registry.next(name);
 	}
 
-	public String lastName() {
-		return lastNames.next();
+	public String nextString(String name) {
+		return registry.nextString(name);
 	}
 
-	public String fullName() {
-		return firstName() + " " + lastName();
+	public Generator get(String name) {
+		return registry.get(name);
 	}
 
-	public String email() {
-		String first = firstName().toLowerCase().replace(" ", "");
-		String last = lastName().toLowerCase().replace(" ", "");
-		String domain = emailDomains.next();
-		return first + "." + last + "@" + domain;
-	}
+	// --- Convenience methods (backed by named generators) ---
 
-	public String phone() {
-		return phones.next();
-	}
+	public String firstName() { return registry.nextString("first_names"); }
+	public String lastName() { return registry.nextString("last_names"); }
+	public String fullName() { return registry.nextString("full_name"); }
+	public String email() { return registry.nextString("email_gen"); }
+	public String phone() { return registry.nextString("phone_numbers"); }
+	public String city() { return registry.nextString("cities"); }
+	public String street() { return registry.nextString("streets"); }
+	public String address() { return registry.nextString("address"); }
+	public String product() { return registry.nextString("product_names"); }
+	public String company() { return registry.nextString("company_names"); }
+	public String lorem() { return registry.nextString("lorem"); }
 
-	public String city() {
-		return cities.next();
-	}
-
-	public String street() {
-		return streets.next();
-	}
-
-	public String address() {
-		return street() + ", " + city();
-	}
-
-	public String product() {
-		return products.next();
-	}
-
-	public String company() {
-		return companies.next();
-	}
-
-	public String lorem() {
-		return loremTexts.next();
-	}
-
-	public String uuid() {
-		return UUID.randomUUID().toString();
-	}
-
-	public String date() {
-		long now = System.currentTimeMillis();
-		long fiveYearsAgo = now - (5L * 365 * 24 * 60 * 60 * 1000);
-		long random = ThreadLocalRandom.current().nextLong(fiveYearsAgo, now);
-		return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new Date(random));
-	}
+	public String uuid() { return registry.nextString("uuid"); }
+	public String date() { return registry.nextString("date"); }
+	public long timestamp() { return (long) registry.get("timestamp").next(); }
+	public int seq() { return (int) registry.get("sequence").next(); }
 
 	public String dateInRange(String from, String to) {
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			long fromMs = sdf.parse(from).getTime();
-			long toMs = sdf.parse(to).getTime();
-			long random = ThreadLocalRandom.current().nextLong(fromMs, toMs);
-			return new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").format(new Date(random));
-		} catch (Exception e) {
-			return date();
-		}
+		return Generators.dateInRange(from, to).nextString();
 	}
 
 	public int intBetween(int min, int max) {
@@ -212,5 +138,16 @@ public class DataGenerators {
 
 	public String pick(String... options) {
 		return options[ThreadLocalRandom.current().nextInt(options.length)];
+	}
+
+	/**
+	 * @deprecated Use {@code gen.getRegistry().get(name)} instead
+	 */
+	@Deprecated
+	public CyclingList list(String name) {
+		Generator g = registry.get(name);
+		if (g == null) return null;
+		// Wrap the generator in a CyclingList-compatible interface for backward compat
+		return new CyclingList(java.util.List.of("use gen.next(\"" + name + "\") instead"));
 	}
 }

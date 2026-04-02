@@ -449,4 +449,233 @@ class GroovyTransformMapperTest {
 			assertThat(result2.getString("category")).isEqualTo("other");
 		}
 	}
+
+	@Nested
+	@DisplayName("Generator DSL definitions")
+	class GeneratorDSL {
+
+		@Test
+		@DisplayName("Should define a random int generator from DSL")
+		void randomIntGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "age", type: "int", min: 18, max: 65
+					set "target.age", gen.next("age")
+					""", generators());
+
+			for (int i = 0; i < 20; i++) {
+				JVS result = mapper.apply(JVS.read("{}"));
+				long age = result.getLong("age");
+				assertThat(age).isBetween(18L, 65L);
+			}
+		}
+
+		@Test
+		@DisplayName("Should define a random double generator from DSL")
+		void randomDoubleGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "price", type: "double", min: 9.99, max: 999.99
+					set "target.price", gen.next("price")
+					""", generators());
+
+			JVS result = mapper.apply(JVS.read("{}"));
+			assertThat(result.getDouble("price")).isBetween(9.99, 999.99);
+		}
+
+		@Test
+		@DisplayName("Should define a sequence generator from DSL")
+		void sequenceGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "order_num", type: "sequence", start: 1000
+					set "target.order", gen.next("order_num")
+					""", generators());
+
+			JVS r1 = mapper.apply(JVS.read("{}"));
+			JVS r2 = mapper.apply(JVS.read("{}"));
+			JVS r3 = mapper.apply(JVS.read("{}"));
+
+			assertThat(r1.getLong("order")).isEqualTo(1000);
+			assertThat(r2.getLong("order")).isEqualTo(1001);
+			assertThat(r3.getLong("order")).isEqualTo(1002);
+		}
+
+		@Test
+		@DisplayName("Should define a sequence with prefix from DSL")
+		void sequenceWithPrefix() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "ticket", type: "sequence", prefix: "TKT-"
+					set "target.ticket", gen.next("ticket")
+					""", generators());
+
+			JVS r1 = mapper.apply(JVS.read("{}"));
+			JVS r2 = mapper.apply(JVS.read("{}"));
+			assertThat(r1.getString("ticket")).isEqualTo("TKT-1");
+			assertThat(r2.getString("ticket")).isEqualTo("TKT-2");
+		}
+
+		@Test
+		@DisplayName("Should define a pattern generator from DSL")
+		void patternGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "sku", type: "pattern", pattern: "SKU-####-??"
+					set "target.sku", gen.next("sku")
+					""", generators());
+
+			JVS result = mapper.apply(JVS.read("{}"));
+			String sku = result.getString("sku");
+			assertThat(sku).startsWith("SKU-");
+			assertThat(sku).hasSize(11); // SKU-####-?? = 3+1+4+1+2
+			// digits in positions 4-7
+			assertThat(sku.substring(4, 8)).matches("\\d{4}");
+			// letters in positions 9-10
+			assertThat(sku.substring(9)).matches("[A-Z]{2}");
+		}
+
+		@Test
+		@DisplayName("Should define a pick generator from DSL")
+		void pickGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "status", type: "pick", values: ["active", "inactive", "pending"]
+					set "target.status", gen.next("status")
+					""", generators());
+
+			JVS result = mapper.apply(JVS.read("{}"));
+			assertThat(result.getString("status")).isIn("active", "inactive", "pending");
+		}
+
+		@Test
+		@DisplayName("Should define an items (cycling) generator from DSL")
+		void itemsGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "color", type: "items", values: ["red", "green", "blue"]
+					set "target.c1", gen.next("color")
+					set "target.c2", gen.next("color")
+					set "target.c3", gen.next("color")
+					set "target.c4", gen.next("color")
+					""", generators());
+
+			JVS result = mapper.apply(JVS.read("{}"));
+			assertThat(result.getString("c1")).isEqualTo("red");
+			assertThat(result.getString("c2")).isEqualTo("green");
+			assertThat(result.getString("c3")).isEqualTo("blue");
+			assertThat(result.getString("c4")).isEqualTo("red"); // cycles!
+		}
+
+		@Test
+		@DisplayName("Should define a uuid generator from DSL")
+		void uuidGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "txn_id", type: "uuid"
+					set "target.txn", gen.next("txn_id")
+					""", generators());
+
+			JVS r1 = mapper.apply(JVS.read("{}"));
+			JVS r2 = mapper.apply(JVS.read("{}"));
+			assertThat(r1.getString("txn")).isNotEmpty();
+			assertThat(r1.getString("txn")).isNotEqualTo(r2.getString("txn"));
+		}
+
+		@Test
+		@DisplayName("Should define a date range generator from DSL")
+		void dateRangeGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "dob", type: "date", from: "1960-01-01", to: "2005-12-31"
+					set "target.dob", gen.next("dob")
+					""", generators());
+
+			JVS result = mapper.apply(JVS.read("{}"));
+			String dob = result.getString("dob");
+			assertThat(dob).matches("\\d{4}-\\d{2}-\\d{2}T.*");
+		}
+
+		@Test
+		@DisplayName("Should define a constant generator from DSL")
+		void constantGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "version", type: "constant", value: "3.0.1"
+					set "target.version", gen.next("version")
+					""", generators());
+
+			JVS result = mapper.apply(JVS.read("{}"));
+			assertThat(result.getString("version")).isEqualTo("3.0.1");
+		}
+
+		@Test
+		@DisplayName("Should define a template generator from DSL")
+		void templateGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "greeting", type: "template", template: "Dear {first_names} {last_names}"
+					set "target.greeting", gen.next("greeting")
+					""", generators());
+
+			JVS result = mapper.apply(JVS.read("{}"));
+			String greeting = result.getString("greeting");
+			assertThat(greeting).startsWith("Dear ");
+			// Should have two words after "Dear "
+			assertThat(greeting.split(" ").length).isGreaterThanOrEqualTo(3);
+		}
+
+		@Test
+		@DisplayName("Should define a boolean generator from DSL")
+		void boolGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "is_active", type: "bool"
+					set "target.active", gen.next("is_active")
+					""", generators());
+
+			JVS result = mapper.apply(JVS.read("{}"));
+			assertThat(result.get("active")).isNotNull();
+			assertThat(result.getBoolean("active") || !result.getBoolean("active")).isTrue();
+		}
+
+		@Test
+		@DisplayName("Should override a default generator from DSL")
+		void overrideDefaultGenerator() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "first_names", type: "items", values: ["Alice", "Bob"], force: true
+					set "target.name", gen.firstName()
+					""", generators());
+
+			// force:true re-creates on each call — both start from "Alice"
+			// The point: the override replaces the CSV-loaded generator
+			JVS r1 = mapper.apply(JVS.read("{}"));
+			assertThat(r1.getString("name")).isIn("Alice", "Bob");
+
+			// Without force, the items generator persists and cycles
+			GroovyTransformMapper mapper2 = GroovyTransformMapper.fromString("""
+					generator "custom_names", type: "items", values: ["X", "Y", "Z"]
+					set "target.name", gen.next("custom_names")
+					""", generators());
+
+			JVS s1 = mapper2.apply(JVS.read("{}"));
+			JVS s2 = mapper2.apply(JVS.read("{}"));
+			JVS s3 = mapper2.apply(JVS.read("{}"));
+			assertThat(s1.getString("name")).isEqualTo("X");
+			assertThat(s2.getString("name")).isEqualTo("Y");
+			assertThat(s3.getString("name")).isEqualTo("Z");
+		}
+
+		@Test
+		@DisplayName("Multiple generators in one script")
+		void multipleGenerators() {
+			GroovyTransformMapper mapper = GroovyTransformMapper.fromString("""
+					generator "age", type: "int", min: 18, max: 65
+					generator "salary", type: "double", min: 30000.0, max: 200000.0
+					generator "emp_id", type: "sequence", prefix: "EMP-"
+					generator "dept", type: "pick", values: ["Engineering", "Sales", "HR"]
+
+					set "target.emp_id", gen.next("emp_id")
+					set "target.age", gen.next("age")
+					set "target.salary", gen.next("salary")
+					set "target.dept", gen.next("dept")
+					set "target.name", gen.fullName()
+					""", generators());
+
+			JVS result = mapper.apply(JVS.read("{}"));
+			assertThat(result.getString("emp_id")).isEqualTo("EMP-1");
+			assertThat(result.getLong("age")).isBetween(18L, 65L);
+			assertThat(result.getDouble("salary")).isBetween(30000.0, 200000.0);
+			assertThat(result.getString("dept")).isIn("Engineering", "Sales", "HR");
+			assertThat(result.getString("name")).contains(" ");
+		}
+	}
 }

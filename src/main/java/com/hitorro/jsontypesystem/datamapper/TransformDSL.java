@@ -30,8 +30,10 @@ import com.hitorro.util.json.keys.propaccess.PropaccessError;
 import groovy.lang.Closure;
 import groovy.lang.Script;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Base class for Groovy DSL transform scripts. Scripts extend this class
@@ -68,12 +70,124 @@ public abstract class TransformDSL extends Script {
 		return ctx.gen;
 	}
 
+	public GeneratorRegistry getRegistry() {
+		return ctx.gen.getRegistry();
+	}
+
 	public JVS getSource() {
 		return ctx.source;
 	}
 
 	public JVS getTarget() {
 		return ctx.target;
+	}
+
+	// --- Generator definition DSL ---
+
+	/**
+	 * Define a generator from a CSV file: generator "colors", file: "colors.csv"
+	 * Define a random int: generator "age", type: "int", min: 18, max: 65
+	 * Define a sequence: generator "seq", type: "sequence", start: 1000
+	 * Define a pattern: generator "sku", type: "pattern", pattern: "SKU-####-??"
+	 * Define a pick: generator "status", type: "pick", values: ["active","inactive"]
+	 * Define from items: generator "tier", type: "items", values: ["gold","silver","bronze"]
+	 * Define a random date: generator "dob", type: "date", from: "1960-01-01", to: "2005-12-31"
+	 * Define a uuid: generator "txn_id", type: "uuid"
+	 * Define a constant: generator "version", type: "constant", value: "2.0"
+	 * Define a composite: generator "greeting", type: "template", template: "Dear {first_names} {last_names}"
+	 */
+	public void generator(Map<String, Object> params, String name) {
+		generatorImpl(name, params);
+	}
+
+	public void generator(String name, Map<String, Object> params) {
+		generatorImpl(name, params);
+	}
+
+	private void generatorImpl(String name, Map<String, Object> params) {
+		GeneratorRegistry reg = ctx.gen.getRegistry();
+		// Use force flag to allow explicit overrides: generator "name", type: "...", force: true
+		boolean force = params.containsKey("force") && Boolean.TRUE.equals(params.get("force"));
+		// Skip if already registered (generators persist across calls) unless forced
+		if (!force && reg.has(name)) return;
+
+		String type = params.containsKey("type") ? params.get("type").toString() : null;
+
+		Generator g;
+
+		if (params.containsKey("file")) {
+			// CSV file generator
+			String filename = params.get("file").toString();
+			File dir = reg.getGeneratorsDir();
+			File f = dir != null ? new File(dir, filename) : new File(filename);
+			try {
+				g = Generators.csv(f);
+			} catch (Exception e) {
+				throw new RuntimeException("Failed to load CSV generator " + filename, e);
+			}
+		} else if ("int".equals(type)) {
+			int min = toInt(params.getOrDefault("min", 0));
+			int max = toInt(params.getOrDefault("max", Integer.MAX_VALUE));
+			g = Generators.randomInt(min, max);
+		} else if ("long".equals(type)) {
+			long min = toLong(params.getOrDefault("min", 0L));
+			long max = toLong(params.getOrDefault("max", Long.MAX_VALUE));
+			g = Generators.randomLong(min, max);
+		} else if ("double".equals(type)) {
+			double min = toDouble(params.getOrDefault("min", 0.0));
+			double max = toDouble(params.getOrDefault("max", 1.0));
+			g = Generators.randomDouble(min, max);
+		} else if ("bool".equals(type) || "boolean".equals(type)) {
+			g = Generators.randomBool();
+		} else if ("uuid".equals(type)) {
+			g = Generators.uuid();
+		} else if ("date".equals(type)) {
+			String from = params.containsKey("from") ? params.get("from").toString() : null;
+			String to = params.containsKey("to") ? params.get("to").toString() : null;
+			g = (from != null && to != null) ? Generators.dateInRange(from, to) : Generators.date();
+		} else if ("timestamp".equals(type)) {
+			g = Generators.timestamp();
+		} else if ("sequence".equals(type) || "seq".equals(type)) {
+			if (params.containsKey("prefix")) {
+				g = Generators.sequence(params.get("prefix").toString());
+			} else {
+				int start = toInt(params.getOrDefault("start", 1));
+				g = Generators.sequence(start);
+			}
+		} else if ("pattern".equals(type)) {
+			g = Generators.pattern(params.get("pattern").toString());
+		} else if ("pick".equals(type)) {
+			java.util.List<?> values = (java.util.List<?>) params.get("values");
+			String[] arr = values.stream().map(Object::toString).toArray(String[]::new);
+			g = Generators.pick(arr);
+		} else if ("items".equals(type)) {
+			java.util.List<?> values = (java.util.List<?>) params.get("values");
+			java.util.List<String> items = values.stream().map(Object::toString).collect(java.util.stream.Collectors.toList());
+			g = Generators.items(items);
+		} else if ("constant".equals(type)) {
+			g = Generators.constant(params.get("value"));
+		} else if ("template".equals(type)) {
+			g = Generators.template(params.get("template").toString(), reg);
+		} else {
+			throw new RuntimeException("Unknown generator type: " + type + " for generator: " + name);
+		}
+
+		reg.register(name, g);
+	}
+
+	private static int toInt(Object v) {
+		if (v instanceof Number) return ((Number) v).intValue();
+		return Integer.parseInt(v.toString());
+	}
+
+	private static long toLong(Object v) {
+		if (v instanceof Number) return ((Number) v).longValue();
+		return Long.parseLong(v.toString());
+	}
+
+	private static double toDouble(Object v) {
+		if (v instanceof Number) return ((Number) v).doubleValue();
+		return Double.parseDouble(v.toString());
 	}
 
 	public JVS getWork() {

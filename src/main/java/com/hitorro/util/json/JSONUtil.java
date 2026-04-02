@@ -148,6 +148,9 @@ public class JSONUtil {
         if (value instanceof Long) {
             return JsonNodeFactory.instance.numberNode(((Long) value).longValue());
         }
+        if (value instanceof Boolean) {
+            return JsonNodeFactory.instance.booleanNode((Boolean) value);
+        }
         return null;
     }
 
