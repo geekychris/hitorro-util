@@ -29,6 +29,7 @@ import com.hitorro.jsontypesystem.Field;
 import com.hitorro.jsontypesystem.Group;
 import com.hitorro.jsontypesystem.SolrFieldType;
 import com.hitorro.jsontypesystem.SolrFieldTypes;
+import com.hitorro.util.core.Log;
 import com.hitorro.util.json.keys.propaccess.Propaccess;
 import com.hitorro.util.json.keys.propaccess.PropaccessError;
 
@@ -51,20 +52,18 @@ public class IndexerAction implements ExecutorAction<ExecutionBuilder> {
         try {
             JsonNode val = pc.source.get(path);
 
-            if (val != null) {
-                if (val.isNull()) {
-                    return;
-                }
+            if (val != null && !val.isNull()) {
                 pc.sb.setLength(0);
                 path.getPathSansIndex(pc.sb);
                 sft.get(pc.sb, lang, isMulti);
                 String field = pc.sb.toString();
                 ObjectNode on = (ObjectNode) pc.target.getJsonNode();
                 JsonNode n = on.get(field);
-                String vText = val.textValue();
                 if (n == null) {
-                    on.put(field, vText);
+                    // First value — store the node directly (preserves type: text, long, etc.)
+                    on.set(field, val);
                 } else {
+                    // Multi-valued — promote to array
                     ArrayNode arr;
                     if (n.isArray()) {
                         arr = (ArrayNode) n;
@@ -73,12 +72,12 @@ public class IndexerAction implements ExecutorAction<ExecutionBuilder> {
                         arr.add(n);
                         on.set(field, arr);
                     }
-
                     arr.add(val);
                 }
             }
         } catch (PropaccessError propaccessError) {
-            propaccessError.printStackTrace();
+            Log.util.error("IndexerAction projection failed for path %s: %s",
+                    path, propaccessError.getMessage());
         }
     }
 }

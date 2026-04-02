@@ -22,6 +22,7 @@
 package com.hitorro.jsontypesystem.executors;
 
 import com.hitorro.jsontypesystem.Field;
+import com.hitorro.util.core.Log;
 import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.json.keys.propaccess.IndexedPart;
 import com.hitorro.util.json.keys.propaccess.Part;
@@ -51,8 +52,8 @@ public class ExecutionNode<E extends ExecutorAction> {
     }
 
     public void project(ProjectionContext pc) throws PropaccessError {
-        Propaccess access = new Propaccess("");
-        project(pc, access, false, null);
+        pc.path.setLength(0);
+        project(pc, pc.path, false, null);
     }
 
     protected String getLang(ProjectionContext pc, Propaccess path) {
@@ -62,7 +63,8 @@ public class ExecutionNode<E extends ExecutorAction> {
             path.pop();
             return l;
         } catch (PropaccessError propaccessError) {
-
+            Log.util.debug("Could not read lang at %s: %s", path, propaccessError.getMessage());
+            path.pop();
         }
         return null;
     }
@@ -141,6 +143,41 @@ public class ExecutionNode<E extends ExecutorAction> {
         actionsTmp = null;
         finalizedCount = actions.length + execRows.length;
         return finalizedCount;
+    }
+
+    /**
+     * Dump the execution plan tree as a readable string for debugging.
+     * Shows the field hierarchy with actions at each level.
+     */
+    public String dump() {
+        StringBuilder sb = new StringBuilder();
+        dump(sb, 0);
+        return sb.toString();
+    }
+
+    private void dump(StringBuilder sb, int depth) {
+        String indent = "  ".repeat(depth);
+        if (f != null) {
+            sb.append(indent).append(f.getName());
+            if (f.isVector()) sb.append("[]");
+            sb.append(" (").append(f.getType().getName()).append(")");
+        } else {
+            sb.append(indent).append("[root]");
+        }
+        if (actions != null && actions.length > 0) {
+            sb.append(" → ").append(actions.length).append(" action(s)");
+            for (ExecutorAction a : actions) {
+                sb.append(" [").append(a.getClass().getSimpleName()).append("]");
+            }
+        }
+        sb.append("\n");
+        if (execRows != null) {
+            for (ExecutionRow row : execRows) {
+                if (row.node != null) {
+                    row.node.dump(sb, depth + 1);
+                }
+            }
+        }
     }
 
     private void pruneRows() {

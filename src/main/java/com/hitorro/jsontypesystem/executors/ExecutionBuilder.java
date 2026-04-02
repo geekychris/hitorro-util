@@ -48,7 +48,9 @@ public class ExecutionBuilder<E extends ExecutorAction> implements TypeVisitor<E
     }
 
     public int finalizeNode() {
-        return root.finalizeNode();
+        int count = root.finalizeNode();
+        executors = null; // no longer needed after finalization
+        return count;
     }
 
     @Override

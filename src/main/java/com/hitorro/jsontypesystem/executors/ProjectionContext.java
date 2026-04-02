@@ -22,9 +22,11 @@
 package com.hitorro.jsontypesystem.executors;
 
 import com.hitorro.jsontypesystem.JVS;
+import com.hitorro.util.json.keys.propaccess.Propaccess;
 
 public class ProjectionContext {
     public StringBuilder sb = new StringBuilder();
+    public Propaccess path = new Propaccess("");
     public JVS source;
     public JVS target;
 }
