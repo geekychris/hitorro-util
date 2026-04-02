@@ -49,6 +49,8 @@ public class JsonNodeClassMapper<T> implements Mapper<JsonNode, T> {
     }
 
     public T getValidated(String sValue, Class requiredSuper, String key) {
+        // Resolve symbolic names to FQN class names via the implementation registry
+        sValue = ImplementationRegistry.getMe().resolve(sValue);
         String parts[] = StringUtil.tokenizeFromSingleChar(sValue, "#");
         if (ArrayUtil.nullOrEmpty(parts)) {
             if (defaultClass != null) {

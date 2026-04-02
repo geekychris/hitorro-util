@@ -465,6 +465,25 @@
                             <overwrite>true</overwrite>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>sync-implementations-config</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${hitorro.runtime.config.dir}</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>config</directory>
+                                    <includes>
+                                        <include>implementations.json</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <overwrite>true</overwrite>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

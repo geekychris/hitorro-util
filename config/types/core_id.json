@@ -13,7 +13,7 @@
       "name": "id",
       "type": "core_string",
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.MultiValueMergerDM",
+        "class": "multivalue-merger",
         "fields": [
           ".domain",
           ".did"
@@ -32,9 +32,9 @@
       "type": "core_long",
       "vector": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "class": "dynamic-mapper",
         "mapper": {
-          "class": "com.hitorro.jsontypesystem.dynamic.mappers.FPHashMapper"
+          "class": "fp-hash"
         },
         "fields": [
           ".id"

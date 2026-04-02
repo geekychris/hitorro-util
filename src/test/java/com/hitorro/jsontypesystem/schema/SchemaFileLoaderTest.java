@@ -95,7 +95,7 @@ class SchemaFileLoaderTest {
 			JsonNode idField = fields.get(2);
 			assertThat(idField.has("dynamic")).isTrue();
 			assertThat(idField.get("dynamic").get("class").asText())
-					.contains("MultiValueMergerDM");
+					.isEqualTo("multivalue-merger");
 		}
 
 		@Test
@@ -109,7 +109,7 @@ class SchemaFileLoaderTest {
 			assertThat(typeJson.get("name").asText()).isEqualTo("mlselem");
 			assertThat(typeJson.has("indexseeker")).isTrue();
 			assertThat(typeJson.get("indexseeker").get("class").asText())
-					.isEqualTo("com.hitorro.jsontypesystem.IsoLanguageSeeker");
+					.isEqualTo("iso-language-seeker");
 			assertThat(typeJson.get("fetchlang").asBoolean()).isTrue();
 
 			// Should have all 11 fields: lang, text, clean, dependency,
@@ -127,9 +127,9 @@ class SchemaFileLoaderTest {
 			JsonNode cleanField = fieldByName(fields, "clean");
 			assertThat(cleanField.get("i18n").asBoolean()).isTrue();
 			assertThat(cleanField.get("dynamic").get("class").asText())
-					.isEqualTo("com.hitorro.jsontypesystem.dynamic.DynamicMapper");
+					.isEqualTo("dynamic-mapper");
 			assertThat(cleanField.get("dynamic").get("mapper").get("class").asText())
-					.contains("Json2HTMLScrubbedJson");
+					.isEqualTo("html-scrubber");
 			assertThat(cleanField.get("dynamic").get("fields").get(0).asText())
 					.isEqualTo(".text");
 			assertThat(cleanField.get("groups").get(0).get("name").asText())
@@ -140,7 +140,7 @@ class SchemaFileLoaderTest {
 			assertThat(nerField.get("vector").asBoolean()).isTrue();
 			assertThat(nerField.get("i18n").asBoolean()).isTrue();
 			assertThat(nerField.get("dynamic").get("class").asText())
-					.contains("NERMarkupMapper");
+					.isEqualTo("ner-markup");
 			assertThat(nerField.get("dynamic").get("fields").get(0).asText())
 					.isEqualTo(".lang");
 			assertThat(nerField.get("dynamic").get("fields").get(1).asText())
@@ -157,7 +157,7 @@ class SchemaFileLoaderTest {
 			assertThat(hashField.get("vector").asBoolean()).isTrue();
 			assertThat(hashField.has("i18n")).isFalse();
 			assertThat(hashField.get("dynamic").get("mapper").get("class").asText())
-					.contains("NormalizedTextHashMapper");
+					.isEqualTo("normalized-text-hash");
 		}
 
 		@Test

@@ -1,0 +1,26 @@
+{
+  "_comment": "Maps symbolic implementation names to Java class names. Used by ImplementationRegistry.",
+
+  "dynamic-mapper": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+  "multivalue-merger": "com.hitorro.jsontypesystem.dynamic.MultiValueMergerDM",
+
+  "iso-language-seeker": "com.hitorro.jsontypesystem.IsoLanguageSeeker",
+
+  "html-scrubber": "com.hitorro.jsontypesystem.dynamic.mappers.Json2HTMLScrubbedJson",
+  "fp-hash": "com.hitorro.jsontypesystem.dynamic.mappers.FPHashMapper",
+  "normalized-text-hash": "com.hitorro.jsontypesystem.dynamic.mappers.NormalizedTextHashMapper",
+
+  "pos-tokenizer": "com.hitorro.jsontypesystem.dynamic.POSTokenizer",
+  "sentence-segmenter": "com.hitorro.jsontypesystem.dynamic.SentenceSegmenter",
+  "sentence-segmenter-span": "com.hitorro.jsontypesystem.dynamic.SentenceSegmenterSpan",
+  "chunk-mapper": "com.hitorro.jsontypesystem.dynamic.ChunkMapper",
+  "text-classifier": "com.hitorro.jsontypesystem.dynamic.TextClassifier",
+  "ner-markup": "com.hitorro.jsontypesystem.dynamic.NERMarkupMapper",
+
+  "mst-mapper": "com.hitorro.dataaquisition.importing.wikipedia.MSTMapper",
+
+  "url-hash": "com.hitorro.util.typesystem.valuesource.mapper.UrlHashMapper",
+  "long-to-inttime": "com.hitorro.util.typesystem.valuesource.mapper.LongToIntTimeMapper",
+  "map-value-mapper": "com.hitorro.util.typesystem.mappers.MapValueMapMapper",
+  "language-id": "com.hitorro.util.bagio.LanguageIdMapper"
+}

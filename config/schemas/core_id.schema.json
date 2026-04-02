@@ -14,7 +14,7 @@
     "id": {
       "$ref": "core_string.schema.json",
       "x-hitorro-dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.MultiValueMergerDM",
+        "class": "multivalue-merger",
         "fields": [".domain", ".did"]
       },
       "x-hitorro-groups": [
@@ -25,8 +25,8 @@
       "type": "array",
       "items": {"$ref": "core_long.schema.json"},
       "x-hitorro-dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
-        "mapper": {"class": "com.hitorro.jsontypesystem.dynamic.mappers.FPHashMapper"},
+        "class": "dynamic-mapper",
+        "mapper": {"class": "fp-hash"},
         "fields": [".id"]
       }
     }

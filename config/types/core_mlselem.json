@@ -1,7 +1,7 @@
 {
   "name": "mlselem",
   "indexseeker": {
-    "class": "com.hitorro.jsontypesystem.IsoLanguageSeeker"
+    "class": "iso-language-seeker"
   },
   "fetchlang": true,
   "fields": [
@@ -19,9 +19,9 @@
       "type": "core_string",
       "i18n": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "class": "dynamic-mapper",
         "mapper": {
-          "class": "com.hitorro.jsontypesystem.dynamic.mappers.Json2HTMLScrubbedJson"
+          "class": "html-scrubber"
         },
         "fields": [
           ".text"
@@ -40,9 +40,9 @@
       "type": "core_string",
       "i18n": true,
       "dynamic_": {
-        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "class": "dynamic-mapper",
         "mapper": {
-          "class": "com.hitorro.dataaquisition.importing.wikipedia.MSTMapper"
+          "class": "mst-mapper"
         },
         "fields": [
           ".text"
@@ -58,9 +58,9 @@
       "type": "core_string",
       "vector": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "class": "dynamic-mapper",
         "mapper": {
-          "class": "com.hitorro.jsontypesystem.dynamic.mappers.NormalizedTextHashMapper"
+          "class": "normalized-text-hash"
         },
         "fields": [
           ".clean"
@@ -85,7 +85,7 @@
       "vector": true,
       "i18n": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.POSTokenizer",
+        "class": "pos-tokenizer",
         "fields": [
           ".lang",
           ".clean"
@@ -109,7 +109,7 @@
       "vector": true,
       "i18n": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.SentenceSegmenterSpan",
+        "class": "sentence-segmenter-span",
         "fields": [
           ".lang",
           ".clean"
@@ -138,7 +138,7 @@
       "vector": true,
       "i18n": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.SentenceSegmenter",
+        "class": "sentence-segmenter",
         "fields": [
           ".segmented_span",
           ".clean"
@@ -167,7 +167,7 @@
       "vector": true,
       "i18n": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.ChunkMapper",
+        "class": "chunk-mapper",
         "fields": [
           ".lang",
           ".segmented"
@@ -188,7 +188,7 @@
       "vector": true,
       "i18n": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.TextClassifier",
+        "class": "text-classifier",
         "fields": [
           ".lang",
           ".segmented"
@@ -212,7 +212,7 @@
       "vector": true,
       "i18n": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.NERMarkupMapper",
+        "class": "ner-markup",
         "fields": [
           ".lang",
           ".segmented"
@@ -236,9 +236,9 @@
       "type": "core_string",
       "vector": true,
       "dynamic": {
-        "class": "com.hitorro.jsontypesystem.dynamic.DynamicMapper",
+        "class": "dynamic-mapper",
         "mapper": {
-          "class": "com.hitorro.jsontypesystem.dynamic.mappers.NormalizedTextHashMapper"
+          "class": "normalized-text-hash"
         },
         "fields": [
           ".segmented"
