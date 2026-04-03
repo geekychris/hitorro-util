@@ -21,6 +21,7 @@
  */
 package com.hitorro.util.core.iterator;
 
+import com.hitorro.util.core.Log;
 import com.hitorro.util.core.iterator.sinks.Sink;
 import com.hitorro.util.io.StoreException;
 
@@ -49,9 +50,9 @@ public class FilterToSinkIterator<T> extends AbstractIterator<T> {
             try {
                 sink.add(tmp);
             } catch (IOException e) {
-                //
+                Log.util.error("FilterToSinkIterator: IOException during sink: %s", e.getMessage());
             } catch (StoreException e) {
-                //
+                Log.util.error("FilterToSinkIterator: StoreException during sink: %s", e.getMessage());
             }
         }
         return tmp;

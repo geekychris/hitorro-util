@@ -35,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class ThreadedQueueIterator<E> extends AbstractIterator<E> implements SinkPeerInterface {
     private E e;
     private ThreadedQueue<E> queue;
-    private boolean completed = false;
+    private volatile boolean completed = false;
     private long queueTimeout = 2000;
 
     public ThreadedQueueIterator(ThreadedQueue<E> queue) {

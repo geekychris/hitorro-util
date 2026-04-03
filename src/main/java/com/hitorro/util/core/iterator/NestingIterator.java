@@ -46,6 +46,9 @@ public class NestingIterator<INITER, OUTITER> extends AbstractIterator<OUTITER> 
 
     @Override
     public void close() throws Exception {
+        if (currIter != null) {
+            close(currIter);
+        }
         close(iter);
     }
 

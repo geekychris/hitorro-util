@@ -401,7 +401,8 @@ public abstract class AbstractIterator<E> implements ChainingIteratorIntf<E>, It
         int iters = Math.min(aSize - start, max);
         int count = 0;
         while (this.hasNext() && iters > 0) {
-            array[count++] = this.next();
+            array[start + count] = this.next();
+            count++;
             iters--;
         }
         return count;
@@ -488,13 +489,51 @@ public abstract class AbstractIterator<E> implements ChainingIteratorIntf<E>, It
     }
 
 
+    /**
+     * @deprecated Use {@link #toStream()} which properly closes the iterator when the stream closes.
+     */
+    @Deprecated
     public Stream<E> stream() {
         return StreamSupport.stream(spliterator(), false);
     }
 
+    /**
+     * Bridge to Java Streams. The returned stream closes this iterator when the stream is closed.
+     * Use with try-with-resources:
+     * <pre>
+     * try (Stream&lt;E&gt; stream = iter.toStream()) {
+     *     stream.filter(...).map(...).collect(...);
+     * }
+     * </pre>
+     */
+    public Stream<E> toStream() {
+        return StreamSupport.stream(spliterator(), false)
+                .onClose(() -> { try { close(); } catch (Exception e) { /* closing */ } });
+    }
+
+    /**
+     * Bridge from Java Streams to AbstractIterator.
+     * The returned iterator supports all chaining operations (map, filter, nest, sink).
+     */
+    public static <E> AbstractIterator<E> fromStream(Stream<E> stream) {
+        return new Iterator2AbstractIterator<>(stream.iterator());
+    }
+
+    /**
+     * Terminal operation using a Java Collector (Collectors.toList(), Collectors.joining(), etc.)
+     */
+    public <R, A> R collect(java.util.stream.Collector<? super E, A, R> collector) {
+        A container = collector.supplier().get();
+        var accumulator = collector.accumulator();
+        while (hasNext()) {
+            accumulator.accept(container, next());
+        }
+        return collector.finisher().apply(container);
+    }
+
     @Override
     public Spliterator<E> spliterator() {
-        return Spliterators.spliterator(this, 0, 0);
+        return Spliterators.spliteratorUnknownSize(this, Spliterator.ORDERED);
     }
 
     public void close() throws Exception {

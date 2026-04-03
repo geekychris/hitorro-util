@@ -49,7 +49,7 @@ public class PredicatedSink<T> implements Sink<T> {
     @Override
     public boolean add(final T o) throws IOException, StoreException {
         if (predicate.test(o)) {
-            this.sink.add(o);
+            return this.sink.add(o);
         }
         return false;
     }

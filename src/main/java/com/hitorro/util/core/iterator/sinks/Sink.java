@@ -65,9 +65,8 @@ public interface Sink<T> extends AutoCloseable, JsonInitable, Consumer<T> {
         try {
             add(t);
         } catch (IOException | StoreException e) {
-            //
+            throw new RuntimeException("Sink.accept failed: " + e.getMessage(), e);
         }
-
     }
 
     boolean add(T o) throws IOException, StoreException;
