@@ -26,6 +26,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.jsontypesystem.JVS;
+import com.hitorro.util.json.keys.propaccess.Propaccess;
 import com.hitorro.util.json.keys.propaccess.PropaccessError;
 import groovy.lang.Closure;
 import groovy.lang.Script;
@@ -80,6 +81,215 @@ public abstract class TransformDSL extends Script {
 
 	public JVS getTarget() {
 		return ctx.target;
+	}
+
+	// --- JVS type system operations ---
+
+	/**
+	 * Enrich the target document using JVS type system enrichment.
+	 * Triggers dynamic field computation for all fields with enrich groups.
+	 */
+	public void enrich(String... tags) {
+		if (ctx.enrichOps == null) {
+			throw new RuntimeException("Enrich operations not available — requires runtime wiring");
+		}
+		try {
+			JVS enriched = ctx.enrichOps.enrich(ctx.target, tags);
+			if (enriched != null) {
+				copyJsonInto(ctx.target, enriched);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Enrichment failed: " + e.getMessage(), e);
+		}
+	}
+
+	/**
+	 * Get a dynamic field value from the source or target.
+	 * Dynamic fields are computed on access via the PAContextTyped.
+	 */
+	public Object dynamic(String path) {
+		try {
+			return ctx.target.get(path);
+		} catch (PropaccessError e) {
+			return null;
+		}
+	}
+
+	// --- AI / LLM operations ---
+
+	/**
+	 * Translate text using the configured AI service.
+	 * translate "source.title.mls[0].text", from: "en", to: "de", into: "target.title_de"
+	 */
+	public void translate(Map<String, Object> params, String sourcePath) {
+		translateImpl(sourcePath, params);
+	}
+
+	public void translate(String sourcePath, Map<String, Object> params) {
+		translateImpl(sourcePath, params);
+	}
+
+	private void translateImpl(String sourcePath, Map<String, Object> params) {
+		AIOperations ai = ctx.ai;
+		if (ai == null || !ai.isAvailable()) {
+			throw new RuntimeException("AI service not available for translate operation");
+		}
+		String text = null;
+		try { text = ctx.getString(sourcePath); } catch (PropaccessError e) { /* ignore */ }
+		if (text == null || text.isEmpty()) return;
+
+		String fromLang = params.containsKey("from") ? params.get("from").toString() : "en";
+		String toLang = params.containsKey("to") ? params.get("to").toString() : "de";
+		String intoPath = params.containsKey("into") ? params.get("into").toString() : null;
+
+		String translated = ai.translate(text, fromLang, toLang);
+		if (translated == null || translated.isEmpty()) return;
+		// Trim LLM artifacts (leading newlines, etc.)
+		translated = translated.strip();
+
+		if (intoPath != null) {
+			// If "into" points to an MLS array (ends with .mls), append as MLS element
+			if (intoPath.endsWith(".mls")) {
+				String basePath = intoPath.substring(0, intoPath.length() - 4); // strip ".mls"
+				if (basePath.startsWith("target.")) basePath = basePath.substring(7);
+				mlsAppendImpl(basePath, Map.of("text", translated, "lang", toLang));
+			} else {
+				set(intoPath, translated);
+			}
+		} else {
+			// Default: append as MLS element to the source field's MLS array
+			String basePath = sourcePath.contains(".mls[") ?
+					sourcePath.substring(0, sourcePath.indexOf(".mls[")) : sourcePath;
+			if (basePath.startsWith("source.")) basePath = basePath.substring(7);
+			mlsAppendImpl(basePath, Map.of("text", translated, "lang", toLang));
+		}
+	}
+
+	/**
+	 * Translate and set an MLS field to multiple languages.
+	 * translateMls "target.title", from: "en", to: ["de", "fr", "ja"]
+	 */
+	public void translateMls(Map<String, Object> params, String fieldPath) {
+		translateMlsImpl(fieldPath, params);
+	}
+
+	public void translateMls(String fieldPath, Map<String, Object> params) {
+		translateMlsImpl(fieldPath, params);
+	}
+
+	private void translateMlsImpl(String fieldPath, Map<String, Object> params) {
+		AIOperations ai = ctx.ai;
+		if (ai == null || !ai.isAvailable()) {
+			throw new RuntimeException("AI service not available for translateMls operation");
+		}
+		String fromLang = params.containsKey("from") ? params.get("from").toString() : "en";
+		String actualPath = fieldPath.startsWith("target.") ? fieldPath.substring(7) : fieldPath;
+
+		// Read source text
+		String sourceText = null;
+		try { sourceText = ctx.target.getString(actualPath + ".mls[" + fromLang + "].text"); }
+		catch (PropaccessError e) { /* ignore */ }
+		if (sourceText == null || sourceText.isEmpty()) return;
+
+		// Get target languages
+		Object toParam = params.get("to");
+		java.util.List<String> targetLangs;
+		if (toParam instanceof java.util.List) {
+			targetLangs = ((java.util.List<?>) toParam).stream().map(Object::toString)
+					.collect(Collectors.toList());
+		} else {
+			targetLangs = java.util.List.of(toParam.toString());
+		}
+
+		for (String lang : targetLangs) {
+			if (lang.equals(fromLang)) continue;
+			String translated = ai.translate(sourceText, fromLang, lang);
+			try {
+				ctx.target.set(actualPath + ".mls[" + lang + "].text", translated);
+			} catch (PropaccessError e) {
+				// Fallback: append
+				mlsAppendImpl(actualPath, Map.of("text", translated, "lang", lang));
+			}
+		}
+	}
+
+	/**
+	 * Summarize text using the configured AI service.
+	 * summarize "source.body.mls[0].text", maxWords: 50, into: "target.summary"
+	 */
+	public void summarize(Map<String, Object> params, String sourcePath) {
+		summarizeImpl(sourcePath, params);
+	}
+
+	public void summarize(String sourcePath, Map<String, Object> params) {
+		summarizeImpl(sourcePath, params);
+	}
+
+	private void summarizeImpl(String sourcePath, Map<String, Object> params) {
+		AIOperations ai = ctx.ai;
+		if (ai == null || !ai.isAvailable()) {
+			throw new RuntimeException("AI service not available for summarize operation");
+		}
+		String text = null;
+		try { text = ctx.getString(sourcePath); } catch (PropaccessError e) { /* ignore */ }
+		if (text == null || text.isEmpty()) return;
+
+		int maxWords = params.containsKey("maxWords") ? toInt(params.get("maxWords")) : 50;
+		String intoPath = params.containsKey("into") ? params.get("into").toString() : null;
+
+		String summary = ai.summarize(text, maxWords);
+		if (summary != null) summary = summary.strip();
+		if (intoPath != null && summary != null) {
+			set(intoPath, summary);
+		}
+	}
+
+	/**
+	 * Ask a question about text using the configured AI service.
+	 * ask "source.body.mls[0].text", question: "What is the main topic?", into: "target.topic"
+	 */
+	public void ask(Map<String, Object> params, String sourcePath) {
+		askImpl(sourcePath, params);
+	}
+
+	public void ask(String sourcePath, Map<String, Object> params) {
+		askImpl(sourcePath, params);
+	}
+
+	private void askImpl(String sourcePath, Map<String, Object> params) {
+		AIOperations ai = ctx.ai;
+		if (ai == null || !ai.isAvailable()) {
+			throw new RuntimeException("AI service not available for ask operation");
+		}
+		String text = null;
+		try { text = ctx.getString(sourcePath); } catch (PropaccessError e) { /* ignore */ }
+		if (text == null || text.isEmpty()) return;
+
+		String question = params.get("question").toString();
+		String intoPath = params.containsKey("into") ? params.get("into").toString() : null;
+
+		String answer = ai.ask(text, question);
+		if (answer != null) answer = answer.strip();
+		if (intoPath != null && answer != null) {
+			set(intoPath, answer);
+		}
+	}
+
+	/**
+	 * Check if AI operations are available.
+	 */
+	public boolean aiAvailable() {
+		return ctx.ai != null && ctx.ai.isAvailable();
+	}
+
+	private void copyJsonInto(JVS target, JVS source) {
+		com.fasterxml.jackson.databind.node.ObjectNode targetNode = (com.fasterxml.jackson.databind.node.ObjectNode) target.getJsonNode();
+		com.fasterxml.jackson.databind.node.ObjectNode sourceNode = (com.fasterxml.jackson.databind.node.ObjectNode) source.getJsonNode();
+		java.util.Iterator<java.util.Map.Entry<String, com.fasterxml.jackson.databind.JsonNode>> fields = sourceNode.fields();
+		while (fields.hasNext()) {
+			java.util.Map.Entry<String, com.fasterxml.jackson.databind.JsonNode> entry = fields.next();
+			targetNode.set(entry.getKey(), entry.getValue());
+		}
 	}
 
 	// --- Generator definition DSL ---
@@ -292,23 +502,12 @@ public abstract class TransformDSL extends Script {
 		String lang = params.containsKey("lang") ? params.get("lang").toString() : "en";
 		if (text == null) return;
 
-		ObjectNode elem = JsonNodeFactory.instance.objectNode();
-		elem.put("text", text);
-		elem.put("lang", lang);
-
-		ArrayNode arr = JsonNodeFactory.instance.arrayNode();
-		arr.add(elem);
-
-		ObjectNode wrapper = JsonNodeFactory.instance.objectNode();
-		wrapper.set("mls", arr);
-
 		try {
-			if (path.startsWith("target.")) {
-				ctx.target.set(path.substring(7), wrapper);
-			} else {
-				ctx.target.set(path, wrapper);
-			}
-		} catch (PropaccessError e) {
+			String actualPath = path.startsWith("target.") ? path.substring(7) : path;
+			// Use JVS addLangTextTemporaryReLook for initial creation (replaces any existing MLS)
+			Propaccess pa = new Propaccess(actualPath + ".mls");
+			ctx.target.addLangTextTemporaryReLook(pa, text, lang);
+		} catch (Exception e) {
 			throw new RuntimeException("Failed to set MLS at " + path, e);
 		}
 	}
@@ -324,28 +523,19 @@ public abstract class TransformDSL extends Script {
 		mlsAppendImpl(path, params);
 	}
 
-	private void mlsAppendImpl(String path, Map<String, String> params) {
-		String text = params.get("text");
-		String lang = params.getOrDefault("lang", "en");
+	void mlsAppendImpl(String path, Map<String, ?> params) {
+		String text = params.get("text") != null ? params.get("text").toString() : null;
+		String lang = params.containsKey("lang") ? params.get("lang").toString() : "en";
 		if (text == null) return;
-
-		ObjectNode elem = JsonNodeFactory.instance.objectNode();
-		elem.put("text", text);
-		elem.put("lang", lang);
 
 		try {
 			String actualPath = path.startsWith("target.") ? path.substring(7) : path;
 			if (!actualPath.endsWith(".mls")) {
 				actualPath = actualPath + ".mls";
 			}
-			JsonNode existing = ctx.target.get(actualPath);
-			if (existing != null && existing.isArray()) {
-				((ArrayNode) existing).add(elem);
-			} else {
-				ArrayNode arr = JsonNodeFactory.instance.arrayNode();
-				arr.add(elem);
-				ctx.target.set(actualPath, arr);
-			}
+			// Use JVS addLangText which properly appends to the MLS array
+			Propaccess pa = new Propaccess(actualPath);
+			ctx.target.addLangText(pa, text, lang);
 		} catch (PropaccessError e) {
 			throw new RuntimeException("Failed to append MLS at " + path, e);
 		}

@@ -46,21 +46,25 @@ public class MappingContext {
 	public final JVS target;
 	public final JVS work;
 	public final DataGenerators gen;
+	public final AIOperations ai;
+	public final EnrichOperations enrichOps;
 	public int docIndex;
 
 	public MappingContext(JVS source, DataGenerators gen, int docIndex) {
+		this(source, gen, null, null, docIndex);
+	}
+
+	public MappingContext(JVS source, DataGenerators gen, AIOperations ai, int docIndex) {
+		this(source, gen, ai, null, docIndex);
+	}
+
+	public MappingContext(JVS source, DataGenerators gen, AIOperations ai, EnrichOperations enrichOps, int docIndex) {
 		this.source = source;
 		this.target = new JVS(source.getJsonNode().deepCopy());
 		this.work = new JVS();
 		this.gen = gen;
-		this.docIndex = docIndex;
-	}
-
-	public MappingContext(JVS source, JVS target, DataGenerators gen, int docIndex) {
-		this.source = source;
-		this.target = target;
-		this.work = new JVS();
-		this.gen = gen;
+		this.ai = ai;
+		this.enrichOps = enrichOps;
 		this.docIndex = docIndex;
 	}
 

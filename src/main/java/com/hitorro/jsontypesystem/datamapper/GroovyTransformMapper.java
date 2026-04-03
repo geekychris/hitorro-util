@@ -56,10 +56,22 @@ public class GroovyTransformMapper extends BaseMapper<JVS, JVS> {
 	private final Script compiledScript;
 	private final DataGenerators generators;
 	private final AtomicInteger counter = new AtomicInteger(0);
+	private AIOperations aiOperations;
+	private EnrichOperations enrichOperations;
 
 	public GroovyTransformMapper(Script compiledScript, DataGenerators generators) {
 		this.compiledScript = compiledScript;
 		this.generators = generators;
+	}
+
+	public GroovyTransformMapper withAI(AIOperations ai) {
+		this.aiOperations = ai;
+		return this;
+	}
+
+	public GroovyTransformMapper withEnrich(EnrichOperations enrich) {
+		this.enrichOperations = enrich;
+		return this;
 	}
 
 	public static GroovyTransformMapper fromFile(File scriptFile, File generatorsDir) throws IOException {
@@ -92,7 +104,7 @@ public class GroovyTransformMapper extends BaseMapper<JVS, JVS> {
 
 	@Override
 	public JVS apply(JVS input) {
-		MappingContext ctx = new MappingContext(input, generators, counter.getAndIncrement());
+		MappingContext ctx = new MappingContext(input, generators, aiOperations, enrichOperations, counter.getAndIncrement());
 		try {
 			TransformDSL dsl = (TransformDSL) compiledScript;
 			dsl.setContext(ctx);
