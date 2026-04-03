@@ -124,34 +124,22 @@ public class JSONUtil {
     }
 
     /**
-     * Ugly code
-     *
-     * @param value
-     * @return
+     * Convert a Java value to a Jackson JsonNode.
      */
     public static JsonNode ensureJsonNode(Object value) {
-        if (value instanceof JsonNode) {
-            return (JsonNode) value;
-        }
-        if (value instanceof String) {
-            return JsonNodeFactory.instance.textNode(value.toString());
-        }
-        if (value instanceof Integer) {
-            return JsonNodeFactory.instance.numberNode(((Integer) value).intValue());
-        }
-        if (value instanceof Float) {
-            return JsonNodeFactory.instance.numberNode(((Float) value).floatValue());
-        }
-        if (value instanceof Double) {
-            return JsonNodeFactory.instance.numberNode(((Double) value).doubleValue());
-        }
-        if (value instanceof Long) {
-            return JsonNodeFactory.instance.numberNode(((Long) value).longValue());
-        }
-        if (value instanceof Boolean) {
-            return JsonNodeFactory.instance.booleanNode((Boolean) value);
-        }
-        return null;
+        return switch (value) {
+            case null -> null;
+            case JsonNode jn -> jn;
+            case String s -> JsonNodeFactory.instance.textNode(s);
+            case Integer i -> JsonNodeFactory.instance.numberNode(i);
+            case Long l -> JsonNodeFactory.instance.numberNode(l);
+            case Float f -> JsonNodeFactory.instance.numberNode(f);
+            case Double d -> JsonNodeFactory.instance.numberNode(d);
+            case Boolean b -> JsonNodeFactory.instance.booleanNode(b);
+            case Short s -> JsonNodeFactory.instance.numberNode(s.intValue());
+            case Byte b -> JsonNodeFactory.instance.numberNode(b.intValue());
+            default -> null;
+        };
     }
 
 

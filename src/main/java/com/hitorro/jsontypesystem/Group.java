@@ -35,7 +35,7 @@ public class Group extends BaseT {
     public static final StringProperty methodKey = new StringProperty("method", "", null);
     public static final BooleanProperty defaultKey = new BooleanProperty("isdefault", "", false);
     public static final StringProperty tagKey = new StringProperty("", "", null);
-    public static final CollectionProperty<String> tagsKey = new CollectionProperty("tags", "", new ArrayList(), tagKey);
+    public static final CollectionProperty<String> tagsKey = new CollectionProperty<>("tags", "", new ArrayList<>(), tagKey);
 
     private List<String> tags;
 

@@ -34,7 +34,7 @@ import java.util.List;
 
 public class ExecutionNode<E extends ExecutorAction> {
     static Part lang = new Part("lang");
-    private List<E> actionsTmp = new ArrayList();
+    private List<E> actionsTmp = new ArrayList<>();
     private List<ExecutionRow<E>> execRowsTmp = new ArrayList<>();
     private ExecutorAction actions[];
     private ExecutionRow<E> execRows[];

@@ -185,7 +185,7 @@ public class JVS implements VS {
 	}
 
 	public List<JsonKeyMap> getSubMaps(String root) throws PropaccessError {
-		List<JsonKeyMap> list = new ArrayList();
+		List<JsonKeyMap> list = new ArrayList<>();
 		JsonNode childKeys = get(root);
 		Iterator<Map.Entry<String, JsonNode>> iter = childKeys.fields();
 		while (iter.hasNext()) {
@@ -412,7 +412,7 @@ public class JVS implements VS {
 		if (node == null || !node.isObject()) {
 			return null;
 		}
-		List<String> list = new ArrayList();
+		List<String> list = new ArrayList<>();
 		ObjectNode on = (ObjectNode) node;
 		Iterator<String> iter = on.fieldNames();
 		while (iter.hasNext()) {

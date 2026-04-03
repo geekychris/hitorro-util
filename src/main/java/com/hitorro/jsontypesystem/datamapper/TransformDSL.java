@@ -83,6 +83,33 @@ public abstract class TransformDSL extends Script {
 		return ctx.target;
 	}
 
+	// --- Script library imports ---
+
+	/**
+	 * Load a library script from the transforms/lib/ directory.
+	 * The library script should return a Map of name→closure.
+	 * Usage: def lib = load("common")  // loads transforms/lib/common.groovy
+	 *        set "target.slug", lib.slugify("Hello World")
+	 */
+	public Object load(String libName) {
+		try {
+			File transformsDir = ctx.gen.getRegistry().getGeneratorsDir();
+			if (transformsDir == null) {
+				throw new RuntimeException("Generators directory not set — cannot resolve lib path");
+			}
+			// generators dir is config/generators, transforms/lib is at config/transforms/lib
+			File libDir = new File(transformsDir.getParentFile(), "transforms/lib");
+			File libFile = new File(libDir, libName + ".groovy");
+			if (!libFile.exists()) {
+				throw new RuntimeException("Library not found: " + libFile.getAbsolutePath());
+			}
+			groovy.lang.GroovyShell shell = new groovy.lang.GroovyShell();
+			return shell.evaluate(libFile);
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to load library '" + libName + "': " + e.getMessage(), e);
+		}
+	}
+
 	// --- JVS type system operations ---
 
 	/**

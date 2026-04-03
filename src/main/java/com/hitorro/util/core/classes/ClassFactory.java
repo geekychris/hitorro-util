@@ -45,17 +45,13 @@ public class ClassFactory<I, C> {
     public C getInstanceSwallowException(I key) {
         try {
             return getInstance(key);
-        } catch (InstantiationException e) {
-            return null;
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             return null;
         }
     }
 
-    public C getInstance(I key) throws InstantiationException,
-            IllegalAccessException {
+    public C getInstance(I key) throws ReflectiveOperationException {
         Class<C> clazz = getClass(key);
-        C c = clazz.newInstance();
-        return c;
+        return clazz.getDeclaredConstructor().newInstance();
     }
 }

@@ -49,12 +49,12 @@ public class Type extends BaseT implements TypeBaseIntf {
     public static HashCache<String, HashCache<Type, ExecutionBuilder>> projectionCache = new HashCache<>(1000000
             , true, null, "execution builders", ExecutionBuilderCacheMapper.ebcm);
     public static com.hitorro.util.json.keys.StringProperty supertypeKey = new com.hitorro.util.json.keys.StringProperty("super", "object super type", null);
-    public static JsonNode2JsonInitable<Field> fieldKey = new JsonNode2JsonInitable(Field.class, "class", Field.class);
+    public static JsonNode2JsonInitable<Field> fieldKey = new JsonNode2JsonInitable<>(Field.class, "class", Field.class);
     public static com.hitorro.util.json.keys.MapProperty<String, Field> fieldsKey =
-            new com.hitorro.util.json.keys.MapProperty<String, Field>("fields", "", new HashMap(), nameKey, fieldKey);
-    public static com.hitorro.util.json.keys.JsonInitableProperty<IndexSeeker> indexSeekerKey = new com.hitorro.util.json.keys.JsonInitableProperty("indexseeker", "", null, IndexSeeker.class, null);
+            new com.hitorro.util.json.keys.MapProperty<>("fields", "", new HashMap<>(), nameKey, fieldKey);
+    public static com.hitorro.util.json.keys.JsonInitableProperty<IndexSeeker> indexSeekerKey = new com.hitorro.util.json.keys.JsonInitableProperty<>("indexseeker", "", null, IndexSeeker.class, null);
     private static com.hitorro.util.json.keys.EnumProperty<com.hitorro.util.typesystem.TypeFieldDataType> primitiveTypeKey =
-            new com.hitorro.util.json.keys.EnumProperty("primitivetype", "", null, TypeFieldDataType.fieldDataType);
+            new com.hitorro.util.json.keys.EnumProperty<>("primitivetype", "", null, TypeFieldDataType.fieldDataType);
 
     static {
         ExecutionBuilderCacheMapper.ebcm.add("index", IndexExecutionBuilderMapper.me);
@@ -65,7 +65,7 @@ public class Type extends BaseT implements TypeBaseIntf {
     private Type superType;
     private TypeFieldDataType primitiveType;
     private JsonNode node;
-    private Map<String, Field> fields = new HashMap();
+    private Map<String, Field> fields = new HashMap<>();
     private boolean fetchLang;
 
     private IndexSeeker indexSeeker;
@@ -223,7 +223,7 @@ public class Type extends BaseT implements TypeBaseIntf {
 
 class ExecutionBuilderCacheMapper extends BaseMapper<String, HashCache<Type, ExecutionBuilder>> {
     public static ExecutionBuilderCacheMapper ebcm = new ExecutionBuilderCacheMapper();
-    private Map<String, BaseMapper<Type, ExecutionBuilder>> factories = new HashMap();
+    private Map<String, BaseMapper<Type, ExecutionBuilder>> factories = new HashMap<>();
 
     public void add(String key, BaseMapper<Type, ExecutionBuilder> mapper) {
         factories.put(key, mapper);

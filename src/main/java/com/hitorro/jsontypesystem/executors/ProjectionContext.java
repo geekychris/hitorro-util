@@ -29,4 +29,6 @@ public class ProjectionContext {
     public Propaccess path = new Propaccess("");
     public JVS source;
     public JVS target;
+    /** Optional trace — set before calling project() to capture execution details. */
+    public ExecutionTrace trace;
 }

@@ -43,12 +43,12 @@ import java.util.function.Predicate;
 public class Field extends BaseT implements FieldBaseIntf {
     public static final BooleanProperty i18nKey = new BooleanProperty("i18n", "", false);
     public static final BooleanProperty vectorKey = new BooleanProperty("vector", "", false);
-    public static JsonInitableProperty<DynamicFieldMapper> dynamicFieldMapperKey = new JsonInitableProperty("dynamic", "", null, DynamicFieldMapper.class, null);
-    public static JsonInitableProperty<Group> groupKey = new JsonInitableProperty("", "", null, Group.class, Group.class);
-    public static CollectionProperty<Group> groupsKey = groupKey.collection("groups", "", new ArrayList());
+    public static JsonInitableProperty<DynamicFieldMapper> dynamicFieldMapperKey = new JsonInitableProperty<>("dynamic", "", null, DynamicFieldMapper.class, null);
+    public static JsonInitableProperty<Group> groupKey = new JsonInitableProperty<>("", "", null, Group.class, Group.class);
+    public static CollectionProperty<Group> groupsKey = groupKey.collection("groups", "", new ArrayList<>());
     private Type type;
     private boolean vector;
-    private Map<String, Collection<Group>> groups = new HashMap();
+    private Map<String, Collection<Group>> groups = new HashMap<>();
 
     private DynamicFieldMapper dynamicFieldMapper = null;
     private boolean i18n = false;

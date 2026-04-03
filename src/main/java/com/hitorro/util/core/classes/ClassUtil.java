@@ -105,11 +105,15 @@ public class ClassUtil {
                     return null;
                 }
             }
-            return theClass.newInstance();
+            return theClass.getDeclaredConstructor().newInstance();
+        } catch (NoSuchMethodException e) {
+            Log.util.error("No default constructor for class %s", theClass.getName());
         } catch (InstantiationException e) {
-            Log.util.error("Illegal instantiation creating instance of class  %s %e", theClass.getName(), e, e);
+            Log.util.error("Cannot instantiate class %s: %s", theClass.getName(), e.getMessage());
         } catch (IllegalAccessException e) {
-            Log.util.error("Illegal access creating instance of class %s with error %s %e", theClass.getName(), e, e);
+            Log.util.error("Cannot access constructor of class %s: %s", theClass.getName(), e.getMessage());
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            Log.util.error("Constructor threw exception for class %s: %s", theClass.getName(), e.getCause());
         }
         return null;
     }

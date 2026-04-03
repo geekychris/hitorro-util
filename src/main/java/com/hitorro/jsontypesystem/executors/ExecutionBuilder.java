@@ -33,11 +33,11 @@ import java.util.Stack;
 
 public class ExecutionBuilder<E extends ExecutorAction> implements TypeVisitor<ExecutionBuilder> {
     ExecutionRow row;
-    private Map<Field, ExecutionNode> executors = new HashMap();
+    private Map<Field, ExecutionNode> executors = new HashMap<>();
     private ExecutorFactory<E> factory;
-    private ExecutionNode<E> root = new ExecutionNode(null);
+    private ExecutionNode<E> root = new ExecutionNode<>(null);
     private ExecutionNode<E> curr = root;
-    private Stack<ExecutionNode> execStack = new Stack();
+    private Stack<ExecutionNode> execStack = new Stack<>();
 
     public ExecutionBuilder(ExecutorFactory<E> factory) {
         this.factory = factory;

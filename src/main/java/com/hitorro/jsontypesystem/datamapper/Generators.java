@@ -230,6 +230,41 @@ public class Generators {
 		};
 	}
 
+	// --- Conditional ---
+
+	/**
+	 * Conditional generator — picks between two generators based on a runtime condition.
+	 * Example: salary depends on department.
+	 */
+	public static Generator conditional(java.util.function.BooleanSupplier condition,
+	                                     Generator ifTrue, Generator ifFalse) {
+		return () -> condition.getAsBoolean() ? ifTrue.next() : ifFalse.next();
+	}
+
+	// --- Transform ---
+
+	/**
+	 * Transform the output of a generator.
+	 * Example: {@code transform(nameGen, s -> s.toUpperCase())}
+	 */
+	public static Generator transform(Generator base, java.util.function.Function<Object, Object> fn) {
+		return () -> fn.apply(base.next());
+	}
+
+	/**
+	 * Format string with generator values.
+	 * Example: {@code format("%s %s", firstNameGen, lastNameGen)} → "Alice Smith"
+	 */
+	public static Generator format(String pattern, Generator... generators) {
+		return () -> {
+			Object[] args = new Object[generators.length];
+			for (int i = 0; i < generators.length; i++) {
+				args[i] = generators[i].next();
+			}
+			return String.format(pattern, args);
+		};
+	}
+
 	// --- Constant ---
 
 	public static Generator constant(Object value) {
