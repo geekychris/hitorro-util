@@ -25,9 +25,7 @@ import com.hitorro.util.basefile.fs.BaseFile;
 
 import java.util.Map;
 
-/**
- *
- */
+
 public class BaseFileDirectoryVersionNode extends VersionNode {
     protected BaseFile m_directory;
     private Map<String, String> m_manifest;

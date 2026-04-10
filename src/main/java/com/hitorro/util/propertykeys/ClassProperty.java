@@ -29,9 +29,7 @@ import com.hitorro.util.json.keys.PropertyKeyValidationException;
 
 import java.util.Map;
 
-/**
- *
- */
+
 public class ClassProperty<T> extends PropertyKey<Class> {
     private Class requiredSuper = Object.class;
     private Class m_defaultVal;

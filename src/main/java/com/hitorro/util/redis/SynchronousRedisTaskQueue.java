@@ -21,8 +21,12 @@
  */
 package com.hitorro.util.redis;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.core.string.Fmt;
+import com.hitorro.util.json.String2JsonMapper;
+import com.hitorro.util.json.keys.propaccess.PAContext;
 import com.hitorro.util.json.keys.propaccess.Propaccess;
 import io.lettuce.core.KeyValue;
 import io.lettuce.core.RedisFuture;
@@ -45,32 +49,32 @@ public class SynchronousRedisTaskQueue {
         this.timeoutSeconds = timeoutSeconds;
     }
 
-    public JVS execute(JVS in) {
-        JVS jobJvs = new JVS();
-        jobJvs.setJVSChild(payload, in);
+    public JsonNode execute(JsonNode in) {
+        ObjectNode jobNode = JsonNodeFactory.instance.objectNode();
+        payload.set(null, jobNode, PAContext.AlwaysCreate, in);
 
         UUID uuid = UUID.randomUUID();
         String returnChannel = Fmt.S("%s-return-%s", taskQueueName, uuid.toString());
-        jobJvs.set(returnChannelKey, returnChannel);
-        RedisFuture<Long> out = qBase.connection.async().rpush(taskQueueName, jobJvs.getStringRepresentation());
+        returnChannelKey.set(null, jobNode, PAContext.AlwaysCreate, com.hitorro.util.json.JSONUtil.ensureJsonNode(returnChannel));
+        RedisFuture<Long> out = qBase.connection.async().rpush(taskQueueName, jobNode.toString());
 
         KeyValue keyValue = qBase.connection.sync().blpop(timeoutSeconds, returnChannel);
-        JVS retJvs = JVS.read(keyValue.getValue().toString());
+        JsonNode retNode = new String2JsonMapper().apply(keyValue.getValue().toString());
 
-        if (retJvs != null) {
-            return jobJvs.getJVSChild(payload);
+        if (retNode != null) {
+            return payload.get(null, jobNode, PAContext.AlwaysCreate);
         }
         return null;
     }
 
-    public void executeAsync(JVS in) {
-        JVS jobJvs = new JVS();
-        jobJvs.setJVSChild(payload, in);
+    public void executeAsync(JsonNode in) {
+        ObjectNode jobNode = JsonNodeFactory.instance.objectNode();
+        payload.set(null, jobNode, PAContext.AlwaysCreate, in);
 
         UUID uuid = UUID.randomUUID();
         String returnChannel = Fmt.S("%s-return-%s", taskQueueName, uuid.toString());
-        jobJvs.set(returnChannelKey, returnChannel);
-        RedisFuture<Long> out = qBase.connection.async().rpush(taskQueueName, jobJvs.getStringRepresentation());
+        returnChannelKey.set(null, jobNode, PAContext.AlwaysCreate, com.hitorro.util.json.JSONUtil.ensureJsonNode(returnChannel));
+        RedisFuture<Long> out = qBase.connection.async().rpush(taskQueueName, jobNode.toString());
 
 
         //String s = qBase.connection.sync().lpop(returnChannel);

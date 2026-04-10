@@ -25,9 +25,7 @@ import com.hitorro.util.servicecounters.CounterContext;
 import com.hitorro.util.servicecounters.CounterSet;
 import com.hitorro.util.servicecounters.Register;
 
-/**
- *
- */
+
 public abstract class DoubleImplementableRegister extends Register {
     public DoubleImplementableRegister(final CounterSet cs, final String name, final String description) {
         super(cs, name, description);

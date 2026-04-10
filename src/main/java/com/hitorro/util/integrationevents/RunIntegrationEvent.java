@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.integrationevents;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
@@ -37,7 +37,7 @@ public class RunIntegrationEvent extends Command {
     @CommandArgument(required = true)
     public static final StringProperty EventName = new StringProperty("event", "Event name", "");
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         String event = EventName.apply(args);
         if (!IntegrationEventsContext.getContext().hasEvent(event)) {
             writeSimpleError(response, "Event %s unknown", event);

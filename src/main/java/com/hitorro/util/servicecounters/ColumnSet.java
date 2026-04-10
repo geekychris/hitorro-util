@@ -29,9 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- */
+
 public class ColumnSet {
     private List<Column> list = new ArrayList();
     private Column[] columns = null;

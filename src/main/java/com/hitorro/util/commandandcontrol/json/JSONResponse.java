@@ -39,9 +39,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 
-/**
- *
- */
+
 public class JSONResponse extends Response {
     public static final String BannerKey = "Banner";
     public static final String ErrorKey = "Error";

@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol.basiccommands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.cmdline.ConfigChangeWatcher;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
@@ -36,9 +36,7 @@ import com.hitorro.util.json.keys.StringProperty;
 
 import java.io.*;
 
-/**
- *
- */
+
 @CommandDef(command = "env.setconfig", description = "Set a key in the configs")
 public class SetConfigEntry extends Command {
     @CommandArgument(required = true)
@@ -47,7 +45,7 @@ public class SetConfigEntry extends Command {
     public static final StringProperty ValueProp = new StringProperty("value", "property value", null);
 
     @Override
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         String key = KeyProp.apply(args);
         String value = ValueProp.apply(args);
         File f = Env.getSavedProps();

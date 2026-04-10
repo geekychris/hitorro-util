@@ -21,69 +21,64 @@
  */
 package com.hitorro.util.commandandcontrol.ano;
 
-import com.hitorro.jsontypesystem.JVS;
-import com.hitorro.jsontypesystem.JVS2JsonMapper;
-import com.hitorro.jsontypesystem.Json2JVSMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.DebugCommandArg;
 import com.hitorro.util.commandandcontrol.RestOperations;
 import com.hitorro.util.core.iterator.AbstractIterator;
 import com.hitorro.util.core.iterator.sinks.JsonSink;
-import com.hitorro.util.core.iterator.sinks.MappingSink;
 import com.hitorro.util.io.FileUtil;
 
 import java.io.IOException;
 import java.io.OutputStream;
 
-/**
- *
- */
+
 public enum ArgType {
 
     Regular() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             return key.getPropValue(jvs);
         }
     },
     Args() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             return jvs;
         }
     },
     Raw() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             return rawValue;
         }
     },
     Request() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             return response.getHttpRequest();
         }
     },
     Uri() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             return response.getHttpRequest().getRequestURI();
         }
     },
     Response() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             return response;
         }
     },
     OutputStream() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             try {
@@ -98,21 +93,21 @@ public enum ArgType {
         }
     },
     Session() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             return session;
         }
     },
     JVSRequestIterator() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             if (response == null || response.getHttpRequest() == null) {
                 return null;
             }
             try {
-                AbstractIterator<JVS> iter = FileUtil.inputstream2JacksonjsonReader.apply(response.getHttpRequest().getInputStream()).map(Json2JVSMapper.me);
+                AbstractIterator<JsonNode> iter = FileUtil.inputstream2JacksonjsonReader.apply(response.getHttpRequest().getInputStream());
                 return iter;
             } catch (IOException e) {
                 return null;
@@ -120,7 +115,7 @@ public enum ArgType {
         }
     },
     JVSResponseSink() {
-        public Object get(final String rawValue, final JVS jvs,
+        public Object get(final String rawValue, final JsonNode jvs,
                           final com.hitorro.util.commandandcontrol.Response response, final CommandSession session,
                           DebugCommandArg key, final RestOperations operation) {
             if (response == null || response.getHttpRequest() == null) {
@@ -131,9 +126,8 @@ public enum ArgType {
                 OutputStream os = response.getHttpResponse().getOutputStream();
                 JsonSink sink = new JsonSink(os);
                 sink.setIndent(AnoUtils.indentProperty.apply(jvs));
-                MappingSink ms = new MappingSink(sink, JVS2JsonMapper.me);
 
-                return ms;
+                return sink;
             } catch (IOException e) {
                 return null;
             }
@@ -144,7 +138,7 @@ public enum ArgType {
         }
     };
 
-    public abstract Object get(final String rawValue, final JVS jvs,
+    public abstract Object get(final String rawValue, final JsonNode jvs,
                                final com.hitorro.util.commandandcontrol.Response response,
                                final CommandSession session, DebugCommandArg key, final RestOperations operation);
 

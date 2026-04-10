@@ -25,9 +25,7 @@ import com.hitorro.util.json.keys.PropertyKeyValidationException;
 
 import java.util.Map;
 
-/**
- *
- */
+
 public class EnumKey<E extends Enum> extends PropertyKey<E> {
     protected E vals[];
     protected String names[];

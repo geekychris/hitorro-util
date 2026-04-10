@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.integrationevents;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.*;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.commandandcontrol.ano.RespColumn;
@@ -39,7 +39,7 @@ public class ListIntegrationEvents extends com.hitorro.util.commandandcontrol.Co
             columns = {@RespColumn(name = "EventName", lName = "name")})
     private com.hitorro.util.commandandcontrol.ResponseShape shape = new com.hitorro.util.commandandcontrol.ResponseShape();
 
-    public boolean execute(String rawValue, JVS args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
         List<String> names = IntegrationEventsContext.getContext().getEventNames();
         response.setResponseShape(shape);
         for (String name : names) {

@@ -1,5 +1,0 @@
-new mappers
-
-collection of primitives (list)
-complex type
-enumerated type

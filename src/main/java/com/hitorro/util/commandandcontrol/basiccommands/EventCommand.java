@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol.basiccommands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
@@ -43,7 +43,7 @@ public class EventCommand extends Command {
     @CommandArgument(required = true)
     public static final StringProperty SubTopic = new StringProperty("subtopic", "sub topic", null);
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         String topic = Topic.apply(args);
         String subtopic = SubTopic.apply(args);
         LocalEventHub.get().event(topic, subtopic, null);

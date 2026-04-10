@@ -38,7 +38,8 @@ import java.util.Iterator;
 
 public class ProcessUtil {
     public static Iterator<String[]> find(HTPredicate oper) throws IOException, InterruptedException {
-        ExecResultRowMapper mapper = Platform.getPlatform().getPSExec();
+        String[] psCommand = Platform.getPlatform().getPSCommand();
+        ExecResultRowMapper mapper = new ExecResultRowMapper(psCommand[0], java.util.Arrays.copyOfRange(psCommand, 1, psCommand.length));
         if (mapper == null) {
             return null;
         }
@@ -64,7 +65,8 @@ public class ProcessUtil {
             if (sRow != null && sRow.length >= 2) {
                 String pid = sRow[1];
                 if (Constants.isNumber(pid)) {
-                    ExecResultRowMapper killer = Platform.getPlatform().getKill(Integer.parseInt(pid));
+                    String[] killCommand = Platform.getPlatform().getKillCommand(Integer.parseInt(pid));
+                    ExecResultRowMapper killer = new ExecResultRowMapper(killCommand[0], java.util.Arrays.copyOfRange(killCommand, 1, killCommand.length));
                     killer.map(10);
                     i++;
                 }

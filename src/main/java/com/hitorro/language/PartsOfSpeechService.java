@@ -19,9 +19,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package com.hitorro.util.propertykeys;
+package com.hitorro.language;
+
+import com.hitorro.util.startupframework.phases.ServiceDefinition;
 
 
-public interface ValidValues {
-    String[] values();
+@ServiceDefinition(dependentService = {},
+		shortName = "pos",
+		description = "Parts of speach",
+		debugCommands = {POSCommand.class},
+		typeManagedClasses = {}
+)
+public class PartsOfSpeechService {
+	public String init(boolean dbInit, final boolean upgrading, final long currentVersion, final long targetVersion) {
+		return null;
+	}
+
+	public String start(boolean dbInit) {
+		return null;
+	}
+
+	public String deInit() {
+		return null;
+	}
 }

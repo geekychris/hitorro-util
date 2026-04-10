@@ -21,9 +21,7 @@
  */
 package com.hitorro.util.interpreters;
 
-/**
- *
- */
+
 public class InterpreterException extends Exception {
     public InterpreterException(Exception e) {
         super(e);

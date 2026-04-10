@@ -24,9 +24,7 @@ package com.hitorro.util.servicecounters.registers;
 import com.hitorro.util.servicecounters.CounterSet;
 import com.hitorro.util.servicecounters.Register;
 
-/**
- *
- */
+
 public class DoubleDivideRegister extends Register {
     Register dividend;
     Register divisor;

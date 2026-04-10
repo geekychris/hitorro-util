@@ -26,9 +26,7 @@ import com.hitorro.util.core.Console;
 import org.xml.sax.helpers.AttributesImpl;
 
 
-/**
- *
- */
+
 public class HTMLMultiRowResponse extends com.hitorro.util.commandandcontrol.MultiRowResponse {
     private static AttributesImpl EmptyAttributes = new AttributesImpl();
 

@@ -22,7 +22,7 @@
 package com.hitorro.util.integrationevents;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.ListUtil;
 import com.hitorro.util.core.classes.ClassUtil;
 import com.hitorro.util.core.string.Fmt;
@@ -119,7 +119,7 @@ public class IntegrationEventsContext {
             Log.integration.error("Unable to retrieve a listFiles of integration events");
             return false;
         }
-        JsonNode prop = JVSProperties.getProperties().get(Fmt.S("%s.%s", ChildKeyKey, eventName));
+        JsonNode prop = GlobalProperties.getProperties().get(Fmt.S("%s.%s", ChildKeyKey, eventName));
         if (prop != null) {
             String clazz = IntegrationClass.apply(prop);
             if (StringUtil.nullOrEmptyOrBlankString(clazz)) {

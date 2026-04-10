@@ -22,7 +22,7 @@
 package com.hitorro.util.mail;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.Log;
 import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.json.keys.BooleanProperty;
@@ -102,7 +102,7 @@ public class MailAgent {
     }
 
     public static MailAgent newInstance(String propertyPath, boolean auth) throws PropaccessError {
-        JsonNode connectInfo = JVSProperties.getProperties().get(propertyPath);
+        JsonNode connectInfo = GlobalProperties.getProperties().get(propertyPath);
         return newInstance(connectInfo, auth);
     }
 

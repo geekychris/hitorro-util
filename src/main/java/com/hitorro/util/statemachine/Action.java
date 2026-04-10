@@ -21,14 +21,14 @@
  */
 package com.hitorro.util.statemachine;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  */
 public abstract class Action<E, C> {
-    private JVS m_parameters = null;
+    private ObjectNode m_parameters = null;
 
-    public void setParameters(JVS parameters) {
+    public void setParameters(ObjectNode parameters) {
         m_parameters = parameters;
     }
 

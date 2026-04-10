@@ -29,9 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- *
- */
+
 public class CounterContext {
     private static CounterContext context = new CounterContext();
     private int[] cascade = new int[]{1, 5, 12, 24, 7, 31, 12};

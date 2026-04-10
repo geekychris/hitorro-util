@@ -1,6 +1,7 @@
 package com.hitorro.util.job;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.core.CommandArgs;
 import com.hitorro.util.core.Log;
 import com.hitorro.util.core.string.StringUtil;
@@ -190,15 +191,15 @@ public class DecisionJobParameters extends JobParameters {
         this.appStepParameters = appStepParameters;
     }
 
-    public JVS getAppStepParametersAsMap() {
+    public ObjectNode getAppStepParametersAsMap() {
         if (StringUtil.nullOrEmptyOrBlankString(appStepParameters)) {
-            return new JVS();
+            return JsonNodeFactory.instance.objectNode();
         }
         try {
             return CommandArgs.getParameters(appStepParameters, true);
         } catch (ParseException | PropaccessError e) {
             Log.statemachine.error("Unable to parse parameters%s %e", e, e);
-            return new JVS();
+            return JsonNodeFactory.instance.objectNode();
         }
     }
 

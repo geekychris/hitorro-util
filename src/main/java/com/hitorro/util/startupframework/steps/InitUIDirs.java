@@ -21,7 +21,8 @@
  */
 package com.hitorro.util.startupframework.steps;
 
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.ArrayUtil;
 import com.hitorro.util.core.Env;
 import com.hitorro.util.core.Log;
@@ -30,7 +31,6 @@ import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.core.string.StringBuilderUtil;
 import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.io.FileUtil;
-import com.hitorro.util.json.keys.propaccess.PropaccessError;
 import com.hitorro.util.startupframework.ServiceContext;
 import com.hitorro.util.startupframework.ServiceWrapper;
 
@@ -112,15 +112,17 @@ public class InitUIDirs implements ServiceStep {
         String v = null;
         String n = null;
         try {
-            v = JVSProperties.getProperties().getString("build.version");
-            n = JVSProperties.getProperties().getString("build.number");
+            v = GlobalProperties.getString("build.version");
+            n = GlobalProperties.getString("build.number");
             String buildNumber = Fmt.S("%s.%s", v, n);
             String serverId = Env.getServerId();
 
             File uiResource = new File(Env.getHome(), Fmt.S("uiresource/%s", serverId));
             File buildDir = new File(Env.getBin(), "build");
-            JVSProperties.getProperties().set("ht_resource", uiResource.getAbsolutePath());
-            String r = JVSProperties.getProperties().getString("ht_resource");
+            JsonNode props = GlobalProperties.getProperties();
+            if (props instanceof com.fasterxml.jackson.databind.node.ObjectNode) {
+                ((com.fasterxml.jackson.databind.node.ObjectNode) props).put("ht_resource", uiResource.getAbsolutePath());
+            }
             FileUtil.ensureDirectoryExists(uiResource);
             ensureCorrectUIResource(buildNumber, uiResource);
 
@@ -131,7 +133,7 @@ public class InitUIDirs implements ServiceStep {
                             module.getShortName(), text);
                 }
             }
-        } catch (PropaccessError e) {
+        } catch (Exception e) {
             return new ErrorCode(40, "Unable to initialize(UI Resource Init) module %s %e", e, e);
         }
 

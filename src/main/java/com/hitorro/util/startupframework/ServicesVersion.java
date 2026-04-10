@@ -21,9 +21,7 @@
  */
 package com.hitorro.util.startupframework;
 
-/**
- *
- */
+
 public class ServicesVersion {
     static long version = 1;
 

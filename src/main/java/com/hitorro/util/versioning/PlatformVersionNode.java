@@ -21,10 +21,10 @@
  */
 package com.hitorro.util.versioning;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.hitorro.util.core.Log;
 import com.hitorro.util.io.FileUtil;
-import com.hitorro.util.json.keys.propaccess.PropaccessError;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,17 +38,17 @@ public class PlatformVersionNode<T extends ConfigTag> extends DirectoryVersionNo
     private int m_usageCount = 0;
     private List<T> serverConfigs = new ArrayList<T>();
 
-    public PlatformVersionNode(JVS manifest,
-                               File directory) throws PropaccessError {
+    public PlatformVersionNode(JsonNode manifest,
+                               File directory) {
         super(manifest, directory,
-                manifest.getLong("major"),
-                manifest.getLong("minor"),
-                manifest.getLong("patch"),
-                manifest.getLong("number"));
+                manifest.has("major") ? manifest.get("major").asLong() : 0,
+                manifest.has("minor") ? manifest.get("minor").asLong() : 0,
+                manifest.has("patch") ? manifest.get("patch").asLong() : 0,
+                manifest.has("number") ? manifest.get("number").asLong() : 0);
     }
 
     public PlatformVersionNode(File directory) {
-        super(new JVS(), directory, 99, 99, 99, 99);
+        super(JsonNodeFactory.instance.objectNode(), directory, 99, 99, 99, 99);
     }
 
     public void addDependentServer(T sc) {

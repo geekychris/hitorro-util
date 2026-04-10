@@ -27,9 +27,7 @@ import com.hitorro.util.core.HTAssert;
 import com.hitorro.util.core.opers.HTPredicate;
 import com.hitorro.util.testframework.TestCaseWrapper;
 
-/**
- *
- */
+
 public class ServiceFilter implements HTPredicate<TestCaseWrapper> {
     private String name;
 

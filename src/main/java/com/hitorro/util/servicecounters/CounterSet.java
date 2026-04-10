@@ -26,9 +26,7 @@ import com.hitorro.util.servicecounters.registers.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
+
 public class CounterSet {
     private String name;
 

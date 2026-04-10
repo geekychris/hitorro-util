@@ -28,9 +28,7 @@ import com.hitorro.util.excelaccess.Log;
 import javax.xml.stream.XMLStreamException;
 import java.io.InputStream;
 
-/**
- *
- */
+
 public class XEDomMapper extends BaseMapper<InputStream, AbstractIterator<XE>> {
     private String path;
 

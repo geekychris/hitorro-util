@@ -21,9 +21,7 @@
  */
 package com.hitorro.util;
 
-/**
- *
- */
+
 public class KMPMatch {
     private int[] failure = new int[20];
     private int matchPoint;

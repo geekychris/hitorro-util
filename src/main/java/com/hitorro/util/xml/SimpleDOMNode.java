@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.xml;
 
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.Log;
 import com.hitorro.util.io.StringInputStream;
 import org.w3c.dom.*;
@@ -169,7 +169,7 @@ public class SimpleDOMNode {
         if (node != null) {
             String val = node.getText();
             if (val != null) {
-                return JVSProperties.getProperties().resolveJsonVariable(val);
+                return GlobalProperties.resolveJsonVariable(val);
             }
             return val;
         }

@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.cmdline;
 
-import com.hitorro.jsontypesystem.propreaders.JVSConfigChangeRegistry;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.Env;
 import com.hitorro.util.core.thread.EnhancedThreadGroup;
 import com.hitorro.util.json.keys.BooleanProperty;
@@ -72,10 +72,8 @@ public class ConfigChangeWatcher implements Runnable {
     public void run() {
         while (true) {
             Env.sleepNSeconds(sleepSecs, notifier);
-            if (JVSConfigChangeRegistry.getRegistry().getSize() > 0) {
-                // only do this if we have observers.  Not much point doing file checks else
-                forceReload();
-            }
+            // Check for config changes and reload if needed
+            forceReload();
         }
     }
 }

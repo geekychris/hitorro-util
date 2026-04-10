@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.ano.CommandArgument;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.commandandcontrol.ano.ResponseDefinition;
@@ -76,7 +76,7 @@ public abstract class Command {
         return null;
     }
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         return execute(rawValue, args, response, session);
     }
 
@@ -88,7 +88,7 @@ public abstract class Command {
      * @param response
      * @return
      */
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session) throws Exception {
         return false;
     }
 
@@ -220,7 +220,7 @@ public abstract class Command {
      * @return
      */
     public long executeRestfull(String rawValue,
-                                JVS args,
+                                JsonNode args,
                                 Response response,
                                 CommandSession session,
                                 RestOperations operation,

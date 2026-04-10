@@ -22,8 +22,7 @@
 package com.hitorro.util.startupframework;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hitorro.jsontypesystem.JVS;
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.Log;
 import com.hitorro.util.core.classes.ClassUtil;
 import com.hitorro.util.core.string.Fmt;
@@ -50,10 +49,10 @@ public class HTServer extends RunnableService {
 
     public List<Class> getDependentService() {
         serverType = ServerType.apply();
-        JVS jvs = JVSProperties.getProperties();
+        JsonNode props = GlobalProperties.getProperties();
         String server = Fmt.S("services.%s", serverType);
         try {
-            serverProps = jvs.get(server);
+            serverProps = props != null ? props.get(server) : null;
         } catch (PropaccessError propaccessError) {
             return null;
         }

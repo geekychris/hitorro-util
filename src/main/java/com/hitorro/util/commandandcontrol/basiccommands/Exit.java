@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol.basiccommands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
@@ -49,7 +49,7 @@ public class Exit extends Command {
     private StringProperty Reason = new StringProperty("reason", "Reason given for exit", "User invoked exit");
 
     @Override
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         boolean exitVm = s_exitVm.apply(args);
         boolean force = s_forceExit.apply(args);
         int exitCode = ExitCode.apply(args);

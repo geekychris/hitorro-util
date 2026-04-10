@@ -21,7 +21,8 @@
  */
 package com.hitorro.util.zookeeper;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.hitorro.util.json.String2JsonMapper;
 
 public class JsonPayload {
     public String topic;
@@ -29,11 +30,11 @@ public class JsonPayload {
     public String message;
 
 
-    public JVS getAsJVS() {
-        return JVS.read(message);
+    public JsonNode getAsJsonNode() {
+        return new String2JsonMapper().apply(message);
     }
 
-    public void setJVS(JVS jvs) {
-        message = jvs.getStringRepresentation();
+    public void setJsonNode(JsonNode node) {
+        message = node.toString();
     }
 }

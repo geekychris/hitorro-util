@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.testframework;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.*;
 import com.hitorro.util.commandandcontrol.ano.CommandArgument;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
@@ -53,10 +53,10 @@ public class RunUnitTestSuite extends com.hitorro.util.commandandcontrol.Command
     private BooleanProperty s_all = new BooleanProperty("all", "print all fields", false);
 
     @Override
-    public boolean execute(String rawValue, JVS args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
         TestSuite suite = null;
         try {
-            LogicalAndOperator<TestCaseWrapper> oper = TestUtil.getOperator(args.getJsonNode());
+            LogicalAndOperator<TestCaseWrapper> oper = TestUtil.getOperator(args);
             suite = FilteredTestSuiteGenerator.getTestSuite(oper, null, TestUtil.IgnoreTestDependencies.apply(args));
         } catch (TestException e) {
             this.writeSimpleError(response, e.getMessage());

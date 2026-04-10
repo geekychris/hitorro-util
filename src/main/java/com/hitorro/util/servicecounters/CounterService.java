@@ -29,9 +29,7 @@ import com.hitorro.util.servicecounters.registers.LongImplementableRegister;
 import com.hitorro.util.servicecounters.registers.LongRegister;
 import com.hitorro.util.startupframework.phases.ServiceDefinition;
 
-/**
- *
- */
+
 @ServiceDefinition(dependentService = {},
         shortName = "counters",
         description = "Counters service",

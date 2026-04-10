@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol.basiccommands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
@@ -35,7 +35,7 @@ import java.util.List;
 
 @CommandDef(command = "env.version", description = "Dump the build, vm and os version information")
 public class VersionDump extends Command {
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         List<GenericKeyValue> list = new Version().getValues();
         writeKeyValue(response, getKVShape(), list);
         return true;

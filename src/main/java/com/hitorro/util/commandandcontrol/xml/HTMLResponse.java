@@ -32,9 +32,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
+
 public class HTMLResponse extends com.hitorro.util.commandandcontrol.Response {
     private static final String Refresh = "<noscript>\n" +
             "<meta http-equiv=\"refresh\" content=\"2\">\n" +

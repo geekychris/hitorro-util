@@ -21,7 +21,8 @@
  */
 package com.hitorro.util.commandandcontrol;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.cmdline.BaseCommandLine;
 import com.hitorro.util.commandandcontrol.ano.ArgType;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
@@ -110,7 +111,7 @@ public class CommandSession implements Runnable {
         PackingResponse logResponse = new PackingResponse(new LogResponse(com.hitorro.util.core.Log.test), 2);
 
         try {
-            JVS jvs = com.hitorro.util.core.CommandArgs.getParameters(params, true, true);
+            ObjectNode jvs = com.hitorro.util.core.CommandArgs.getParameters(params, true, true);
             InputStream is = null;
 
             Command dc = CommandRegistry.getRegistry().get(action);
@@ -175,8 +176,8 @@ public class CommandSession implements Runnable {
         }
     }
 
-    private static JVS getArgs(String rest) {
-        JVS map = new JVS();
+    private static ObjectNode getArgs(String rest) {
+        ObjectNode map = JsonNodeFactory.instance.objectNode();
         if (StringUtil.nullOrEmptyOrBlankString(rest)) {
             return map;
         }
@@ -414,7 +415,7 @@ public class CommandSession implements Runnable {
         return null;
     }
 
-    public void addExecutedCommand(String command, JVS args, String rawArgs) {
+    public void addExecutedCommand(String command, ObjectNode args, String rawArgs) {
         boolean addMe = true;
         if (userHistoryBuffer != null) {
             try {
@@ -459,7 +460,7 @@ public class CommandSession implements Runnable {
         return list;
     }
 
-    public void executeRawCommandAux(String command, JVS map,
+    public void executeRawCommandAux(String command, ObjectNode map,
             Response resp, String rawArgs) throws PropaccessError {
         Command debugCommand = CommandRegistry.getRegistry().get(command);
         if (debugCommand == null) {
@@ -663,7 +664,7 @@ public class CommandSession implements Runnable {
         }
         String command;
         String rest;
-        JVS map;
+        ObjectNode map;
         if (interactiveCommand != null) {
             if (s.equalsIgnoreCase("exit")) {
                 interactiveCommand = null;
@@ -672,8 +673,8 @@ public class CommandSession implements Runnable {
             }
             command = interactiveCommand.getCommand();
             rest = Fmt.S("%s = \"%s\"", interactiveCommand.interactiveArgument(), s);
-            map = new JVS();
-            map.set(interactiveCommand.interactiveArgument(), s);
+            map = JsonNodeFactory.instance.objectNode();
+            map.put(interactiveCommand.interactiveArgument(), s);
 
         } else {
             command = getCommandPart(s);
@@ -710,7 +711,7 @@ public class CommandSession implements Runnable {
         CommandMap command = null;
         if (commandIn.startsWith("!!")) {
             if (session.getCommands().size() == 0) {
-                command = new CommandMap("commands", new JVS(), "");
+                command = new CommandMap("commands", JsonNodeFactory.instance.objectNode(), "");
             } else {
                 number = Integer.toString(session.getCommands().size() - 1);
             }
@@ -721,14 +722,14 @@ public class CommandSession implements Runnable {
             if (StringUtil.nullOrEmptyOrBlankString(number)) {
                 // we dont have a number and no response object yet so
                 // just print the commands executed again.
-                command = new CommandMap("history", new JVS(), "");
+                command = new CommandMap("history", JsonNodeFactory.instance.objectNode(), "");
             } else {
                 int index = Integer.parseInt(number);
                 command = session.getCommand(index);
                 if (command == null) {
                     // not a valid number
                     // just print the commands executed again.
-                    command = new CommandMap("history", new JVS(), "");
+                    command = new CommandMap("history", JsonNodeFactory.instance.objectNode(), "");
                 }
             }
         }
@@ -803,7 +804,7 @@ public class CommandSession implements Runnable {
 
             String command = getCommandPart(line);
             String rest = getRest(line);
-            JVS map = getArgs(rest);
+            ObjectNode map = getArgs(rest);
             session.executeRawCommandAux(command, map, response, rest);
         }
         return true;
@@ -811,7 +812,7 @@ public class CommandSession implements Runnable {
     }
 
     protected void executeCommandAux(PrintWriter pw, String command,
-            JVS args, boolean printCommand,
+            ObjectNode args, boolean printCommand,
             CommandSession session, String rawArgs, boolean addToHistory) throws PropaccessError {
         Response resp = getResponse(pw, session);
         if (pw != null) {

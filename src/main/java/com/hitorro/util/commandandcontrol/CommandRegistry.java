@@ -21,8 +21,10 @@
  */
 package com.hitorro.util.commandandcontrol;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
+import com.hitorro.util.json.JSONUtil;
 import com.hitorro.util.commandandcontrol.ano.DebugArgAno;
 import com.hitorro.util.commandandcontrol.basiccommands.*;
 import com.hitorro.util.core.Console;
@@ -36,9 +38,7 @@ import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.core.trie.NonUniqueKeyException;
 import com.hitorro.util.core.trie.Trie;
-import com.hitorro.util.html.DumpHtmlStressResults;
-import com.hitorro.util.html.RunHTMLStress;
-import com.hitorro.util.io.resourcecache.file.DumpResourceCache;
+
 import com.hitorro.util.json.keys.BaseMappingProperty;
 import com.hitorro.util.json.keys.propaccess.PropaccessError;
 import com.hitorro.util.testframework.ListTestUnits;
@@ -103,7 +103,23 @@ public class CommandRegistry {
                         Constructor cons = c.getDeclaredConstructor(DebugArgAno.class);
                         pkeys[i] = new DebugCommandArg(daa.mustExist(), (BaseMappingProperty) cons.newInstance(daa), ((DebugArgAno) ano).argType());
                     } catch (NoSuchMethodException e) {
-                        Log.commands.fatal("Unable to initialize FunctionCommand %s %e", e, e);
+                        // Fallback: construct property directly from annotation values
+                        // This handles classes (like hitorro-core StringProperty) that can't
+                        // have a DebugArgAno constructor due to module dependency direction
+                        try {
+                            BaseMappingProperty prop = null;
+                            try {
+                                Constructor cons = c.getDeclaredConstructor(String.class, String.class, String.class);
+                                prop = (BaseMappingProperty) cons.newInstance(daa.keyName(), daa.description(), daa.defaultValue());
+                            } catch (NoSuchMethodException e2) {
+                                // Try (String, String, Boolean) for BooleanProperty etc.
+                                Constructor cons = c.getDeclaredConstructor(String.class, String.class, Boolean.class);
+                                prop = (BaseMappingProperty) cons.newInstance(daa.keyName(), daa.description(), Boolean.valueOf(daa.defaultValue()));
+                            }
+                            pkeys[i] = new DebugCommandArg(daa.mustExist(), prop, daa.argType());
+                        } catch (Exception fallbackEx) {
+                            Log.commands.fatal("Unable to initialize FunctionCommand %s %e", e, e);
+                        }
                     } catch (InvocationTargetException e) {
                         Log.commands.fatal("Unable to initialize FunctionCommand %s %e", e, e);
                     } catch (InstantiationException e) {
@@ -231,7 +247,7 @@ public class CommandRegistry {
     }
 
     public boolean execute(String rawArgs, String s,
-                           JVS map,
+                           ObjectNode map,
                            Response response,
                            CommandSession session) throws PropaccessError {
         Command command = get(s);
@@ -242,7 +258,7 @@ public class CommandRegistry {
         }
         List<DebugCommandArg> args = command.getArguments();
         for (DebugCommandArg arg : args) {
-            String val = map.getString(arg.getName());
+            String val = JSONUtil.getString(map.get(arg.getName()));
             if (arg.isHidden()) {
                 continue;
             }
@@ -293,11 +309,7 @@ public class CommandRegistry {
         add(new com.hitorro.util.commandandcontrol.basiccommands.EventCommand());
         add(new com.hitorro.util.commandandcontrol.basiccommands.DumpEventListeners());
         add(new com.hitorro.util.commandandcontrol.basiccommands.VersionDump());
-        add(new RunHTMLStress());
-        add(new DumpHtmlStressResults());
         add(new com.hitorro.util.commandandcontrol.basiccommands.DumpProcessStats());
-        add(new DumpResourceCache());
-        add(new com.hitorro.util.commandandcontrol.basiccommands.DumpDiskUsage());
         add(new com.hitorro.util.commandandcontrol.basiccommands.EnterInteractive());
         add(new com.hitorro.util.commandandcontrol.basiccommands.ExecuteInterpreterScript());
         add(new com.hitorro.util.commandandcontrol.basiccommands.SetConfigEntry());

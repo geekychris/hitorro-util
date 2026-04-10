@@ -27,9 +27,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- */
+
 public abstract class BaseInterpreter<T extends BaseInterpreter> {
     private static Map<String, BaseInterpreter> interpreter = getInterpreters();
 

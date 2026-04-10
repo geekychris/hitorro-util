@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol.basiccommands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
@@ -37,9 +37,7 @@ import com.hitorro.util.json.keys.StringProperty;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-/**
- *
- */
+
 @CommandDef(command = "interpreter.script", description = "execute a script from one of the registered interpreters")
 public class ExecuteInterpreterScript extends Command {
     @CommandArgument(required = true)
@@ -48,7 +46,7 @@ public class ExecuteInterpreterScript extends Command {
     @CommandArgument(required = true)
     public final StringProperty Var = new StringProperty("assignto", "assign to a variable", null);
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         BaseFile scr = Script.apply(args);
 
         String var = Var.apply(args);

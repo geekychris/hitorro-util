@@ -34,9 +34,7 @@ import java.io.*;
 import java.util.HashSet;
 import java.util.List;
 
-/**
- *
- */
+
 public class UserHistoryBuffer {
     private static LockBox lockBox = new LockBox();
     private File directory;

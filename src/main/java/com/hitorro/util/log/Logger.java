@@ -22,8 +22,7 @@
 package com.hitorro.util.log;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hitorro.jsontypesystem.JVS;
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.commandandcontrol.Response;
 import com.hitorro.util.commandandcontrol.ResponseShape;
 import com.hitorro.util.core.Console;
@@ -36,7 +35,6 @@ import com.hitorro.util.io.FileUtil;
 import com.hitorro.util.json.JSONUtil;
 import com.hitorro.util.json.keys.BooleanProperty;
 import com.hitorro.util.json.keys.StringProperty;
-import com.hitorro.util.json.keys.propaccess.PropaccessError;
 import org.apache.log4j.*;
 import org.apache.log4j.net.SyslogAppender;
 import org.apache.log4j.spi.DefaultRepositorySelector;
@@ -280,17 +278,14 @@ public class Logger extends org.apache.log4j.Logger {
     }
 
     public static final void setLogLevelsFromProps() {
-        JVS props = JVSProperties.getProperties();
-        try {
-            JsonNode sub = props.get("env.loglevel");
+        JsonNode props = GlobalProperties.getProperties();
+        JsonNode sub = props.get("env.loglevel");
+        if (sub != null) {
             String levels = JSONUtil.mergeValues(sub, ",");
             if (!StringUtil.nullOrEmptyOrBlankString(levels)) {
                 setLogLevels(levels);
             }
-        } catch (PropaccessError propaccessError) {
-            propaccessError.printStackTrace();
         }
-
     }
 
     public static final Level getLevelFromString(String levelString) {

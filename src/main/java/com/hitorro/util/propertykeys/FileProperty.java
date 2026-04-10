@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.propertykeys;
 
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.commandandcontrol.ano.DebugArgAno;
 import com.hitorro.util.json.keys.PropertyKeyValidationException;
 
@@ -66,7 +66,7 @@ public class FileProperty extends PropertyKey<File> {
         if (val == null && m_notNull == false) {
             val = m_defaultValue;
         }
-        val = JVSProperties.getProperties().resolveJsonVariable(val);
+        val = GlobalProperties.resolveJsonVariable(val);
         if (val == null) {
             return null;
         }

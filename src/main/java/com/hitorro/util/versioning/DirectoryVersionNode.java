@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.versioning;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.File;
 
@@ -29,9 +29,9 @@ import java.io.File;
  */
 public class DirectoryVersionNode extends VersionNode {
     protected File m_directory;
-    private JVS m_manifest;
+    private JsonNode m_manifest;
 
-    public DirectoryVersionNode(JVS manifest, File directory, long major, long minor, long patch, long buildNumber) {
+    public DirectoryVersionNode(JsonNode manifest, File directory, long major, long minor, long patch, long buildNumber) {
         super(major, minor, patch, buildNumber);
         m_directory = directory;
         m_manifest = manifest;
@@ -41,7 +41,7 @@ public class DirectoryVersionNode extends VersionNode {
 
     }
 
-    public DirectoryVersionNode(JVS manifest, File directory, String schemaVersion) {
+    public DirectoryVersionNode(JsonNode manifest, File directory, String schemaVersion) {
         super(schemaVersion);
         m_directory = directory;
         m_manifest = manifest;

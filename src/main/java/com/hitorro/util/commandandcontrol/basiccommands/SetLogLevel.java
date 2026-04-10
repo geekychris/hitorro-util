@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol.basiccommands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
 import com.hitorro.util.commandandcontrol.RestOperations;
@@ -39,7 +39,7 @@ public class SetLogLevel extends DumpLogLevels {
     }
 
     @Override
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         Logger.setLogLevels(Level.apply(args));
         super.execute(rawValue, args, response, session, operation);
         return false;

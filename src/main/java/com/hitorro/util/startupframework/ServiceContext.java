@@ -246,13 +246,17 @@ public class ServiceContext {
     public String init() throws IOException {
         initdb = DbInit.apply();
         for (com.hitorro.util.startupframework.steps.ServiceStep ss : startupSteps) {
+            Log.servicecontext.info("Executing phase: %s (dbInit=%s)", ss.getPhaseName(), initdb);
             ErrorCode ec = ss.execute(initdb);
             if (ec != null) {
                 String err = Fmt.S("Unable to complete phase %s %s", ss.getPhaseName(), ec.toString());
                 deInit();
                 return err;
             }
+            Log.servicecontext.info("Completed phase: %s", ss.getPhaseName());
+            Log.servicecontext.info("Firing post-step event: %s", ss.getPostStepEvent());
             LocalEventHub.get().event(ss.getPostStepEvent(), "", null);
+            Log.servicecontext.info("Post-step event completed: %s", ss.getPostStepEvent());
         }
 
         com.hitorro.util.core.Log.servicecontext.info("Service compContext finished module initialization");

@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.ano.ArgType;
 import com.hitorro.util.json.keys.BaseMappingProperty;
 
@@ -54,7 +54,7 @@ public class DebugCommandArg implements Comparable<DebugCommandArg> {
         return argType != ArgType.Regular;
     }
 
-    public Object getPropValue(JVS jvs) {
+    public Object getPropValue(JsonNode jvs) {
         if (propKey != null) {
             return propKey.apply(jvs);
         }
@@ -74,7 +74,7 @@ public class DebugCommandArg implements Comparable<DebugCommandArg> {
         return this.propKey.toString();
     }
 
-    public String validate(JVS map) {
+    public String validate(JsonNode map) {
         propKey.validate(map);
         return null;
     }

@@ -21,22 +21,20 @@
  */
 package com.hitorro.util.commandandcontrol.basiccommands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.*;
 import com.hitorro.util.commandandcontrol.ano.CommandArgument;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.json.keys.StringProperty;
 
-/**
- *
- */
+
 @CommandDef(command = "interactive", description = "Enter interactive input with a command that supports interactive commands")
 public class EnterInteractive extends com.hitorro.util.commandandcontrol.Command {
     @CommandArgument(required = true)
     public static final StringProperty cmd = new StringProperty("command", "command to interact with", null);
 
-    public boolean execute(String rawValue, JVS args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
         String c = cmd.apply(args);
         com.hitorro.util.commandandcontrol.Command command = com.hitorro.util.commandandcontrol.CommandRegistry.getRegistry().get(c);
         if (command == null) {

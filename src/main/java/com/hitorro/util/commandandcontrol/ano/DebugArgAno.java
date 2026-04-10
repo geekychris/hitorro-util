@@ -26,9 +26,7 @@ import com.hitorro.util.json.keys.StringProperty;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-/**
- *
- */
+
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DebugArgAno {
     Class propType() default StringProperty.class;

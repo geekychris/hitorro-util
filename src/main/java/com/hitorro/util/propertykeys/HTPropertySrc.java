@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.propertykeys;
 
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.params.HTProperties;
 
 public class HTPropertySrc extends PropertySrc {
@@ -31,6 +31,6 @@ public class HTPropertySrc extends PropertySrc {
     }
 
     public String resolve(final String key) {
-        return JVSProperties.getProperties().resolveJsonVariable(key);
+        return GlobalProperties.resolveJsonVariable(key);
     }
 }

@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.testframework;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.*;
 import com.hitorro.util.commandandcontrol.ano.CommandArgument;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
@@ -65,10 +65,10 @@ public class ListTestUnits extends com.hitorro.util.commandandcontrol.Command {
     }
 
     @Override
-    public boolean execute(String rawValue, JVS args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
         List<TestCaseWrapper> cases = null;
 
-        LogicalAndOperator<TestCaseWrapper> oper = TestUtil.getOperator(args.getJsonNode());
+        LogicalAndOperator<TestCaseWrapper> oper = TestUtil.getOperator(args);
         try {
             cases = FilteredTestSuiteGenerator.getTestCases(oper, null, TestUtil.IgnoreTestDependencies.apply(args));
 

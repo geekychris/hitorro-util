@@ -26,9 +26,7 @@ import bsh.Interpreter;
 import com.hitorro.util.basefile.fs.BaseFile;
 import com.hitorro.util.basefile.tools.BaseFileUtil;
 
-/**
- *
- */
+
 public class BeanShellInterpreter extends BaseInterpreter {
     protected Interpreter bshInterpreter = new Interpreter();
 

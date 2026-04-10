@@ -22,7 +22,6 @@
 package com.hitorro.util.commandandcontrol.basiccommands;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hitorro.jsontypesystem.JVS;
 import com.hitorro.util.commandandcontrol.*;
 import com.hitorro.util.commandandcontrol.ano.*;
 import com.hitorro.util.core.ArrayUtil;
@@ -117,7 +116,7 @@ public class DumpThreads extends com.hitorro.util.commandandcontrol.Command {
     }
 
     @Override
-    public boolean execute(String rawValue, JVS args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
         if (Desc.apply(args)) {
             listAllThreadsSet(response);
             response.end();
@@ -126,7 +125,7 @@ public class DumpThreads extends com.hitorro.util.commandandcontrol.Command {
 
         int stackDepth = 0;
         boolean dumpDeadlock = DumpDeadlock.apply(args);
-        long ids[] = getIds(args.getJsonNode());
+        long ids[] = getIds(args);
         if (DumpStack.apply(args)) {
             stackDepth = 100;
         }

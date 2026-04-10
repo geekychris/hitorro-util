@@ -21,7 +21,8 @@
  */
 package com.hitorro.util.commandandcontrol;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.core.CommandArgs;
 import com.hitorro.util.core.Log;
 import com.hitorro.util.core.string.Fmt;
@@ -30,12 +31,10 @@ import com.hitorro.util.json.keys.propaccess.PropaccessError;
 
 import java.text.ParseException;
 
-/**
- *
- */
+
 public class CommandMap {
     private String m_command;
-    private JVS m_map;
+    private ObjectNode m_map;
     private String m_rawArgs;
 
 	public CommandMap(String row) {
@@ -43,7 +42,7 @@ public class CommandMap {
 	}
     public CommandMap(String row, boolean reportException) {
         int index = row.indexOf(" ");
-        m_map = new JVS();
+        m_map = JsonNodeFactory.instance.objectNode();
         if (index == -1) {
             m_command = row;
             m_rawArgs = "";
@@ -65,7 +64,7 @@ public class CommandMap {
         }
     }
 
-    public CommandMap(String cmd, JVS args, String rawArgs) {
+    public CommandMap(String cmd, ObjectNode args, String rawArgs) {
         m_command = cmd;
         m_map = args;
         if (StringUtil.nullOrEmptyString(rawArgs)) {
@@ -83,7 +82,7 @@ public class CommandMap {
         return m_rawArgs;
     }
 
-    public JVS getArgs() {
+    public ObjectNode getArgs() {
         return m_map;
     }
 

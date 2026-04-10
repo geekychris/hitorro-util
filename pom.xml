@@ -37,6 +37,19 @@
     </repositories>
 
     <dependencies>
+        <!-- HiTorro Core (foundation utilities) -->
+        <dependency>
+            <groupId>com.hitorro</groupId>
+            <artifactId>hitorro-core</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <!-- HiTorro JSON Type System -->
+        <dependency>
+            <groupId>com.hitorro</groupId>
+            <artifactId>hitorro-jsontypesystem</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+
         <!-- Jakarta Persistence API -->
         <dependency>
             <groupId>jakarta.persistence</groupId>

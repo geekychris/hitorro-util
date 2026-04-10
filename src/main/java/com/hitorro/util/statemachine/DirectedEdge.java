@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.statemachine;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.core.CommandArgs;
 import com.hitorro.util.core.classes.ClassUtil;
 import com.hitorro.util.core.string.StringUtil;
@@ -162,7 +162,7 @@ public class DirectedEdge implements HTSerializable {
         return false;
     }
 
-    public JVS getParameters() {
+    public ObjectNode getParameters() {
         try {
             if (StringUtil.nullOrEmptyString(m_parameters)) {
                 return null;

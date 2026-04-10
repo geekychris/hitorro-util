@@ -21,9 +21,7 @@
  */
 package com.hitorro.util.servicecounters;
 
-/**
- *
- */
+
 public interface RegisterMBean {
     String getValue();
 }

@@ -25,9 +25,7 @@ import com.hitorro.util.servicecounters.CounterContext;
 import com.hitorro.util.servicecounters.CounterSet;
 import com.hitorro.util.servicecounters.Register;
 
-/**
- *
- */
+
 public class DoubleRegister extends Register {
     private volatile double[] registers;
     private volatile double[] registersPrior;

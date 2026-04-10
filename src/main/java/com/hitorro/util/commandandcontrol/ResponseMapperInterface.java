@@ -21,9 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol;
 
-/**
- *
- */
+
 public interface ResponseMapperInterface<T> {
     /**
      * Start of response by setting up the response shape.

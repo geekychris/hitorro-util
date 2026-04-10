@@ -40,9 +40,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
+
 public class BasicCommands {
     @CommandDef(command = "assume",
             description = "assume the user and store the command history to disk.  Also assuming user will load any history from disk if it exists.",

@@ -24,9 +24,7 @@ package com.hitorro.util.servicecounters;
 import com.hitorro.util.core.Env;
 
 
-/**
- *
- */
+
 public class CounterClock implements Runnable {
     private boolean running = true;
     private int secondsSleep = 60;

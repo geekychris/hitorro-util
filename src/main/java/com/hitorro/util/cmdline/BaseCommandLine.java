@@ -21,7 +21,9 @@
  */
 package com.hitorro.util.cmdline;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.SshListener;
 import com.hitorro.util.commandandcontrol.TerminalListener;
@@ -62,7 +64,7 @@ public abstract class BaseCommandLine<T> {
     public int processId = -1;
     protected String parameterLine;
     // property related basics
-    protected JVS commandLineArguments = new JVS();
+    protected ObjectNode commandLineArguments = JsonNodeFactory.instance.objectNode();
     protected boolean enableCommandLine = false;
     protected Thread commandLineThread;
     protected EnhancedThreadGroup commandLineThreadGroup = new EnhancedThreadGroup("CommandLine");
@@ -99,7 +101,7 @@ public abstract class BaseCommandLine<T> {
      *                version to identify any changes.
      * @return Command being executed
      */
-    public abstract JVS reloadJVSProps(boolean runDiff);
+    public abstract JsonNode reloadJVSProps(boolean runDiff);
 
     /**
      * Get my PID since java doesnt let you do that, we use our swig wrapper todo
@@ -160,7 +162,8 @@ public abstract class BaseCommandLine<T> {
         try {
             com.hitorro.util.core.CommandArgs.parseArgs(parameterLine, true, true, commandLineArguments);
             if (StringUtil.nullOrEmptyOrBlankString(command)) {
-                command = commandLineArguments.getString(CommandKey);
+                JsonNode cmdNode = commandLineArguments.get(CommandKey);
+                command = (cmdNode != null && !cmdNode.isNull()) ? cmdNode.asText() : null;
             }
 
         } catch (ParseException e) {

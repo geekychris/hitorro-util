@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.hitorro.jsontypesystem.JVS;
 import com.hitorro.util.commandandcontrol.ano.ArgType;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.commandandcontrol.ano.DebugArgAno;
@@ -243,7 +242,7 @@ public class ZKContext {
                               @DebugArgAno(keyName = "",
                                       description = "",
                                       defaultValue = "",
-                                      argType = ArgType.Args) JVS args) throws HTException {
+                                      argType = ArgType.Args) JsonNode args) throws HTException {
         String path = new com.hitorro.util.json.keys.StringProperty("", "path", null).apply(args);
         delete(path);
         return true;
@@ -257,7 +256,7 @@ public class ZKContext {
                                 @DebugArgAno(keyName = "",
                                         description = "",
                                         defaultValue = "",
-                                        argType = ArgType.Args) JVS args) throws HTException {
+                                        argType = ArgType.Args) JsonNode args) throws HTException {
         ArrayNode jsonNodes = JsonNodeFactory.instance.arrayNode();
 
         String path = new com.hitorro.util.json.keys.StringProperty("", "path", null).apply(args);
@@ -278,7 +277,7 @@ public class ZKContext {
                             @DebugArgAno(keyName = "",
                                     description = "",
                                     defaultValue = "",
-                                    argType = ArgType.Args) JVS args) {
+                                    argType = ArgType.Args) JsonNode args) {
         String path = new com.hitorro.util.json.keys.StringProperty("", "path", null).apply(args);
 
         return getContentsAsJson(path);
@@ -292,7 +291,7 @@ public class ZKContext {
                                             @DebugArgAno(keyName = "",
                                                     description = "",
                                                     defaultValue = "",
-                                                    argType = ArgType.Args) JVS args) throws HTException {
+                                                    argType = ArgType.Args) JsonNode args) throws HTException {
         String path = pathKey.apply(args);
         String job = jobKey.apply(args);
         String collection = colectionKey.apply(args);

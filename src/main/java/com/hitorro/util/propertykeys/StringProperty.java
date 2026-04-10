@@ -22,7 +22,7 @@
 
 package com.hitorro.util.propertykeys;
 
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.commandandcontrol.ano.DebugArgAno;
 import com.hitorro.util.json.keys.PropertyKeyValidationException;
 
@@ -60,7 +60,7 @@ public class StringProperty extends PropertyKey<String> {
         String val = getValueFromConfig(map);
         if (val == null && m_notNull == false) {
             if (this.m_resolveVariable && m_defaultValue != null) {
-                return JVSProperties.getProperties().resolveJsonVariable(m_defaultValue);
+                return GlobalProperties.resolveJsonVariable(m_defaultValue);
             }
             return m_defaultValue;
         }

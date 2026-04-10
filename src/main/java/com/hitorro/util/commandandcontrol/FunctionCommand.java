@@ -22,7 +22,6 @@
 package com.hitorro.util.commandandcontrol;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hitorro.jsontypesystem.JVS;
 import com.hitorro.util.commandandcontrol.ano.ArgType;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.core.Log;
@@ -38,9 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-/**
- *
- */
+
 public class FunctionCommand extends Command {
     private Object o;
     private Method method;
@@ -54,7 +51,7 @@ public class FunctionCommand extends Command {
         this.keys = keys;
 
         for (DebugCommandArg arg : keys) {
-            if (!arg.isHidden()) {
+            if (arg != null && !arg.isHidden()) {
                 m_args.add(arg);
             }
         }
@@ -77,7 +74,7 @@ public class FunctionCommand extends Command {
     }
 
     @Override
-    public boolean execute(final String rawValue, final JVS jvs, final Response response, final CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(final String rawValue, final JsonNode jvs, final Response response, final CommandSession session, RestOperations operation) throws Exception {
         Object result;
         Object argsArray[] = new Object[keys.length];
         boolean writeResponse = true;

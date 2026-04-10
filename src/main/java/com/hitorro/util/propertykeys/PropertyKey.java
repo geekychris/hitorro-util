@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.propertykeys;
 
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.commandandcontrol.ano.DebugArgAno;
 import com.hitorro.util.core.KeyValue;
 import com.hitorro.util.core.params.HTProperties;
@@ -95,7 +95,7 @@ public abstract class PropertyKey<T> implements Function<Map<String, String>, T>
             s = map.get(m_key);
         }
         if (this.m_resolveVariable && s != null) {
-            return JVSProperties.getProperties().resolveJsonVariable(s);
+            return GlobalProperties.resolveJsonVariable(s);
         }
         return s;
     }

@@ -28,9 +28,7 @@ import com.hitorro.util.commandandcontrol.ano.RespColumn;
 import com.hitorro.util.commandandcontrol.ano.ResponseDefinition;
 import com.hitorro.util.core.GenericKeyValue;
 
-/**
- *
- */
+
 public class KeyValuePairMapping implements ResponseMapperInterface<GenericKeyValue<Object, Object>> {
     @ResponseDefinition(command = "command",
             rowname = "row",

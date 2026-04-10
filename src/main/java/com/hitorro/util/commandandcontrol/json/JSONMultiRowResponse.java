@@ -31,9 +31,7 @@ import com.hitorro.util.json.JSONMap;
 
 import java.io.IOException;
 
-/**
- *
- */
+
 public class JSONMultiRowResponse extends MultiRowResponse {
     private JSONResponse resp;
     private Class classes[];

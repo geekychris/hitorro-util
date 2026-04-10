@@ -23,12 +23,11 @@ package com.hitorro.util.versioning;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.Env;
 import com.hitorro.util.core.GenericKeyValue;
 import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.json.JSONUtil;
-import com.hitorro.util.json.keys.propaccess.PropaccessError;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,21 +41,16 @@ public class Version {
     public Version() {
 
         // now put some vm and other info
-        try {
-            node = JVSProperties.getProperties().get("build");
-            Env.addVMPropsToMap(JVSProperties.getProperties());
-        } catch (PropaccessError propaccessError) {
-
+        node = GlobalProperties.getProperties().get("build");
+        JsonNode props = GlobalProperties.getProperties();
+        if (props instanceof ObjectNode) {
+            Env.addVMPropsToMap((ObjectNode) props);
         }
     }
 
     public static final String getFullVersionLabel() {
-        try {
-            return Fmt.S("%s.%s", JVSProperties.getProperties().getString("build.version"),
-                    JVSProperties.getProperties().getString("build.number"));
-        } catch (PropaccessError propaccessError) {
-            return null;
-        }
+        return Fmt.S("%s.%s", GlobalProperties.getString("build.version"),
+                GlobalProperties.getString("build.number"));
     }
 
     public List<GenericKeyValue> getValues() {

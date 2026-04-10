@@ -21,8 +21,10 @@
  */
 package com.hitorro.util.commandandcontrol;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.commandandcontrol.serialized.InfoRow;
+import com.hitorro.util.json.String2JsonMapper;
 import com.hitorro.util.io.StoreException;
 import com.hitorro.util.typesystem.HTObjectInputStream;
 import com.hitorro.util.typesystem.HTObjectOutputStream;
@@ -40,7 +42,7 @@ import java.util.List;
         schemaVersion = ActionRequest.SerializationVersion)
 public class ActionRequest implements HTSerializable {
     public static final int SerializationVersion = 1;
-    private JVS args = new JVS();
+    private ObjectNode args = JsonNodeFactory.instance.objectNode();
     private String method;
     private List<InfoRow> rows = new ArrayList<InfoRow>();
 
@@ -55,7 +57,7 @@ public class ActionRequest implements HTSerializable {
     public void serialize(HTObjectOutputStream os) throws IOException, StoreException {
         os.writeInt(SerializationVersion);
         os.writeString(getMethod());
-        os.writeString(getArgs().getStringRepresentation());
+        os.writeString(getArgs().toString());
         os.writeInt(rows.size());
         for (InfoRow row : rows) {
             os.writeVersionedObject(row);
@@ -65,8 +67,7 @@ public class ActionRequest implements HTSerializable {
     public void deserialize(HTObjectInputStream os) throws IOException, ClassNotFoundException, StoreException {
         int version = os.readInt();
         setMethod(os.readString());
-        int argSize = os.readInt();
-        args = JVS.read(os.readString());
+        args = (ObjectNode) new String2JsonMapper().apply(os.readString());
         int rowSize = os.readInt();
         for (int i = 0; i < rowSize; i++) {
             rows.add((InfoRow) os.readVersionedObject());
@@ -89,11 +90,11 @@ public class ActionRequest implements HTSerializable {
         return false;
     }
 
-    public JVS getArgs() {
+    public ObjectNode getArgs() {
         return args;
     }
 
-    public void setArgs(JVS args) {
+    public void setArgs(ObjectNode args) {
         this.args = args;
     }
 

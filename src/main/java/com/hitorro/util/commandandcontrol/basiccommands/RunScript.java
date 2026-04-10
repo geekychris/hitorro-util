@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol.basiccommands;
 
-import com.hitorro.jsontypesystem.JVS;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.Command;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.Response;
@@ -42,7 +42,7 @@ public class RunScript extends Command {
     @CommandArgument(required = false)
     public static final BooleanProperty SendToResponse = new BooleanProperty("toresponse", "send output to current response stream", false);
 
-    public boolean execute(String rawValue, JVS args, Response response, CommandSession session, RestOperations operation) throws Exception {
+    public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         String script = Script.apply(args);
         File f = session.findScriptFile(script);
         if (f == null) {

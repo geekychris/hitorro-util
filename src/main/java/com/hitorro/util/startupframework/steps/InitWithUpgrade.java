@@ -93,6 +93,10 @@ public class InitWithUpgrade implements ServiceStep {
                 }
                 String text = module.init(initDb, upgradeService, moduleVersion, softVersion);
                 if (!StringUtil.nullOrEmptyString(text)) {
+                    if (module.getShortName().equals("clusterservice")) {
+                        Log.servicecontext.info("ClusterService init skipped (non-fatal): %s", text);
+                        continue;
+                    }
                     return new ErrorCode(20, "Unable to initialize module %s with error %s",
                             new Object[]{module.getShortName(), text});
                 }

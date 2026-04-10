@@ -27,9 +27,7 @@ import com.hitorro.util.commandandcontrol.ResponseShape;
 import com.hitorro.util.commandandcontrol.ano.RespColumn;
 import com.hitorro.util.commandandcontrol.ano.ResponseDefinition;
 
-/**
- *
- */
+
 public class SingleObjectToStringMapping implements ResponseMapperInterface<Object> {
     @ResponseDefinition(command = "command",
             rowname = "row",

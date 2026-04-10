@@ -22,9 +22,11 @@
 package com.hitorro.util.cmdline;
 
 
-import com.hitorro.jsontypesystem.JVS;
-import com.hitorro.jsontypesystem.propreaders.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.commandandcontrol.CommandRegistry;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.commandandcontrol.TestCommands;
 import com.hitorro.util.core.Console;
 import com.hitorro.util.core.Env;
@@ -47,18 +49,6 @@ import java.io.IOException;
 public class CommandLine extends BaseCommandLine<HTProperties> {
     public static DirectoryWatch logWatcher = null;
 
-
-    public final com.hitorro.jsontypesystem.propreaders.JVSPropertiesReader[] jvsPropLoaders = {new com.hitorro.jsontypesystem.propreaders.JVSSystemArgsPropertyReader(),
-            new com.hitorro.jsontypesystem.propreaders.JVSDirectoryReadingPropertiesReader(com.hitorro.jsontypesystem.propreaders.JVSDirectoryType.Bin, false),
-            new com.hitorro.jsontypesystem.propreaders.JVSDirectoryReadingPropertiesReader(com.hitorro.jsontypesystem.propreaders.JVSDirectoryType.Home, true),
-            new com.hitorro.jsontypesystem.propreaders.JVSLoadPropsPropertyReader(true),
-            new com.hitorro.jsontypesystem.propreaders.JVSSingleFilePropertyReader(true) {
-                @Override
-                public File getFile(JVS propsSoFar) {
-                    return Env.getSavedJVSProps(propsSoFar);
-                }
-            }, new com.hitorro.jsontypesystem.propreaders.JVSCommandLinePropertyReader()};
-
     /**
      * Some specialized args passed in are: JAVA_HOME=/jre/path command=ServiceToRun (class name or short name if we
      * have a way to register) ....rest of arguments as we know it
@@ -74,11 +64,7 @@ public class CommandLine extends BaseCommandLine<HTProperties> {
     }
 
     public boolean haveJVSConfigsChanged() {
-        for (com.hitorro.jsontypesystem.propreaders.JVSPropertiesReader pr : jvsPropLoaders) {
-            if (pr.havePropertiesChanged()) {
-                return true;
-            }
-        }
+        // Override in subclass that has access to property readers
         return false;
     }
 
@@ -117,21 +103,12 @@ public class CommandLine extends BaseCommandLine<HTProperties> {
         }
     }
 
-    public JVS reloadJVSProps(boolean runDiff) {
-        JVS props = new JVS();
-        try {
-            for (com.hitorro.jsontypesystem.propreaders.JVSPropertiesReader reader : jvsPropLoaders) {
-                reader.getProperties(props, commandLineArguments);
-            }
-            props.resolveVariables(props);
-
-            com.hitorro.jsontypesystem.propreaders.JVSProperties.setDefaultProperties(props, runDiff);
-            return props;
-        } catch (Exception e) {
-            Log.util.error("Unable to init configs%s %e", e, e);
-            return null;
-        }
-
+    public JsonNode reloadJVSProps(boolean runDiff) {
+        // Override in subclass that has access to property readers (e.g., in hitorro-util module).
+        // Base implementation returns empty properties.
+        ObjectNode props = JsonNodeFactory.instance.objectNode();
+        GlobalProperties.setDefaultProperties(props);
+        return props;
     }
 
     /**

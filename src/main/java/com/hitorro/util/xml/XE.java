@@ -27,9 +27,7 @@ import org.xml.sax.Attributes;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- */
+
 public class XE {
     private XE parent;
     private String name;

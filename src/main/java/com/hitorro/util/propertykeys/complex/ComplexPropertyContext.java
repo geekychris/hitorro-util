@@ -22,7 +22,7 @@
 package com.hitorro.util.propertykeys.complex;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.hitorro.jsontypesystem.propreaders.JVSProperties;
+import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.json.keys.StringProperty;
@@ -30,9 +30,7 @@ import com.hitorro.util.json.keys.propaccess.PropaccessError;
 
 import java.util.*;
 
-/**
- *
- */
+
 public class ComplexPropertyContext {
     public static final StringProperty TypeKey = new StringProperty("cptype", "", null);
     private static Map<String, ComplexPropertyFactoryInterface> adapterMap = new HashMap();
@@ -44,7 +42,7 @@ public class ComplexPropertyContext {
     }
 
     public static <T extends Object> List<T> getList(String path, String defaultType) throws ComplexPropertiesException, PropaccessError {
-        JsonNode keys = JVSProperties.getProperties().get(path);
+        JsonNode keys = GlobalProperties.getProperties().get(path);
         List<T> list = new ArrayList<T>();
         Iterator<Map.Entry<String, JsonNode>> iter = keys.fields();
         while (iter.hasNext()) {
@@ -62,7 +60,7 @@ public class ComplexPropertyContext {
      * @return
      */
     public static <T extends Object> T get(String path, String defaultType) throws ComplexPropertiesException, PropaccessError {
-        JsonNode map = JVSProperties.getProperties().get(path);
+        JsonNode map = GlobalProperties.getProperties().get(path);
         return (T) get(map, defaultType, path);
     }
 
@@ -73,7 +71,7 @@ public class ComplexPropertyContext {
      * @return
      */
     public static <T extends Object> T get(String path) throws ComplexPropertiesException, PropaccessError {
-        JsonNode map = JVSProperties.getProperties().get(path);
+        JsonNode map = GlobalProperties.getProperties().get(path);
         return (T) get(map, null, path);
     }
 

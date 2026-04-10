@@ -29,9 +29,7 @@ import com.hitorro.util.commandandcontrol.ano.ResponseDefinition;
 
 import java.util.Map;
 
-/**
- *
- */
+
 public class MapMapping implements ResponseMapperInterface<Map.Entry<Object, Object>> {
     @ResponseDefinition(command = "command",
             rowname = "row",
