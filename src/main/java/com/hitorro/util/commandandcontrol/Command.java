@@ -54,7 +54,7 @@ public abstract class Command {
     protected List<DebugCommandArg> m_args = new ArrayList<DebugCommandArg>();
     private ResponseShape keyValShape;
 
-    public static String initRequiredResponses(Object initMe) {
+    public static final String initRequiredResponses(Object initMe) {
         List<MemberVarAnnotations> list = new ArrayList();
         ClassAnoUtil.getAllMemberVariable(initMe.getClass(), hasCommandResponseShape, list, true);
         for (MemberVarAnnotations mva : list) {

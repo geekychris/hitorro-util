@@ -53,7 +53,7 @@ public class ProcessUtil {
         return find(new StringContainsOperator(contains, true));
     }
 
-    public static int killProcesses(HTPredicate oper) throws IOException, InterruptedException {
+    public static final int killProcesses(HTPredicate oper) throws IOException, InterruptedException {
         Iterator<String[]> mapIter = find(oper);
         if (mapIter == null) {
             return -1;
@@ -76,14 +76,14 @@ public class ProcessUtil {
         return i;
     }
 
-    public static int killProcesses(String contains, String notValue) throws IOException, InterruptedException {
+    public static final int killProcesses(String contains, String notValue) throws IOException, InterruptedException {
         HTPredicate c = new StringContainsOperator(contains, true);
         HTPredicate not = new LogicalNotOperator(new StringContainsOperator(notValue, true));
 
         return killProcesses(new LogicalAndOperator(c, not));
     }
 
-    public static int killProcesses(String contains) throws IOException, InterruptedException {
+    public static final int killProcesses(String contains) throws IOException, InterruptedException {
         return killProcesses(new StringContainsOperator(contains, true));
     }
 }

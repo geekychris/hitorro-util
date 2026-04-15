@@ -37,13 +37,13 @@ import java.io.IOException;
  */
 public class SshListener implements Runnable {
     // Configuration properties
-    public static final IntegerProperty PortNumber = new IntegerProperty("ssh.port",
+    public static IntegerProperty PortNumber = new IntegerProperty("ssh.port",
             "port that the SSH service runs on", 2222);
-    public static final BooleanProperty Enabled = new BooleanProperty("ssh.enabled",
+    public static BooleanProperty Enabled = new BooleanProperty("ssh.enabled",
             "enable SSH server", true);
-    public static final StringProperty Username = new StringProperty("ssh.auth.username",
+    public static StringProperty Username = new StringProperty("ssh.auth.username",
             "SSH authentication username", "admin");
-    public static final StringProperty Password = new StringProperty("ssh.auth.password",
+    public static StringProperty Password = new StringProperty("ssh.auth.password",
             "SSH authentication password", "admin");
 
     private SshServer sshServer;

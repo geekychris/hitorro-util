@@ -55,8 +55,8 @@ import static com.hitorro.util.core.Env.getHome;
  */
 
 public class CommandSession implements Runnable {
-    public static final StringProperty CSVFile = new StringProperty("csvfile", "", null);
-    public static final StringProperty TempCSVFile = new StringProperty("temp.csvfile", "", null);
+    public static StringProperty CSVFile = new StringProperty("csvfile", "", null);
+    public static StringProperty TempCSVFile = new StringProperty("temp.csvfile", "", null);
     protected static final String StartupScript = "startup.command";
     private static ResponseShape header = initList();
     private static Map<String, String> substMap = new HashMap<String, String>();

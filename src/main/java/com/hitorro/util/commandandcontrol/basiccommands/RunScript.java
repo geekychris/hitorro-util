@@ -37,10 +37,10 @@ import java.io.File;
 @CommandDef(command = "run", description = "run a script")
 public class RunScript extends Command {
     @CommandArgument(required = true)
-    public static final StringProperty Script = new StringProperty("script", "Script to executed", null);
+    public static StringProperty Script = new StringProperty("script", "Script to executed", null);
 
     @CommandArgument(required = false)
-    public static final BooleanProperty SendToResponse = new BooleanProperty("toresponse", "send output to current response stream", false);
+    public static BooleanProperty SendToResponse = new BooleanProperty("toresponse", "send output to current response stream", false);
 
     public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         String script = Script.apply(args);

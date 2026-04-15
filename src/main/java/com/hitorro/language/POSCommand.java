@@ -41,7 +41,7 @@ import java.util.List;
 @CommandDef(command = "analysis.pos", description = "Penn and Treebank parts of speech for a given sentence")
 public class POSCommand extends Command {
 	@CommandArgument(required = true)
-	public static final StringProperty Sentence = new StringProperty("sentence", "Sentence to compute parts of speech", null);
+	public static StringProperty Sentence = new StringProperty("sentence", "Sentence to compute parts of speech", null);
 
 	public String interactiveArgument() {
 		return Sentence.getKey();

@@ -41,7 +41,7 @@ import java.util.List;
         generatedServices = true
 )
 public class HTServer extends RunnableService {
-    public static final StringProperty NodeId = new StringProperty("node", "id of node if server is a multinodel server", null);
+    public static StringProperty NodeId = new StringProperty("node", "id of node if server is a multinodel server", null);
     @com.hitorro.util.startupframework.phases.ServiceProperty
     public final StringProperty ServerType = new StringProperty("servertype", "type of server to start", null);
     private String serverType;

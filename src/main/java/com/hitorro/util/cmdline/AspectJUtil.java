@@ -87,7 +87,7 @@ public class AspectJUtil {
         return true;
     }
 
-    public static String getJarFilePath ()
+    public static final String getJarFilePath ()
     {
         ClassPathShallowIterator iter = new ClassPathShallowIterator();
         return iter.filter(new StringContainsOperator("aspectjweaver-1", true)).getFirstItem();

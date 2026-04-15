@@ -51,12 +51,12 @@ public class MailAgent {
     //  Property Key Root
     public static final String MONITOR_PROPERTY_KEY_ROOT = "monitor.email";
     //  Mail Properties
-    public static final StringProperty UserName = new StringProperty("username", "Email user name", null);
-    public static final StringProperty Address = new StringProperty("address", "Email address", null);
-    public static final StringProperty Password = new StringProperty("password", "Email password", null);
-    public static final StringProperty SmtpHost = new StringProperty("smtp.host", "Email smtp host", null);
-    public static final StringProperty SmtpPort = new StringProperty("smtp.port", "Email smtp port", null);
-    public static final BooleanProperty IsSSL = new BooleanProperty("ssl", "Use SSL to connect to host", false);
+    public static StringProperty UserName = new StringProperty("username", "Email user name", null);
+    public static StringProperty Address = new StringProperty("address", "Email address", null);
+    public static StringProperty Password = new StringProperty("password", "Email password", null);
+    public static StringProperty SmtpHost = new StringProperty("smtp.host", "Email smtp host", null);
+    public static StringProperty SmtpPort = new StringProperty("smtp.port", "Email smtp port", null);
+    public static BooleanProperty IsSSL = new BooleanProperty("ssl", "Use SSL to connect to host", false);
 
     //  Mail Exception
     private static final String MSG_MISSING_TARGET_ADDRESS = "Missing Target Email Address";

@@ -40,9 +40,9 @@ import java.io.*;
 @CommandDef(command = "env.setconfig", description = "Set a key in the configs")
 public class SetConfigEntry extends Command {
     @CommandArgument(required = true)
-    public static final StringProperty KeyProp = new StringProperty("key", "property key", null);
+    public static StringProperty KeyProp = new StringProperty("key", "property key", null);
     @CommandArgument(required = true)
-    public static final StringProperty ValueProp = new StringProperty("value", "property value", null);
+    public static StringProperty ValueProp = new StringProperty("value", "property value", null);
 
     @Override
     public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {

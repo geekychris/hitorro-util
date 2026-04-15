@@ -35,7 +35,7 @@ import com.hitorro.util.json.keys.StringProperty;
 public class TestCommands {
 
     @CommandDef(command = "test.test2", description = "test2 test description", isInternal = false)
-    public static int test2(@DebugArgAno(propType = StringProperty.class, keyName = "a",
+    public static final int test2(@DebugArgAno(propType = StringProperty.class, keyName = "a",
             description = "a description", defaultValue = "hello there") String a,
                             @DebugArgAno(propType = IntegerProperty.class, keyName = "b",
                                     description = "b description", defaultValue = "2") int b) {

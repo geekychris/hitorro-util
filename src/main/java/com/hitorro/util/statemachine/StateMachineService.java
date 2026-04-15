@@ -39,7 +39,7 @@ import java.util.Map;
         uiDirectories = {},
         dependentServiceInterfaces = {})
 public class StateMachineService {
-    public static final FileProperty StateMachineDir = new FileProperty("statemachine.dir", "State machines", "${HT_BIN}/data/statemachine/");
+    public static FileProperty StateMachineDir = new FileProperty("statemachine.dir", "State machines", "${HT_BIN}/data/statemachine/");
     private static StateMachineService s_service;
     private Map<String, MooreStateMachine> stateMachines = new HashMap<String, MooreStateMachine>();
 

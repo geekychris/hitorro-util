@@ -39,9 +39,9 @@ import java.util.List;
 @CommandDef(command = "help", description = "Get help about a specific debug command.")
 public class Help extends com.hitorro.util.commandandcontrol.Command {
     @CommandArgument(required = false)
-    public static final StringProperty Command = new StringProperty("command", "Command to get help about", null);
+    public static StringProperty Command = new StringProperty("command", "Command to get help about", null);
     @CommandArgument(required = false)
-    public static final StringProperty StartsWith = new StringProperty("startswith", "arguments that start with", null);
+    public static StringProperty StartsWith = new StringProperty("startswith", "arguments that start with", null);
 
 
     @ResponseDefinition(command = "help",

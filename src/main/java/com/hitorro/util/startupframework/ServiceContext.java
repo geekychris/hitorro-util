@@ -53,12 +53,12 @@ import java.util.*;
 public class ServiceContext {
     // message topic sent when server is fully up.
     public static final String ServerUp = com.hitorro.util.startupframework.steps.Start.EventName;
-    public static final BooleanProperty DbInit =
+    public static BooleanProperty DbInit =
             new BooleanProperty("dbinit",
                     "command line flag to indicate the " +
                             "schema should be created and config data loaded",
                     false);
-    public static final BooleanProperty NannyManaged =
+    public static BooleanProperty NannyManaged =
             new BooleanProperty("managed.nanny",
                     "Managed through a nanny",
                     false);
@@ -111,7 +111,7 @@ public class ServiceContext {
     }
 
     @CommandDef(command = "dms.dumppersistedclasses", description = "Dump the classes to be persisted in hibernate.")
-    public static final List<Class> getPersistedClasses() {
+    public static List<Class> getPersistedClasses() {
         return getSC().persistedClassesSW;
     }
 
@@ -120,7 +120,7 @@ public class ServiceContext {
      *
      * @return String containing error text if failed to validate, else empty string.
      */
-    public static String validateConfigKeys() {
+    public static final String validateConfigKeys() {
         StringBuilder buff = new StringBuilder();
         for (ServiceWrapper module : ServiceContext.getSC().getServices()) {
             BaseMappingProperty keys[] = module.getRequiredPropertyKeys();

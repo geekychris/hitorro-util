@@ -33,7 +33,7 @@ public class ExcelUtil {
     /**
      * The max number of rows per spread sheet.
      */
-    public static int getMaxRowsPerSheet(int excelFormat) {
+    public static final int getMaxRowsPerSheet(int excelFormat) {
         switch (excelFormat) {
             case Excel5:
                 return 16384;

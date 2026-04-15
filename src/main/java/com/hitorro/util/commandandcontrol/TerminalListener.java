@@ -32,7 +32,7 @@ import java.net.Socket;
 import java.util.concurrent.*;
 
 public class TerminalListener implements Runnable {
-    public static final IntegerProperty PortNumber = new IntegerProperty("telnet.port", "port that the telnet service runs on", 5050);
+    public static IntegerProperty PortNumber = new IntegerProperty("telnet.port", "port that the telnet service runs on", 5050);
     private static EnhancedThreadFactory m_factory = new EnhancedThreadFactory("Terminal",
             "Terminal", true);
     private static BlockingQueue<Runnable> m_workQueue = new PriorityBlockingQueue<Runnable>(20);

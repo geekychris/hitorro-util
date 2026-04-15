@@ -33,9 +33,9 @@ import com.hitorro.util.json.keys.IntegerProperty;
  * appropriate diffing.
  */
 public class ConfigChangeWatcher implements Runnable {
-    public static final IntegerProperty CheckPeriod = new IntegerProperty("config.changecheck.seconds", "how frequently to check for changes to configs", 60);
+    public static IntegerProperty CheckPeriod = new IntegerProperty("config.changecheck.seconds", "how frequently to check for changes to configs", 60);
 
-    public static final BooleanProperty Check = new BooleanProperty("config.changecheck.enabled", "whether to check for property changes", false);
+    public static BooleanProperty Check = new BooleanProperty("config.changecheck.enabled", "whether to check for property changes", false);
 
     private static ConfigChangeWatcher ccw;
     private static EnhancedThreadGroup etg = new EnhancedThreadGroup("Config Watcher");

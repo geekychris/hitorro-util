@@ -65,75 +65,75 @@ public abstract class EnhancedTestCase extends TestCase implements HTTestRunnabl
         super();
     }
 
-    public static final void assertNotNull(Object o) {
+    public static void assertNotNull(Object o) {
         TestCase.assertNotNull(o);
     }
 
-    public static final void assertNotNull(String msg, Object o) {
+    public static void assertNotNull(String msg, Object o) {
         TestCase.assertNotNull(msg, o);
     }
 
-    public static final void assertEquals(String msg, String s, String s2) {
+    public static void assertEquals(String msg, String s, String s2) {
         TestCase.assertEquals(msg, s, s2);
     }
 
-    public static final void assertEquals(String s, String s2) {
+    public static void assertEquals(String s, String s2) {
         TestCase.assertEquals(s, s2);
     }
 
-    public static final void assertEquals(Class s, Class s2) {
+    public static void assertEquals(Class s, Class s2) {
         TestCase.assertEquals(s, s2);
     }
 
-    public static final void assertEquals(Object s, Object s2) {
+    public static void assertEquals(Object s, Object s2) {
         TestCase.assertEquals(s, s2);
     }
 
-    public static final void assertEquals(String msg, Object s, Object s2) {
+    public static void assertEquals(String msg, Object s, Object s2) {
         TestCase.assertEquals(msg, s, s2);
     }
 
-    public static final void assertTrue(boolean b) {
+    public static void assertTrue(boolean b) {
         TestCase.assertTrue(b);
     }
 
-    public static final void assertTrue(String msg, boolean b) {
+    public static void assertTrue(String msg, boolean b) {
         TestCase.assertTrue(msg, b);
     }
 
-    public static final void assertEquals(int a, int b) {
+    public static void assertEquals(int a, int b) {
         TestCase.assertEquals(a, b);
     }
 
-    public static final void assertEquals(String msg, int a, int b) {
+    public static void assertEquals(String msg, int a, int b) {
         TestCase.assertEquals(msg, a, b);
     }
 
-    public static final void assertEquals(long a, long b) {
+    public static void assertEquals(long a, long b) {
         TestCase.assertEquals(a, b);
     }
 
-    public static final void assertEquals(String msg, long a, long b) {
+    public static void assertEquals(String msg, long a, long b) {
         TestCase.assertEquals(msg, a, b);
     }
 
-    public static final void assertFalse(boolean b) {
+    public static void assertFalse(boolean b) {
         TestCase.assertFalse(b);
     }
 
-    public static final void assertFalse(String msg, boolean b) {
+    public static void assertFalse(String msg, boolean b) {
         TestCase.assertFalse(msg, b);
     }
 
-    public static final void assertNull(Object o) {
+    public static void assertNull(Object o) {
         TestCase.assertNull(o);
     }
 
-    public static final void assertNull(String msg, Object o) {
+    public static void assertNull(String msg, Object o) {
         TestCase.assertNull(msg, o);
     }
 
-    public static final void fail(String msg) {
+    public static void fail(String msg) {
         TestCase.fail(msg);
     }
 }

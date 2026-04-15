@@ -32,7 +32,7 @@ import com.hitorro.util.log.Logger;
 
 @CommandDef(command = "env.setloglevel", description = "Set the logging level")
 public class SetLogLevel extends DumpLogLevels {
-    public static final StringProperty Level = new StringProperty("level", "category:level,category2:level...", null);
+    public static StringProperty Level = new StringProperty("level", "category:level,category2:level...", null);
 
     public SetLogLevel() {
         this.addArgument(true, Level);

@@ -37,19 +37,19 @@ import junit.framework.TestSuite;
 
 public class RunUnitTestSuite extends com.hitorro.util.commandandcontrol.Command {
     @CommandArgument(required = true)
-    public static final BaseMappingProperty level = TestUtil.Level;
+    public static BaseMappingProperty level = TestUtil.Level;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty pack = TestUtil.Packages;
+    public static BaseMappingProperty pack = TestUtil.Packages;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty dep = TestUtil.IgnoreTestDependencies;
+    public static BaseMappingProperty dep = TestUtil.IgnoreTestDependencies;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty service = TestUtil.Services;
+    public static BaseMappingProperty service = TestUtil.Services;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty module = TestUtil.Modules;
+    public static BaseMappingProperty module = TestUtil.Modules;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty tags = TestUtil.Modules;
+    public static BaseMappingProperty tags = TestUtil.Modules;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty tests = TestUtil.Test;
+    public static BaseMappingProperty tests = TestUtil.Test;
     private BooleanProperty s_all = new BooleanProperty("all", "print all fields", false);
 
     @Override

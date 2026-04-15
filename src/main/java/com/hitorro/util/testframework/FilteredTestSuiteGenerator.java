@@ -54,7 +54,7 @@ public class FilteredTestSuiteGenerator {
      * @param ignoreTestDependencies
      * @return
      */
-    public static final TestSuite getTestSuite(HTPredicate<TestCaseWrapper> oper,
+    public static TestSuite getTestSuite(HTPredicate<TestCaseWrapper> oper,
                                                Comparator<TestCaseWrapper> comp,
                                                boolean ignoreTestDependencies) throws TestException {
 
@@ -70,7 +70,7 @@ public class FilteredTestSuiteGenerator {
         return ts;
     }
 
-    public static final List<JUnit4TestAdapter> getTestSuiteJ4(HTPredicate<TestCaseWrapper> oper,
+    public static List<JUnit4TestAdapter> getTestSuiteJ4(HTPredicate<TestCaseWrapper> oper,
                                                                Comparator<TestCaseWrapper> comp,
                                                                boolean ignoreTestDependencies) throws TestException {
 
@@ -85,7 +85,7 @@ public class FilteredTestSuiteGenerator {
     }
 
 
-    public static final List<TestCaseWrapper> getTestCases(HTPredicate<TestCaseWrapper> oper,
+    public static List<TestCaseWrapper> getTestCases(HTPredicate<TestCaseWrapper> oper,
                                                            Comparator<TestCaseWrapper> comp,
                                                            boolean ignoreTestDependencies)
             throws TestException {
@@ -124,7 +124,7 @@ public class FilteredTestSuiteGenerator {
      * @param oper
      * @return
      */
-    public static final List<TestCaseWrapper> getTestCasesAux(HTPredicate<TestCaseWrapper> oper) {
+    public static List<TestCaseWrapper> getTestCasesAux(HTPredicate<TestCaseWrapper> oper) {
         List<TestCaseWrapper> testCases = new ArrayList<TestCaseWrapper>();
         ClassPathDeepIterator iter = new ClassPathDeepIterator();
 
@@ -165,7 +165,7 @@ public class FilteredTestSuiteGenerator {
     }
 
 
-    public static final RunLevel getSuiteRunLevel() {
+    public static RunLevel getSuiteRunLevel() {
         return m_suiteRunLevel;
     }
 

@@ -26,6 +26,6 @@ import com.hitorro.util.log.Logger;
 /**
  */
 public class Log extends com.hitorro.util.core.Log {
-    public static final Logger statemachine = Logger.getLogger("com.hitorro.util.statemachine");
-    public static final Logger workflow = Logger.getLogger("ht.workflow");
+    public static Logger statemachine = Logger.getLogger("com.hitorro.util.statemachine");
+    public static Logger workflow = Logger.getLogger("ht.workflow");
 }

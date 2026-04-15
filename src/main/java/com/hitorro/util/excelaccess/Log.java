@@ -26,5 +26,5 @@ import com.hitorro.util.log.Logger;
 /**
  */
 public class Log extends com.hitorro.util.core.Log {
-    public static final Logger excel = Logger.getLogger("ht.excel");
+    public static Logger excel = Logger.getLogger("ht.excel");
 }

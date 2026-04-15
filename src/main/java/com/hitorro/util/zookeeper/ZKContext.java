@@ -60,12 +60,12 @@ import java.util.List;
         typeManagedClasses = {},
         uiDirectories = {})
 public class ZKContext {
-    public static final com.hitorro.util.json.keys.IntegerProperty ExhibitorPollingMillis = new com.hitorro.util.json.keys.IntegerProperty("zookeeper.exhibitor.pollingmillis", "", (int) (60 * Constants.MillisInSecond));
-    public static final com.hitorro.util.json.keys.IntegerProperty SleepMillisBetweenRetries = new com.hitorro.util.json.keys.IntegerProperty("zookeeper.sleepmillisbtwretries", "", (int) (5 * Constants.MillisInSecond));
-    public static final com.hitorro.util.json.keys.IntegerProperty MaxSleepMillisBetweenRetries = new com.hitorro.util.json.keys.IntegerProperty("zookeeper.maxsleepmillisbtwretries", "", (int) (50 * Constants.MillisInSecond));
-    public static final com.hitorro.util.json.keys.IntegerProperty MaxRetries = new com.hitorro.util.json.keys.IntegerProperty("zookeeper.maxretries", "", 29);
-    public static final com.hitorro.util.json.keys.BooleanProperty ZookeeperInProcess = new com.hitorro.util.json.keys.BooleanProperty("zookeeper.inprocess", "", false);
-    public static final com.hitorro.util.json.keys.BooleanProperty ZookeeperConnectByIP = new com.hitorro.util.json.keys.BooleanProperty("zookeeper.connectbyip", "", true);
+    public static com.hitorro.util.json.keys.IntegerProperty ExhibitorPollingMillis = new com.hitorro.util.json.keys.IntegerProperty("zookeeper.exhibitor.pollingmillis", "", (int) (60 * Constants.MillisInSecond));
+    public static com.hitorro.util.json.keys.IntegerProperty SleepMillisBetweenRetries = new com.hitorro.util.json.keys.IntegerProperty("zookeeper.sleepmillisbtwretries", "", (int) (5 * Constants.MillisInSecond));
+    public static com.hitorro.util.json.keys.IntegerProperty MaxSleepMillisBetweenRetries = new com.hitorro.util.json.keys.IntegerProperty("zookeeper.maxsleepmillisbtwretries", "", (int) (50 * Constants.MillisInSecond));
+    public static com.hitorro.util.json.keys.IntegerProperty MaxRetries = new com.hitorro.util.json.keys.IntegerProperty("zookeeper.maxretries", "", 29);
+    public static com.hitorro.util.json.keys.BooleanProperty ZookeeperInProcess = new com.hitorro.util.json.keys.BooleanProperty("zookeeper.inprocess", "", false);
+    public static com.hitorro.util.json.keys.BooleanProperty ZookeeperConnectByIP = new com.hitorro.util.json.keys.BooleanProperty("zookeeper.connectbyip", "", true);
     public static final String HOSTINFO_NAME = "hostinfo.name";
     public static final String HOSTINFO_IP = "hostinfo.ip";
     public static final String ExhibitorClusterListEndpoint = "/exhibitor/v1/cluster/list";

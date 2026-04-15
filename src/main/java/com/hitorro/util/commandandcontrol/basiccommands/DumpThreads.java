@@ -43,13 +43,13 @@ import java.lang.management.ThreadMXBean;
 @com.hitorro.util.commandandcontrol.ano.CommandDef(command = "env.threads", description = "Dump the threads running in the system and optionally their stack frames.")
 public class DumpThreads extends com.hitorro.util.commandandcontrol.Command {
     @com.hitorro.util.commandandcontrol.ano.CommandArgument(required = false)
-    public static final BooleanProperty DumpStack = new BooleanProperty("stack", "Dump the thread stack", false);
+    public static BooleanProperty DumpStack = new BooleanProperty("stack", "Dump the thread stack", false);
     @com.hitorro.util.commandandcontrol.ano.CommandArgument(required = false)
-    public static final BooleanProperty Desc = new BooleanProperty("description", "thread dump with groups and possible thread info", false);
+    public static BooleanProperty Desc = new BooleanProperty("description", "thread dump with groups and possible thread info", false);
     @com.hitorro.util.commandandcontrol.ano.CommandArgument(required = false)
-    public static final BooleanProperty DumpDeadlock = new BooleanProperty("dumpdeadlock", "Dump deadlocked threads", false);
+    public static BooleanProperty DumpDeadlock = new BooleanProperty("dumpdeadlock", "Dump deadlocked threads", false);
     @com.hitorro.util.commandandcontrol.ano.CommandArgument(required = false)
-    public static final StringProperty Ids = new StringProperty("ids", "List of thread ids to constrain by", null);
+    public static StringProperty Ids = new StringProperty("ids", "List of thread ids to constrain by", null);
 
     @com.hitorro.util.commandandcontrol.ano.ResponseDefinition(command = "dumpthreads",
             rowname = "thread",
