@@ -24,5 +24,5 @@ package com.hitorro.util.integrationevents;
 import com.hitorro.util.log.Logger;
 
 public class Log extends com.hitorro.util.core.Log {
-    public static final Logger integration = Logger.getLogger("ht.integration");
+    public static Logger integration = Logger.getLogger("ht.integration");
 }

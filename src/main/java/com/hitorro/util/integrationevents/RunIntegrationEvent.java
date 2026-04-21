@@ -35,7 +35,7 @@ import com.hitorro.util.json.keys.StringProperty;
 @CommandDef(command = "integration.run", description = "Run an integration event")
 public class RunIntegrationEvent extends Command {
     @CommandArgument(required = true)
-    public static final StringProperty EventName = new StringProperty("event", "Event name", "");
+    public static StringProperty EventName = new StringProperty("event", "Event name", "");
 
     public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         String event = EventName.apply(args);

@@ -74,7 +74,7 @@ public class InitUIDirs implements ServiceStep {
         }
     }
 
-    public static String ensureUIResourceDependency(ServiceWrapper service, File buildDir, File resourceDir) {
+    public static final String ensureUIResourceDependency(ServiceWrapper service, File buildDir, File resourceDir) {
         String[] resources = service.getUIDirectories();
         if (!ArrayUtil.nullOrEmpty(resources)) {
             for (String resource : resources) {

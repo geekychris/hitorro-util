@@ -55,31 +55,31 @@ import java.util.TreeMap;
  */
 public class Logger extends org.apache.log4j.Logger {
     public static final String ExitEvent = "ExitEvent";
-    public static final StringProperty ConsoleLoggerPattern =
+    public static StringProperty ConsoleLoggerPattern =
             new StringProperty("logging.console.pattern",
                     "Pattern for standard logger",
                     "%d{ISO8601} (%t) %c{1} %p: %m%n");
-    public static final StringProperty ConsoleLogLevel =
+    public static StringProperty ConsoleLogLevel =
             new StringProperty("logging.console.threshold",
                     "Logging level threshold for sending messages to the stdout",
                     "INFO");
-    public static final StringProperty StandardLoggerPattern =
+    public static StringProperty StandardLoggerPattern =
             new StringProperty("logging.standard.pattern",
                     "Pattern for standard logger",
                     "%d{ISO8601} (%t) %c{1} %p: %m%n");
-    public static final StringProperty DefaultLogAppenderLevel =
+    public static StringProperty DefaultLogAppenderLevel =
             new StringProperty("logging.standard.defaultlevel",
                     "Default logging level for the default appender",
                     "info");
-    public static final StringProperty SyslogPattern =
+    public static StringProperty SyslogPattern =
             new StringProperty("logging.syslog.pattern",
                     "Pattern used for log output to the syslog",
                     "%d{ISO8601} (%t) %c{1} %p: %m%n");
-    public static final StringProperty SyslogLogLevel =
+    public static StringProperty SyslogLogLevel =
             new StringProperty("logging.syslog.threshold",
                     "Logging level threshold for sending messages to the syslog",
                     "ERROR");
-    public static final BooleanProperty SyslogEnabledKey =
+    public static BooleanProperty SyslogEnabledKey =
             new BooleanProperty("logging.syslog.enabled",
                     "enable or disable the sylogging.", false);
     // we should be able to change the default logging level
@@ -103,11 +103,11 @@ public class Logger extends org.apache.log4j.Logger {
         setLogLevelOnLogger(this);
     }
 
-    public static final void removeAppenders() {
+    public static void removeAppenders() {
         Logger.getRootLogger().removeAllAppenders();
     }
 
-    public static final void configurePropsFile() {
+    public static void configurePropsFile() {
         if (initializedProperly == true) {
             return;
         }
@@ -149,7 +149,7 @@ public class Logger extends org.apache.log4j.Logger {
         Logger.addConsoleAppenderPrimordial();
     }
 
-    public static final Level getDefaultLevel() {
+    public static Level getDefaultLevel() {
         return getLevelFromString(DefaultLogAppenderLevel.apply());
     }
 
@@ -161,14 +161,14 @@ public class Logger extends org.apache.log4j.Logger {
      * @param processName
      * @throws IOException
      */
-    public static final void addStandardAppenderWithProcessName(String processName) throws IOException {
+    public static void addStandardAppenderWithProcessName(String processName) throws IOException {
         File logDir = Env.getLogDir();
         logDir.mkdirs();
         File logFile = FileUtil.getDatedFileFromPattern(logDir, processName, "log");
         addStandardAppender(logFile.getAbsolutePath());
     }
 
-    public static final void addArchivingAppenderWithProcessName(String processName) throws IOException {
+    public static void addArchivingAppenderWithProcessName(String processName) throws IOException {
         File logDir = Env.getLogDir();
         logDir.mkdirs();
         addArchivingAppender(processName);
@@ -177,7 +177,7 @@ public class Logger extends org.apache.log4j.Logger {
     /**
      * Add a syslog appender if enabled.
      */
-    public static final void addSyslogAppender(String processName) {
+    public static void addSyslogAppender(String processName) {
         if (SyslogEnabledKey.apply() == true) {
             SyslogAppender appender = new SyslogAppender();
             String host = Env.getHostIP();
@@ -202,7 +202,7 @@ public class Logger extends org.apache.log4j.Logger {
     /**
      * Add stdout output to the root level
      */
-    public static final void addConsoleAppender() {
+    public static void addConsoleAppender() {
         if (s_consoleAppender != null) {
             org.apache.log4j.Logger root = org.apache.log4j.Logger.getRootLogger();
             root.removeAppender(s_consoleAppender);
@@ -222,7 +222,7 @@ public class Logger extends org.apache.log4j.Logger {
     /**
      * Add stdout output to the root level..does not assume properties are configured.  Used in basic startup.
      */
-    public static final void addConsoleAppenderPrimordial() {
+    public static void addConsoleAppenderPrimordial() {
 
         Layout layout = new PatternLayout("%d{ISO8601} (%t) %c{1} %p: %m%n");
         Level consoleLevel = Level.INFO;
@@ -239,7 +239,7 @@ public class Logger extends org.apache.log4j.Logger {
      * @param fileName
      * @throws IOException
      */
-    public static final void addArchivingAppender(String fileName)
+    public static void addArchivingAppender(String fileName)
             throws IOException {
         s_archiveDir = new File(Env.getLogDir(),
                 Fmt.S("archive_%s", fileName));
@@ -260,7 +260,7 @@ public class Logger extends org.apache.log4j.Logger {
         root.addAppender(s_archiveAppender);
     }
 
-    public static final void addStandardAppender(String fileName)
+    public static void addStandardAppender(String fileName)
             throws IOException {
         s_archiveDir = new File(Env.getLogDir(),
                 Fmt.S("archive_%s", fileName));
@@ -277,7 +277,7 @@ public class Logger extends org.apache.log4j.Logger {
         root.addAppender(archivingAppender);
     }
 
-    public static final void setLogLevelsFromProps() {
+    public static void setLogLevelsFromProps() {
         JsonNode props = GlobalProperties.getProperties();
         JsonNode sub = props.get("env.loglevel");
         if (sub != null) {
@@ -288,7 +288,7 @@ public class Logger extends org.apache.log4j.Logger {
         }
     }
 
-    public static final Level getLevelFromString(String levelString) {
+    public static Level getLevelFromString(String levelString) {
         Level level = s_levels.get(levelString.toLowerCase());
         if (level == null) {
             return Level.INFO;
@@ -303,7 +303,7 @@ public class Logger extends org.apache.log4j.Logger {
      * @param levelString
      * @param message
      */
-    public static final boolean log(String category, String levelString,
+    public static boolean log(String category, String levelString,
                                     String message) {
         Level level = getLevel(levelString);
         org.apache.log4j.Logger logger = getLoggerByName(category);
@@ -315,21 +315,21 @@ public class Logger extends org.apache.log4j.Logger {
         return false;
     }
 
-    public static String generateMessageWithCallstack(String msg, Throwable t) {
+    public static final String generateMessageWithCallstack(String msg, Throwable t) {
         StringBuilder buff = new StringBuilder();
         buff.append(msg);
         Fmt.addCallstack(t, buff, false);
         return buff.toString();
     }
 
-    public static final Logger getLogger(Class name) {
+    public static Logger getLogger(Class name) {
         if (initialized == false) {
             init();
         }
         return (Logger) org.apache.log4j.Logger.getLogger(name);
     }
 
-    public static final Logger getLogger(String name) {
+    public static Logger getLogger(String name) {
         if (initialized == false) {
             init();
         }
@@ -383,7 +383,7 @@ public class Logger extends org.apache.log4j.Logger {
         return org.apache.log4j.Logger.getLogger(name);
     }
 
-    public static final Level getLevel(String level) {
+    public static Level getLevel(String level) {
         level = level.toLowerCase();
         Level l = s_levels.get(level);
         if (l == null) {
@@ -429,7 +429,7 @@ public class Logger extends org.apache.log4j.Logger {
         }
     }
 
-    public static final void getLogLevels(Response response, ResponseShape shape) {
+    public static void getLogLevels(Response response, ResponseShape shape) {
         Set<Entry<String, LoggerToLevelMapping>> set = s_categories.entrySet();
         response.setResponseShape(shape);
         for (Entry<String, LoggerToLevelMapping> entry : set) {

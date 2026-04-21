@@ -45,7 +45,7 @@ public class BasicCommands {
     @CommandDef(command = "assume",
             description = "assume the user and store the command history to disk.  Also assuming user will load any history from disk if it exists.",
             isInternal = false)
-    public static String assume(@DebugArgAno(propType = StringProperty.class, keyName = "user",
+    public static final String assume(@DebugArgAno(propType = StringProperty.class, keyName = "user",
             description = "username", defaultValue = "chris") String username,
                                 @DebugArgAno(keyName = "session",
                                         description = "session",
@@ -87,7 +87,7 @@ public class BasicCommands {
     }
 
     @CommandDef(command = "script", description = "copy output to file")
-    public static String script(@DebugArgAno(propType = StringProperty.class, keyName = "script",
+    public static final String script(@DebugArgAno(propType = StringProperty.class, keyName = "script",
             description = "name of file", defaultValue = "") String scr,
                                 @DebugArgAno(keyName = "session",
                                         description = "session",

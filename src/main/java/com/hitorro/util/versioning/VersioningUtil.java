@@ -34,7 +34,7 @@ public class VersioningUtil {
      *
      * @return
      */
-    public static String getMajorVersion(String version) {
+    public static final String getMajorVersion(String version) {
         String leftPart = getLeft(version);
         int major = getMajorAsInt(version);
         if (StringUtil.nullOrEmptyOrBlankString(leftPart)) {

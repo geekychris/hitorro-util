@@ -72,7 +72,7 @@ public class Welcome {
      * @param right Right edge position in characters.
      * @return Right aligned ascii picture. Each <code>String</code> is already terminated by <code>\r\n</code>.
      */
-    public static final String[] getPicture(final int right) {
+    public static String[] getPicture(final int right) {
         final Random random = new Random();
         final String[] welcome = bull;
         final String[] result = new String[welcome.length];

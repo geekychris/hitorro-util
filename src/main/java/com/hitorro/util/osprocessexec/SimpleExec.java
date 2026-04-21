@@ -34,7 +34,7 @@ import java.io.InputStreamReader;
  */
 public class SimpleExec {
 
-    public static int exec(String command, StringBuilder resultBuffer,
+    public static final int exec(String command, StringBuilder resultBuffer,
                            boolean wait, String... args) throws IOException, InterruptedException {
         StringBuilder err = new StringBuilder();
         int val = exec(command, resultBuffer, err, wait, args);
@@ -44,7 +44,7 @@ public class SimpleExec {
         return val;
     }
 
-    public static int exec(String command, StringBuilder resultBuffer,
+    public static final int exec(String command, StringBuilder resultBuffer,
                            StringBuilder errorBuffer,
                            boolean wait, String... args) throws IOException, InterruptedException {
         Log.util.debug("Executing %s'", command);

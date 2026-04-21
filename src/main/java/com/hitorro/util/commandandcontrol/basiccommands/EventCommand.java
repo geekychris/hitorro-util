@@ -39,9 +39,9 @@ import com.hitorro.util.json.keys.StringProperty;
 @CommandDef(command = "env.sendevent", description = "Send an event to anyone listening on the topic")
 public class EventCommand extends Command {
     @CommandArgument(required = true)
-    public static final StringProperty Topic = new StringProperty("topic", "event topic", null);
+    public static StringProperty Topic = new StringProperty("topic", "event topic", null);
     @CommandArgument(required = true)
-    public static final StringProperty SubTopic = new StringProperty("subtopic", "sub topic", null);
+    public static StringProperty SubTopic = new StringProperty("subtopic", "sub topic", null);
 
     public boolean execute(String rawValue, JsonNode args, Response response, CommandSession session, RestOperations operation) throws Exception {
         String topic = Topic.apply(args);

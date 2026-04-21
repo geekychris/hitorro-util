@@ -43,7 +43,7 @@ public class RenderingContainer {
         this.fontColor = fontColor;
     }
 
-    public static String renderForHtml(RenderingContainer rcArr[], int offset, Object values[]) {
+    public static final String renderForHtml(RenderingContainer rcArr[], int offset, Object values[]) {
         if (values == null || values[offset] == null) {
             return Fmt.S("<td>%s</td>", "");
         }
@@ -59,7 +59,7 @@ public class RenderingContainer {
         setTerminal(rcArr, offset, btio);
     }
 
-    public static String renderForHtml(RenderingContainer rcArr[], int offset, Object value) {
+    public static final String renderForHtml(RenderingContainer rcArr[], int offset, Object value) {
         if (rcArr == null || offset >= rcArr.length || rcArr[offset] == null) {
             return Fmt.S("<td>%s</td>", value.toString());
 

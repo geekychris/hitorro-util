@@ -43,7 +43,7 @@ public class XmlUtil {
      */
 
 
-    public static final StringBuilder escapeXML(String toEncode, StringBuilder buffer) {
+    public static StringBuilder escapeXML(String toEncode, StringBuilder buffer) {
         int size = toEncode.length();
         for (int i = 0; i < size; i++) {
             char c = toEncode.charAt(i);

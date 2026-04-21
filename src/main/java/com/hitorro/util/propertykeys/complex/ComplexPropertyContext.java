@@ -32,7 +32,7 @@ import java.util.*;
 
 
 public class ComplexPropertyContext {
-    public static final StringProperty TypeKey = new StringProperty("cptype", "", null);
+    public static StringProperty TypeKey = new StringProperty("cptype", "", null);
     private static Map<String, ComplexPropertyFactoryInterface> adapterMap = new HashMap();
 
     public static void add(ComplexPropertyFactoryInterface intf) {

@@ -32,7 +32,7 @@ import com.hitorro.util.json.keys.StringProperty;
 @CommandDef(command = "interactive", description = "Enter interactive input with a command that supports interactive commands")
 public class EnterInteractive extends com.hitorro.util.commandandcontrol.Command {
     @CommandArgument(required = true)
-    public static final StringProperty cmd = new StringProperty("command", "command to interact with", null);
+    public static StringProperty cmd = new StringProperty("command", "command to interact with", null);
 
     public boolean execute(String rawValue, JsonNode args, com.hitorro.util.commandandcontrol.Response response, com.hitorro.util.commandandcontrol.CommandSession session, com.hitorro.util.commandandcontrol.RestOperations operation) throws Exception {
         String c = cmd.apply(args);

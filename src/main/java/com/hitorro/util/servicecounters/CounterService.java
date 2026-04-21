@@ -47,7 +47,7 @@ public class CounterService {
     private CounterClock counterClock = new CounterClock(CounterContext.getContext());
     private CounterSet testSet = new CounterSet("test");
 
-    public static final CounterService getService() {
+    public static CounterService getService() {
         return service;
     }
 

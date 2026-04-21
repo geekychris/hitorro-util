@@ -11,7 +11,7 @@ import org.apache.log4j.Level;
  * I failed, please retry me later. I failed and I am giving up Here is my update parameters for the retry.
  */
 public class JobExecutionResult {
-    public static final JobExecutionResult Executed = new JobExecutionResult();
+    public static JobExecutionResult Executed = new JobExecutionResult();
 
     private boolean shouldRetry = false;
     private int timeMinutes = 0;

@@ -35,7 +35,7 @@ import java.util.Map;
 /**
  */
 public class DateProperty extends PropertyKey<Date> {
-    public static final SimpleDateFormat YYMMDD = new SimpleDateFormat("yyMMdd");
+    public static SimpleDateFormat YYMMDD = new SimpleDateFormat("yyMMdd");
     private Date m_defaultVal;
     private boolean m_mustExist;
     private SimpleDateFormat formatter = YYMMDD;

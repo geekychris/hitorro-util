@@ -38,19 +38,19 @@ import java.util.List;
 @CommandDef(command = "test.listtests", description = "List the available unit tests")
 public class ListTestUnits extends com.hitorro.util.commandandcontrol.Command {
     @CommandArgument(required = true)
-    public static final BaseMappingProperty level = TestUtil.Level;
+    public static BaseMappingProperty level = TestUtil.Level;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty pack = TestUtil.Packages;
+    public static BaseMappingProperty pack = TestUtil.Packages;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty dep = TestUtil.IgnoreTestDependencies;
+    public static BaseMappingProperty dep = TestUtil.IgnoreTestDependencies;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty service = TestUtil.Services;
+    public static BaseMappingProperty service = TestUtil.Services;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty module = TestUtil.Modules;
+    public static BaseMappingProperty module = TestUtil.Modules;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty tags = TestUtil.Modules;
+    public static BaseMappingProperty tags = TestUtil.Modules;
     @CommandArgument(required = false)
-    public static final BaseMappingProperty tests = TestUtil.Modules;
+    public static BaseMappingProperty tests = TestUtil.Modules;
     @ResponseDefinition(command = "tests",
             rowname = "test",
             columns = {@RespColumn(name = "Class", lName = "class"),

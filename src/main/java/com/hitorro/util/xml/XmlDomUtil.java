@@ -46,7 +46,7 @@ public class XmlDomUtil {
      * @param inputStream
      * @return
      */
-    public static final Document parseFromInputStream(InputStream inputStream) {
+    public static Document parseFromInputStream(InputStream inputStream) {
         return parseFromInputSource(new InputSource(inputStream));
     }
 
@@ -54,7 +54,7 @@ public class XmlDomUtil {
      * @param buffer
      * @return parsed document.
      */
-    public static final Document parseFromString(String buffer) {
+    public static Document parseFromString(String buffer) {
 
         Reader reader = new StringReader(buffer);
         InputSource is = new InputSource(reader);
@@ -67,7 +67,7 @@ public class XmlDomUtil {
      * @param inputSource
      * @return Document
      */
-    public static final Document parseFromInputSource(InputSource inputSource) {
+    public static Document parseFromInputSource(InputSource inputSource) {
         DOMParser parser = new DOMParser();
         Document msg;
         try {
@@ -102,7 +102,7 @@ public class XmlDomUtil {
         return null;
     }
 
-    public static final Node getFirstElement(Node node, String name) {
+    public static Node getFirstElement(Node node, String name) {
         List nodes = getChildren(node, name);
         if (nodes.size() == 0) {
             return null;
@@ -133,7 +133,7 @@ public class XmlDomUtil {
         return ival;
     }
 
-    public static final String[] getAllElementText(Node node, String name) {
+    public static String[] getAllElementText(Node node, String name) {
         List nodes = getChildren(node, name);
         String[] strings = new String[nodes.size()];
         if (nodes.size() == 0) {
@@ -152,7 +152,7 @@ public class XmlDomUtil {
      * @param tagName the name of the child elements we're getting.  If null, get all of the child elements
      * @return an array of child nodes, which may be of length zero if there were no listChildren
      */
-    public static final List getChildren(Node node, String tagName) {
+    public static List getChildren(Node node, String tagName) {
         NodeList nodes = node.getChildNodes();
         List l = ListUtil.list();
         int tempi = 0;
@@ -173,12 +173,12 @@ public class XmlDomUtil {
      *
      * @return the child elements
      */
-    public static final List getAllChildren(Node node) {
+    public static List getAllChildren(Node node) {
         return getChildren(node, null);
     }
 
     //-------------------------------------------------------------------------
-    public static final boolean hasAttribute(Element elem, String attrName) {
+    public static boolean hasAttribute(Element elem, String attrName) {
         return getAttributeString(elem, attrName) != null;
     }
 
@@ -199,7 +199,7 @@ public class XmlDomUtil {
     }
 
     //-------------------------------------------------------------------------
-    public static final boolean getAttributeBoolean(Node node, String attrName) {
+    public static boolean getAttributeBoolean(Node node, String attrName) {
         String val = getAttributeString(node, attrName);
         return Boolean.valueOf(val).booleanValue();
     }
@@ -211,7 +211,7 @@ public class XmlDomUtil {
     }
 
     //-------------------------------------------------------------------------
-    public static final void setAttribute(Element elem, String attrName, Object value) {
+    public static void setAttribute(Element elem, String attrName, Object value) {
         Attr aa = getAttribute(elem, attrName);
         if (aa != null) {
             aa.setValue(value.toString());
@@ -230,7 +230,7 @@ public class XmlDomUtil {
      *
      * @param attrName The name of the attribute to remove
      */
-    public static final void removeAttribute(Element elem, String attrName) {
+    public static void removeAttribute(Element elem, String attrName) {
         elem.removeAttribute(attrName);
     }
 

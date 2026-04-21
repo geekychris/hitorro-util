@@ -64,7 +64,7 @@ public class TestUtil {
 
     public static TestWatchdogTimer timer = new TestWatchdogTimer();
 
-    public static int runTest(final String test, final JsonNode map, final Response nestedResponse) throws TestException {
+    public static final int runTest(final String test, final JsonNode map, final Response nestedResponse) throws TestException {
         //TestSuite suite = null;
         List<JUnit4TestAdapter> suites = new ArrayList();
         int exitCode = 0;
@@ -125,7 +125,7 @@ public class TestUtil {
         return oper;
     }
 
-    public static final HTPredicate<TestCaseWrapper> getPackageConstraint(List<String> pack) {
+    public static HTPredicate<TestCaseWrapper> getPackageConstraint(List<String> pack) {
         if (ListUtil.nullOrEmpty(pack)) {
             return null;
         }
@@ -138,7 +138,7 @@ public class TestUtil {
 
     }
 
-    public static final HTPredicate<TestCaseWrapper> getServiceConstraint(List<String> pack) {
+    public static HTPredicate<TestCaseWrapper> getServiceConstraint(List<String> pack) {
         if (ListUtil.nullOrEmpty(pack)) {
             return null;
         }
@@ -151,7 +151,7 @@ public class TestUtil {
 
     }
 
-    public static final HTPredicate<TestCaseWrapper> getModuleConstraint(List<String> pack) {
+    public static HTPredicate<TestCaseWrapper> getModuleConstraint(List<String> pack) {
         if (ListUtil.nullOrEmpty(pack)) {
             return null;
         }
@@ -164,7 +164,7 @@ public class TestUtil {
 
     }
 
-    public static final HTPredicate<TestCaseWrapper> getTagList(List<String> tags) {
+    public static HTPredicate<TestCaseWrapper> getTagList(List<String> tags) {
         if (ListUtil.nullOrEmpty(tags)) {
             return null;
         }
@@ -176,7 +176,7 @@ public class TestUtil {
         return oper;
     }
 
-    public static final HTPredicate<TestCaseWrapper> getTestConstraint(List<String> tests) {
+    public static HTPredicate<TestCaseWrapper> getTestConstraint(List<String> tests) {
         if (ListUtil.nullOrEmpty(tests)) {
             return null;
         }
