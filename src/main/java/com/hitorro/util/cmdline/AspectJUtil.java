@@ -24,9 +24,13 @@ package com.hitorro.util.cmdline;
 //import com.sun.tools.attach.VirtualMachine;
 
 import com.hitorro.util.core.Console;
+import com.hitorro.util.core.classes.ClassPathShallowIterator;
+import com.hitorro.util.core.opers.StringContainsOperator;
+import com.sun.tools.attach.VirtualMachine;
 import org.aspectj.weaver.loadtime.Agent;
 
 import java.lang.instrument.Instrumentation;
+import java.lang.management.ManagementFactory;
 
 public class AspectJUtil {
 
@@ -63,7 +67,7 @@ public class AspectJUtil {
         return null;
     }
 
-    /*public static boolean dynamicallyLoadAspectJAgent ()
+    public static boolean dynamicallyLoadAspectJAgent ()
     {
         String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
         int p = nameOfRunningVM.indexOf('@');
@@ -91,5 +95,5 @@ public class AspectJUtil {
     {
         ClassPathShallowIterator iter = new ClassPathShallowIterator();
         return iter.filter(new StringContainsOperator("aspectjweaver-1", true)).getFirstItem();
-    }*/
+    }
 }
