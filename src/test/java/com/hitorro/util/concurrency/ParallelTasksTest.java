@@ -21,8 +21,10 @@
  */
 package com.hitorro.util.concurrency;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.MDC;
 
 import java.time.Duration;
 import java.util.List;
@@ -92,5 +94,25 @@ class ParallelTasksTest {
     @DisplayName("empty input returns empty list")
     void emptyInput() {
         assertThat(ParallelTasks.runAll(List.of())).isEmpty();
+    }
+
+    @AfterEach
+    void clearMdc() {
+        MDC.clear();
+    }
+
+    @Test
+    @DisplayName("caller's MDC propagates to each task on the virtual-thread worker")
+    void mdcPropagates() {
+        MDC.put("corrId", "outer-123");
+        List<Callable<String>> tasks = List.of(
+                () -> "a=" + MDC.get("corrId"),
+                () -> "b=" + MDC.get("corrId"),
+                () -> "c=" + MDC.get("corrId")
+        );
+        List<String> results = ParallelTasks.runAll(tasks);
+        assertThat(results).containsExactly("a=outer-123", "b=outer-123", "c=outer-123");
+        // Outer thread MDC still intact after runAll.
+        assertThat(MDC.get("corrId")).isEqualTo("outer-123");
     }
 }

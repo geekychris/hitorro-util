@@ -21,6 +21,8 @@
  */
 package com.hitorro.util.concurrency;
 
+import com.hitorro.util.tracing.MdcContext;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,10 +60,13 @@ public final class ParallelTasks {
      */
     public static <T> List<T> runAll(List<Callable<T>> tasks, Duration timeout) {
         if (tasks.isEmpty()) return List.of();
+        // Capture the caller's MDC (including any correlation id) so each virtual-thread task
+        // sees the same logging context. Without this, tasks would run with an empty MDC.
+        MdcContext mdc = MdcContext.capture();
         try (ExecutorService exec = VirtualExecutors.virtualPerTask("parallel")) {
             ExecutorCompletionService<T> completion = new ExecutorCompletionService<>(exec);
             List<Future<T>> futures = new ArrayList<>(tasks.size());
-            for (Callable<T> t : tasks) futures.add(completion.submit(t));
+            for (Callable<T> t : tasks) futures.add(completion.submit(mdc.wrap(t)));
 
             long deadlineNanos = timeout == null ? 0L : System.nanoTime() + timeout.toNanos();
             try {
