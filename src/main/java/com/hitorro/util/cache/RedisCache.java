@@ -32,7 +32,7 @@ import java.util.function.Function;
 
 /**
  * Cache backed by a Lettuce sync connection. Keys and values are serialised via caller-supplied
- * functions; TTL uses native Redis expiry ({@code SET ... PX}).
+ * functions; TTL uses native Redis expiry (issued as {@code PSETEX}).
  *
  * <p>{@link #invalidateAll()} deletes only the entries whose keys match {@link #keyPrefix} using
  * cursor-based {@code SCAN} iteration — it does <b>not</b> issue {@code FLUSHDB} and never blocks
@@ -99,7 +99,7 @@ public class RedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public void invalidateAll() {
-        ScanArgs args = ScanArgs.Builder.matches(keyPrefix + "*");
+        ScanArgs args = ScanArgs.Builder.matches(prefixMatchPattern());
         ScanCursor cursor = ScanCursor.INITIAL;
         do {
             KeyScanCursor<String> result = redis.scan(cursor, args);
@@ -113,7 +113,7 @@ public class RedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public long size() {
-        ScanArgs args = ScanArgs.Builder.matches(keyPrefix + "*");
+        ScanArgs args = ScanArgs.Builder.matches(prefixMatchPattern());
         ScanCursor cursor = ScanCursor.INITIAL;
         long count = 0L;
         do {
@@ -125,5 +125,27 @@ public class RedisCache<K, V> implements Cache<K, V> {
             cursor = result;
         } while (!cursor.isFinished());
         return count;
+    }
+
+    /** SCAN MATCH pattern for this cache's keyspace, with keyPrefix glob-escaped for literal matching. */
+    private String prefixMatchPattern() {
+        return escapeGlob(keyPrefix) + "*";
+    }
+
+    /**
+     * Escape Redis glob metacharacters ({@code \ * ? [ ]}) so a literal string can be used inside
+     * a SCAN MATCH pattern without accidentally widening or narrowing the match. Backslash must be
+     * escaped first so we don't double-escape the escapes we're about to add.
+     */
+    static String escapeGlob(String s) {
+        StringBuilder out = new StringBuilder(s.length());
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c == '\\' || c == '*' || c == '?' || c == '[' || c == ']') {
+                out.append('\\');
+            }
+            out.append(c);
+        }
+        return out.toString();
     }
 }
