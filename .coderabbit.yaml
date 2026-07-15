@@ -1,11 +1,7 @@
 language: en-US
 
 tone_instructions: >
-  Be concise and pragmatic. Flag correctness, concurrency, resource-leak,
-  security, and performance issues aggressively. When a change appears to
-  alter an existing architectural pattern or introduce new shared/stateful
-  infrastructure, call that out explicitly as an "architecture" concern
-  rather than a routine style comment.
+  Be concise and pragmatic. 
 
 early_access: false
 
@@ -33,6 +29,11 @@ reviews:
   path_instructions:
     - path: "**/*"
       instructions: >
+        Flag correctness, concurrency, resource-leak,
+        security, and performance issues aggressively. When a change appears to
+        alter an existing architectural pattern or introduce new shared/stateful
+        infrastructure, call that out explicitly as an "architecture" concern
+        rather than a routine style comment.
         In addition to routine correctness review, explicitly call out:
         (1) Security-relevant concerns — injection risks (e.g. building
         glob/regex/SQL/shell patterns from variable input), credential or
