@@ -27,7 +27,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /** Registers all {@link Scheduled}-annotated no-arg methods on a target with a {@link SimpleScheduler}. */
 public final class ScheduledMethodScanner {
@@ -36,31 +39,36 @@ public final class ScheduledMethodScanner {
 
     public static List<JobKey> registerAll(Object target, SimpleScheduler scheduler) {
         List<JobKey> keys = new ArrayList<>();
-        for (Method m : target.getClass().getDeclaredMethods()) {
-            Scheduled s = m.getAnnotation(Scheduled.class);
-            if (s == null) continue;
-            if (m.getParameterCount() != 0) {
-                throw new IllegalStateException("@Scheduled methods must take no args: " + m);
-            }
-            m.setAccessible(true);
-            String name = s.name().isEmpty()
-                    ? target.getClass().getSimpleName() + "." + m.getName()
-                    : s.name();
-            Runnable body = wrap(target, m);
+        Set<String> seen = new HashSet<>();
+        for (Class<?> c = target.getClass(); c != null && c != Object.class; c = c.getSuperclass()) {
+            for (Method m : c.getDeclaredMethods()) {
+                Scheduled s = m.getAnnotation(Scheduled.class);
+                if (s == null) continue;
+                String dedupKey = m.getName() + Arrays.toString(m.getParameterTypes());
+                if (!seen.add(dedupKey)) continue;
+                if (m.getParameterCount() != 0) {
+                    throw new IllegalStateException("@Scheduled methods must take no args: " + m);
+                }
+                m.setAccessible(true);
+                String name = s.name().isEmpty()
+                        ? target.getClass().getSimpleName() + "." + m.getName()
+                        : s.name();
+                Runnable body = wrap(target, m);
 
-            boolean hasCron = !s.cron().isEmpty();
-            boolean hasRate = s.fixedRateMs() > 0;
-            if (hasCron == hasRate) {
-                throw new IllegalStateException(
-                        "@Scheduled on " + m + " must specify exactly one of cron() or fixedRateMs()");
-            }
-            if (hasCron) {
-                keys.add(scheduler.schedule(name, s.cron(), body));
-            } else {
-                keys.add(scheduler.every(name,
-                        Duration.ofMillis(s.fixedRateMs()),
-                        Duration.ofMillis(s.initialDelayMs()),
-                        body));
+                boolean hasCron = !s.cron().isEmpty();
+                boolean hasRate = s.fixedRateMs() > 0;
+                if (hasCron == hasRate) {
+                    throw new IllegalStateException(
+                            "@Scheduled on " + m + " must specify exactly one of cron() or fixedRateMs()");
+                }
+                if (hasCron) {
+                    keys.add(scheduler.schedule(name, s.cron(), body));
+                } else {
+                    keys.add(scheduler.every(name,
+                            Duration.ofMillis(s.fixedRateMs()),
+                            Duration.ofMillis(s.initialDelayMs()),
+                            body));
+                }
             }
         }
         return keys;

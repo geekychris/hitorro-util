@@ -35,9 +35,12 @@ import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
+import org.quartz.spi.JobFactory;
+import org.quartz.spi.TriggerFiredBundle;
 
 import java.time.Duration;
 import java.util.Date;
+import java.util.Properties;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -66,16 +69,25 @@ public class SimpleScheduler {
         SMART
     }
 
-    private static final ConcurrentMap<String, Runnable> BODIES = new ConcurrentHashMap<>();
     private static final String BODY_KEY = "hitorro.body.id";
 
+    private final ConcurrentMap<String, Runnable> bodies = new ConcurrentHashMap<>();
     private final Scheduler scheduler;
     private volatile boolean started = false;
     private Misfire misfire = Misfire.SMART;
 
     public SimpleScheduler() {
         try {
-            this.scheduler = StdSchedulerFactory.getDefaultScheduler();
+            Properties props = new Properties();
+            String instanceName = "hitorro-simple-" + UUID.randomUUID();
+            props.setProperty("org.quartz.scheduler.instanceName", instanceName);
+            props.setProperty("org.quartz.scheduler.instanceId", "AUTO");
+            props.setProperty("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
+            props.setProperty("org.quartz.threadPool.threadCount", "10");
+            props.setProperty("org.quartz.jobStore.class", "org.quartz.simpl.RAMJobStore");
+            StdSchedulerFactory factory = new StdSchedulerFactory(props);
+            this.scheduler = factory.getScheduler();
+            this.scheduler.setJobFactory(new BodyResolvingJobFactory(bodies));
         } catch (SchedulerException e) {
             throw new RuntimeException("failed to create Quartz scheduler", e);
         }
@@ -84,6 +96,11 @@ public class SimpleScheduler {
     /** Package-private for tests. */
     SimpleScheduler(Scheduler scheduler) {
         this.scheduler = scheduler;
+        try {
+            this.scheduler.setJobFactory(new BodyResolvingJobFactory(bodies));
+        } catch (SchedulerException e) {
+            throw new RuntimeException("failed to install job factory", e);
+        }
     }
 
     public SimpleScheduler misfire(Misfire policy) {
@@ -109,7 +126,7 @@ public class SimpleScheduler {
         } catch (SchedulerException e) {
             throw new RuntimeException("failed to stop scheduler", e);
         }
-        BODIES.clear();
+        bodies.clear();
     }
 
     /** Register a job that fires on the given cron expression. */
@@ -159,7 +176,7 @@ public class SimpleScheduler {
             JobDetail detail = scheduler.getJobDetail(key);
             if (detail != null) {
                 Object bodyId = detail.getJobDataMap().get(BODY_KEY);
-                if (bodyId instanceof String s) BODIES.remove(s);
+                if (bodyId instanceof String s) bodies.remove(s);
             }
             return scheduler.deleteJob(key);
         } catch (SchedulerException e) {
@@ -184,18 +201,57 @@ public class SimpleScheduler {
         }
     }
 
-    private static String registerBody(Runnable body) {
+    private String registerBody(Runnable body) {
         String id = UUID.randomUUID().toString();
-        BODIES.put(id, body);
+        bodies.put(id, body);
         return id;
     }
 
-    /** Quartz job that looks up its body from the static registry. Public so Quartz can instantiate it. */
+    /**
+     * JobFactory that injects the owning scheduler's per-instance body registry into each
+     * {@link RunnableJob} it constructs, so instances do not share state.
+     */
+    private static final class BodyResolvingJobFactory implements JobFactory {
+        private final ConcurrentMap<String, Runnable> bodies;
+
+        BodyResolvingJobFactory(ConcurrentMap<String, Runnable> bodies) {
+            this.bodies = bodies;
+        }
+
+        @Override
+        public Job newJob(TriggerFiredBundle bundle, Scheduler scheduler) {
+            Class<? extends Job> jobClass = bundle.getJobDetail().getJobClass();
+            if (jobClass == RunnableJob.class) {
+                return new RunnableJob(bodies);
+            }
+            try {
+                return jobClass.getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("failed to instantiate " + jobClass, e);
+            }
+        }
+    }
+
+    /** Quartz job that looks up its body from the owning scheduler's registry. Public so Quartz can reference it. */
     public static final class RunnableJob implements Job {
+        private final ConcurrentMap<String, Runnable> bodies;
+
+        /** No-arg constructor retained for Quartz's default instantiation path (unused when a JobFactory is installed). */
+        public RunnableJob() {
+            this.bodies = null;
+        }
+
+        RunnableJob(ConcurrentMap<String, Runnable> bodies) {
+            this.bodies = bodies;
+        }
+
         @Override
         public void execute(JobExecutionContext ctx) throws JobExecutionException {
+            if (bodies == null) {
+                throw new JobExecutionException("RunnableJob constructed without a body registry; JobFactory not installed");
+            }
             String bodyId = ctx.getMergedJobDataMap().getString(BODY_KEY);
-            Runnable body = BODIES.get(bodyId);
+            Runnable body = bodies.get(bodyId);
             if (body == null) return; // job was cancelled between fire selection and execution
             try {
                 body.run();

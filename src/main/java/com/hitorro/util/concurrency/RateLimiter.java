@@ -82,6 +82,7 @@ public final class RateLimiter {
     }
 
     public void acquire(int permits) {
+        if (permits <= 0) throw new IllegalArgumentException("permits must be > 0");
         while (true) {
             long waitNanos;
             synchronized (this) {

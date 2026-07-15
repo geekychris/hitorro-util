@@ -23,10 +23,13 @@ package com.hitorro.util.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
@@ -116,6 +119,7 @@ public final class Http {
         }
 
         public Request form(String name, String value) {
+            if (body != null) throw new IllegalStateException("cannot mix body and form fields");
             form.add(new BasicNameValuePair(name, value));
             return this;
         }
@@ -141,7 +145,7 @@ public final class Http {
         }
 
         public HttpResponse<String> asString() {
-            try (CloseableHttpClient client = defaultClient()) {
+            try (CloseableHttpClient client = defaultClient(timeout)) {
                 return executeWith(client, String.class);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
@@ -149,7 +153,7 @@ public final class Http {
         }
 
         public <T> HttpResponse<T> asJson(Class<T> type) {
-            try (CloseableHttpClient client = defaultClient()) {
+            try (CloseableHttpClient client = defaultClient(timeout)) {
                 return executeWith(client, type);
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
@@ -202,16 +206,7 @@ public final class Http {
 
         private HttpEntity buildEntity() {
             if (body != null) return new StringEntity(body, bodyContentType);
-            if (!form.isEmpty()) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < form.size(); i++) {
-                    if (i > 0) sb.append('&');
-                    sb.append(java.net.URLEncoder.encode(form.get(i).getName(), StandardCharsets.UTF_8));
-                    sb.append('=');
-                    sb.append(java.net.URLEncoder.encode(form.get(i).getValue(), StandardCharsets.UTF_8));
-                }
-                return new StringEntity(sb.toString(), ContentType.APPLICATION_FORM_URLENCODED);
-            }
+            if (!form.isEmpty()) return new UrlEncodedFormEntity(form, StandardCharsets.UTF_8);
             return null;
         }
     }
@@ -219,5 +214,20 @@ public final class Http {
     /** Default single-shot client. Callers who want pooling should build their own. */
     public static CloseableHttpClient defaultClient() {
         return HttpClients.createDefault();
+    }
+
+    /**
+     * Default single-shot client with the given TCP connect timeout applied to the
+     * connection manager. Response and connection-request timeouts are still applied
+     * per-request via {@link RequestConfig}.
+     */
+    public static CloseableHttpClient defaultClient(Duration connectTimeout) {
+        return HttpClients.custom()
+                .setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create()
+                        .setDefaultConnectionConfig(ConnectionConfig.custom()
+                                .setConnectTimeout(Timeout.ofMilliseconds(connectTimeout.toMillis()))
+                                .build())
+                        .build())
+                .build();
     }
 }

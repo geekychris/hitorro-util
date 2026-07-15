@@ -50,6 +50,7 @@ public final class CircuitBreaker {
     private volatile State state = State.CLOSED;
     private int consecutiveFailures = 0;
     private long openedAtNanos = 0L;
+    private boolean probeInFlight = false;
 
     public CircuitBreaker(String name, int failureThreshold, Duration cooldown) {
         this(name, failureThreshold, cooldown, System::nanoTime);
@@ -69,9 +70,19 @@ public final class CircuitBreaker {
     }
 
     public <T> T call(Callable<T> body) throws Exception {
-        maybeHalfOpen();
-        if (state == State.OPEN) {
-            throw new CircuitOpenException("circuit[" + name + "] is OPEN");
+        boolean probeClaimed = false;
+        synchronized (this) {
+            maybeHalfOpen();
+            if (state == State.OPEN) {
+                throw new CircuitOpenException("circuit[" + name + "] is OPEN");
+            }
+            if (state == State.HALF_OPEN) {
+                if (probeInFlight) {
+                    throw new CircuitOpenException("circuit[" + name + "] is OPEN");
+                }
+                probeInFlight = true;
+                probeClaimed = true;
+            }
         }
         try {
             T result = body.call();
@@ -80,6 +91,12 @@ public final class CircuitBreaker {
         } catch (Exception e) {
             onFailure();
             throw e;
+        } finally {
+            if (probeClaimed) {
+                synchronized (this) {
+                    probeInFlight = false;
+                }
+            }
         }
     }
 

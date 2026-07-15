@@ -65,10 +65,11 @@ public final class Tracing {
         Throwable err = null;
         try {
             return body.call();
-        } catch (Exception e) {
-            err = e;
-            if (e instanceof RuntimeException re) throw re;
-            throw new RuntimeException(e);
+        } catch (Throwable t) {
+            err = t;
+            if (t instanceof Error e) throw e;
+            if (t instanceof RuntimeException re) throw re;
+            throw new RuntimeException(t);
         } finally {
             long elapsed = System.nanoTime() - start;
             try {

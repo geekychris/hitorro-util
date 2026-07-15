@@ -85,6 +85,8 @@ public final class Retry {
     }
 
     public Retry maxDelay(Duration d) {
+        if (d == null) throw new IllegalArgumentException("maxDelay must not be null");
+        if (d.isNegative()) throw new IllegalArgumentException("maxDelay must be >= 0");
         this.maxDelay = d;
         return this;
     }
@@ -108,11 +110,11 @@ public final class Retry {
     }
 
     public <T> T call(Callable<T> body) {
-        Throwable last = null;
+        Exception last = null;
         for (int attempt = 1; attempt <= maxAttempts; attempt++) {
             try {
                 return body.call();
-            } catch (Throwable t) {
+            } catch (Exception t) {
                 last = t;
                 if (attempt == maxAttempts || !retryOn.test(t)) {
                     break;

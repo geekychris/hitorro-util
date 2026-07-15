@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -58,21 +59,30 @@ public final class ParallelTasks {
     public static <T> List<T> runAll(List<Callable<T>> tasks, Duration timeout) {
         if (tasks.isEmpty()) return List.of();
         try (ExecutorService exec = VirtualExecutors.virtualPerTask("parallel")) {
+            ExecutorCompletionService<T> completion = new ExecutorCompletionService<>(exec);
             List<Future<T>> futures = new ArrayList<>(tasks.size());
-            for (Callable<T> t : tasks) futures.add(exec.submit(t));
+            for (Callable<T> t : tasks) futures.add(completion.submit(t));
 
             long deadlineNanos = timeout == null ? 0L : System.nanoTime() + timeout.toNanos();
-            List<T> results = new ArrayList<>(tasks.size());
             try {
-                for (Future<T> f : futures) {
+                // Observe tasks in completion order so a fast failure is surfaced immediately,
+                // rather than waiting on earlier-submitted long-running tasks.
+                for (int i = 0; i < futures.size(); i++) {
+                    Future<T> done;
                     if (timeout == null) {
-                        results.add(f.get());
+                        done = completion.take();
                     } else {
                         long remaining = deadlineNanos - System.nanoTime();
                         if (remaining <= 0) throw new TimeoutException();
-                        results.add(f.get(remaining, TimeUnit.NANOSECONDS));
+                        done = completion.poll(remaining, TimeUnit.NANOSECONDS);
+                        if (done == null) throw new TimeoutException();
                     }
+                    // Trigger ExecutionException here if this task failed; result value discarded.
+                    done.get();
                 }
+                // All tasks succeeded — collect results in original submission order.
+                List<T> results = new ArrayList<>(futures.size());
+                for (Future<T> f : futures) results.add(f.get());
                 return results;
             } catch (ExecutionException e) {
                 cancelAll(futures);

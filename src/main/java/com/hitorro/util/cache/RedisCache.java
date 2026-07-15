@@ -21,21 +21,27 @@
  */
 package com.hitorro.util.cache;
 
+import io.lettuce.core.KeyScanCursor;
+import io.lettuce.core.ScanArgs;
+import io.lettuce.core.ScanCursor;
 import io.lettuce.core.api.sync.RedisCommands;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.function.Function;
 
 /**
  * Cache backed by a Lettuce sync connection. Keys and values are serialised via caller-supplied
  * functions; TTL uses native Redis expiry ({@code SET ... PX}).
  *
- * <p>{@link #invalidateAll()} deletes only the entries whose keys match {@link #keyPrefix} —
- * it does <b>not</b> issue {@code FLUSHDB}. Callers must give each cache a distinct prefix
- * if multiple caches share a Redis instance.
+ * <p>{@link #invalidateAll()} deletes only the entries whose keys match {@link #keyPrefix} using
+ * cursor-based {@code SCAN} iteration — it does <b>not</b> issue {@code FLUSHDB} and never blocks
+ * Redis with {@code KEYS}. The constructor rejects a null or empty {@code keyPrefix} so callers
+ * cannot accidentally produce a global {@code "*"} scan pattern that would touch unrelated keys;
+ * each cache sharing a Redis instance must therefore be constructed with a distinct prefix.
  *
- * <p>{@link #size()} runs a {@code SCAN} with the prefix; treat it as an estimate on large
- * datasets and avoid calling it on a hot path.
+ * <p>{@link #size()} performs the same cursor-based {@code SCAN} with the prefix; treat it as an
+ * estimate on large datasets and avoid calling it on a hot path.
  */
 public class RedisCache<K, V> implements Cache<K, V> {
 
@@ -50,8 +56,11 @@ public class RedisCache<K, V> implements Cache<K, V> {
                       Function<K, String> keySer,
                       Function<V, String> valueSer,
                       Function<String, V> valueDeser) {
+        if (keyPrefix == null || keyPrefix.isEmpty()) {
+            throw new IllegalArgumentException("keyPrefix must be non-empty");
+        }
         this.redis = redis;
-        this.keyPrefix = keyPrefix == null ? "" : keyPrefix;
+        this.keyPrefix = keyPrefix;
         this.keySer = keySer;
         this.valueSer = valueSer;
         this.valueDeser = valueDeser;
@@ -90,15 +99,31 @@ public class RedisCache<K, V> implements Cache<K, V> {
 
     @Override
     public void invalidateAll() {
-        var keys = redis.keys(keyPrefix + "*");
-        if (keys != null && !keys.isEmpty()) {
-            redis.del(keys.toArray(new String[0]));
-        }
+        ScanArgs args = ScanArgs.Builder.matches(keyPrefix + "*");
+        ScanCursor cursor = ScanCursor.INITIAL;
+        do {
+            KeyScanCursor<String> result = redis.scan(cursor, args);
+            List<String> keys = result.getKeys();
+            if (keys != null && !keys.isEmpty()) {
+                redis.del(keys.toArray(new String[0]));
+            }
+            cursor = result;
+        } while (!cursor.isFinished());
     }
 
     @Override
     public long size() {
-        var keys = redis.keys(keyPrefix + "*");
-        return keys == null ? 0L : keys.size();
+        ScanArgs args = ScanArgs.Builder.matches(keyPrefix + "*");
+        ScanCursor cursor = ScanCursor.INITIAL;
+        long count = 0L;
+        do {
+            KeyScanCursor<String> result = redis.scan(cursor, args);
+            List<String> keys = result.getKeys();
+            if (keys != null) {
+                count += keys.size();
+            }
+            cursor = result;
+        } while (!cursor.isFinished());
+        return count;
     }
 }

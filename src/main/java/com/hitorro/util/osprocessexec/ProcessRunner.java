@@ -107,54 +107,74 @@ public final class ProcessRunner {
             t.setName("proc-pump");
             return t;
         });
-        Future<StringBuilder> outFuture = pumps.submit(() -> pump(proc.getInputStream(), stdoutLine, captureStdout));
-        Future<StringBuilder> errFuture = pumps.submit(() -> pump(proc.getErrorStream(), stderrLine, captureStderr));
-
-        if (stdin != null) {
-            try (OutputStream os = proc.getOutputStream()) {
-                os.write(stdin);
-            } catch (IOException e) {
-                pumps.shutdownNow();
-                throw new UncheckedIOException("failed to write stdin", e);
-            }
-        } else {
-            try { proc.getOutputStream().close(); } catch (IOException ignored) {}
-        }
-
-        boolean timedOut = false;
-        int exitCode;
         try {
-            if (timeout == null) {
-                exitCode = proc.waitFor();
-            } else {
-                boolean finished = proc.waitFor(timeout.toMillis(), TimeUnit.MILLISECONDS);
-                if (!finished) {
-                    timedOut = true;
-                    killProcess(proc);
+            Future<StringBuilder> outFuture = pumps.submit(() -> pump(proc.getInputStream(), stdoutLine, captureStdout));
+            Future<StringBuilder> errFuture = pumps.submit(() -> pump(proc.getErrorStream(), stderrLine, captureStderr));
+
+            if (stdin != null) {
+                try (OutputStream os = proc.getOutputStream()) {
+                    os.write(stdin);
+                } catch (IOException e) {
+                    throw new UncheckedIOException("failed to write stdin", e);
                 }
-                exitCode = proc.exitValue();
+            } else {
+                try { proc.getOutputStream().close(); } catch (IOException ignored) {}
             }
-        } catch (InterruptedException e) {
-            killProcess(proc);
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("interrupted while waiting for " + command, e);
-        } catch (IllegalThreadStateException e) {
-            // Race: process exited between kill and exitValue().
-            exitCode = -1;
-        }
 
-        StringBuilder out, err;
-        try {
-            out = outFuture.get(1, TimeUnit.SECONDS);
-            err = errFuture.get(1, TimeUnit.SECONDS);
-        } catch (Exception e) {
-            out = new StringBuilder();
-            err = new StringBuilder();
+            boolean timedOut = false;
+            int exitCode;
+            try {
+                if (timeout == null) {
+                    exitCode = proc.waitFor();
+                } else {
+                    boolean finished = proc.waitFor(timeout.toMillis(), TimeUnit.MILLISECONDS);
+                    if (!finished) {
+                        timedOut = true;
+                        killProcess(proc);
+                        // Give the OS a brief grace period to actually reap the process
+                        // so exitValue() returns the real signal-based exit code instead
+                        // of racing into IllegalThreadStateException.
+                        try {
+                            proc.waitFor(500, TimeUnit.MILLISECONDS);
+                        } catch (InterruptedException ie) {
+                            Thread.currentThread().interrupt();
+                            throw new RuntimeException("interrupted while waiting for " + command, ie);
+                        }
+                    }
+                    try {
+                        exitCode = proc.exitValue();
+                    } catch (IllegalThreadStateException e) {
+                        // Genuine last-resort race: forcibly killed but not yet reaped.
+                        exitCode = -1;
+                    }
+                }
+            } catch (InterruptedException e) {
+                killProcess(proc);
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("interrupted while waiting for " + command, e);
+            }
+
+            // Await each pump independently so a failure/slow-drain in one does not
+            // discard the other's buffered output. The streams close when the process
+            // exits, so no per-future grace is needed here.
+            StringBuilder out = awaitPump(outFuture);
+            StringBuilder err = awaitPump(errFuture);
+
+            return new ProcessResult(exitCode, out.toString(), err.toString(), timedOut);
         } finally {
             pumps.shutdownNow();
         }
+    }
 
-        return new ProcessResult(exitCode, out.toString(), err.toString(), timedOut);
+    private static StringBuilder awaitPump(Future<StringBuilder> f) {
+        try {
+            return f.get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return new StringBuilder();
+        } catch (Exception e) {
+            return new StringBuilder();
+        }
     }
 
     private void killProcess(Process proc) {
