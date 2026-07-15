@@ -71,12 +71,14 @@ public final class EmailBuilder {
     public EmailBuilder subject(String s)    { this.subject = s; return this; }
 
     public EmailBuilder text(String body) {
+        if (body == null) throw new IllegalArgumentException("body must not be null");
         this.body = body;
         this.html = false;
         return this;
     }
 
     public EmailBuilder html(String body) {
+        if (body == null) throw new IllegalArgumentException("body must not be null");
         this.body = body;
         this.html = true;
         return this;
@@ -94,7 +96,7 @@ public final class EmailBuilder {
 
     public EmailMessage build() {
         if (to.isEmpty()) throw new IllegalStateException("email requires at least one 'to' address");
-        if (subject.isEmpty()) throw new IllegalStateException("email requires a subject");
+        if (subject == null || subject.isEmpty()) throw new IllegalStateException("email requires a subject");
         return new EmailMessage(
                 List.copyOf(to),
                 List.copyOf(cc),

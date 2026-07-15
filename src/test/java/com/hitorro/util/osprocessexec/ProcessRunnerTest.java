@@ -97,12 +97,39 @@ class ProcessRunnerTest {
 
     @Test
     @DisplayName("killTree terminates shell-spawned descendants on timeout")
-    void killTreeTerminatesChildren() {
+    void killTreeTerminatesChildren() throws Exception {
+        // Snapshot sleep PIDs before we run so we can identify the descendant
+        // spawned by *our* shell (as opposed to any other sleep the host may
+        // already be running).
+        java.util.Set<Long> preexisting = ProcessHandle.allProcesses()
+                .filter(ph -> ph.info().command().map(c -> c.endsWith("/sleep") || c.equals("sleep")).orElse(false))
+                .map(ProcessHandle::pid)
+                .collect(java.util.stream.Collectors.toSet());
+
         ProcessRunner.ProcessResult r = ProcessRunner.of("sh", "-c", "sleep 30")
                 .timeout(Duration.ofMillis(200))
                 .killTree(true)
                 .run();
         assertThat(r.timedOut()).isTrue();
+
+        // Any sleep process that appeared during the test must be gone shortly
+        // after the runner returns. Poll briefly to allow the OS to reap.
+        long deadline = System.currentTimeMillis() + 3_000;
+        java.util.List<ProcessHandle> stillAlive;
+        do {
+            stillAlive = ProcessHandle.allProcesses()
+                    .filter(ph -> !preexisting.contains(ph.pid()))
+                    .filter(ph -> ph.info().command().map(c -> c.endsWith("/sleep") || c.equals("sleep")).orElse(false))
+                    // Only consider sleeps that look like our 30s child.
+                    .filter(ph -> ph.info().commandLine().map(cl -> cl.contains("sleep 30")).orElse(true))
+                    .toList();
+            if (stillAlive.isEmpty()) break;
+            Thread.sleep(50);
+        } while (System.currentTimeMillis() < deadline);
+
+        assertThat(stillAlive)
+                .as("killTree should have terminated the shell-spawned sleep descendant")
+                .isEmpty();
     }
 
     @Test

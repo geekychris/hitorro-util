@@ -29,13 +29,14 @@ import org.slf4j.MDC;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("CorrelationId")
 class CorrelationIdTest {
 
     @AfterEach
     void tearDown() {
-        MDC.clear();
+        CorrelationId.clear();
     }
 
     @Test
@@ -93,6 +94,33 @@ class CorrelationIdTest {
     void withCallable() throws Exception {
         String result = CorrelationId.with("x", () -> "answer");
         assertThat(result).isEqualTo("answer");
+        assertThat(CorrelationId.get()).isNull();
+    }
+
+    @Test
+    @DisplayName("set rejects IDs containing control characters (e.g. newline)")
+    void setRejectsControlCharacters() {
+        assertThatThrownBy(() -> CorrelationId.set("abc\ndef"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("control character");
+        assertThat(CorrelationId.get()).isNull();
+    }
+
+    @Test
+    @DisplayName("set rejects IDs longer than 128 characters")
+    void setRejectsOverlongId() {
+        assertThatThrownBy(() -> CorrelationId.set("a".repeat(200)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("max length");
+        assertThat(CorrelationId.get()).isNull();
+    }
+
+    @Test
+    @DisplayName("set rejects empty string")
+    void setRejectsEmpty() {
+        assertThatThrownBy(() -> CorrelationId.set(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("must not be empty");
         assertThat(CorrelationId.get()).isNull();
     }
 }

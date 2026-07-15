@@ -115,6 +115,8 @@ public final class ProcessRunner {
                 try (OutputStream os = proc.getOutputStream()) {
                     os.write(stdin);
                 } catch (IOException e) {
+                    // Don't let the child linger if we can't feed it.
+                    killProcess(proc);
                     throw new UncheckedIOException("failed to write stdin", e);
                 }
             } else {
@@ -131,6 +133,11 @@ public final class ProcessRunner {
                     if (!finished) {
                         timedOut = true;
                         killProcess(proc);
+                        // Close the pipes ourselves so the pump readers see EOF promptly
+                        // even if a spawned descendant still holds file descriptors on
+                        // stdout/stderr — otherwise awaitPump() below could block forever.
+                        try { proc.getInputStream().close(); } catch (IOException ignored) {}
+                        try { proc.getErrorStream().close(); } catch (IOException ignored) {}
                         // Give the OS a brief grace period to actually reap the process
                         // so exitValue() returns the real signal-based exit code instead
                         // of racing into IllegalThreadStateException.

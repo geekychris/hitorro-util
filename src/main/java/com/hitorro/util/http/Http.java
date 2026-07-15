@@ -21,6 +21,7 @@
  */
 package com.hitorro.util.http;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.ConnectionConfig;
@@ -29,7 +30,7 @@ import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
@@ -70,7 +71,8 @@ import java.util.TreeMap;
  */
 public final class Http {
 
-    private static final ObjectMapper JSON = new ObjectMapper();
+    private static final ObjectMapper JSON = new ObjectMapper()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
     public enum Method { GET, POST, PUT, DELETE, PATCH, HEAD }
 
@@ -222,12 +224,12 @@ public final class Http {
      * per-request via {@link RequestConfig}.
      */
     public static CloseableHttpClient defaultClient(Duration connectTimeout) {
+        BasicHttpClientConnectionManager cm = new BasicHttpClientConnectionManager();
+        cm.setConnectionConfig(ConnectionConfig.custom()
+                .setConnectTimeout(Timeout.ofMilliseconds(connectTimeout.toMillis()))
+                .build());
         return HttpClients.custom()
-                .setConnectionManager(PoolingHttpClientConnectionManagerBuilder.create()
-                        .setDefaultConnectionConfig(ConnectionConfig.custom()
-                                .setConnectTimeout(Timeout.ofMilliseconds(connectTimeout.toMillis()))
-                                .build())
-                        .build())
+                .setConnectionManager(cm)
                 .build();
     }
 }

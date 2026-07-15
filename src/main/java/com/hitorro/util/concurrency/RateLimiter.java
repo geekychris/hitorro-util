@@ -68,6 +68,8 @@ public final class RateLimiter {
 
     public synchronized boolean tryAcquire(int permits) {
         if (permits <= 0) throw new IllegalArgumentException("permits must be > 0");
+        if (permits > capacity)
+            throw new IllegalArgumentException("permits (" + permits + ") exceeds capacity (" + capacity + ")");
         refill();
         if (tokens >= permits) {
             tokens -= permits;
@@ -83,6 +85,8 @@ public final class RateLimiter {
 
     public void acquire(int permits) {
         if (permits <= 0) throw new IllegalArgumentException("permits must be > 0");
+        if (permits > capacity)
+            throw new IllegalArgumentException("permits (" + permits + ") exceeds capacity (" + capacity + ")");
         while (true) {
             long waitNanos;
             synchronized (this) {

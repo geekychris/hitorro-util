@@ -93,4 +93,17 @@ class RateLimiterTest {
         RateLimiter r = RateLimiter.perSecond(42.0);
         assertThat(r.permitsPerSecond()).isCloseTo(42.0, org.assertj.core.data.Offset.offset(1e-9));
     }
+
+    @Test
+    @DisplayName("rejects permits that exceed capacity")
+    void permitsExceedCapacity() {
+        AtomicLong clock = new AtomicLong(0L);
+        RateLimiter r = new RateLimiter(10.0, 5.0, clock::get);
+        assertThatThrownBy(() -> r.tryAcquire(6))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("exceeds capacity");
+        assertThatThrownBy(() -> r.acquire(6))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("exceeds capacity");
+    }
 }

@@ -56,4 +56,42 @@ public final class EmailTemplate {
     public static String render(String template, Map<String, ?> values) {
         return new EmailTemplate(template).render(values);
     }
+
+    /**
+     * Same as {@link #render(Map)}, but HTML-escapes the substituted values. The surrounding
+     * template text is left alone, and unresolved {@code {{missing}}} placeholders are preserved
+     * verbatim (they are not treated as substituted content).
+     */
+    public String renderHtmlEscaped(Map<String, ?> values) {
+        Matcher m = PLACEHOLDER.matcher(source);
+        StringBuilder out = new StringBuilder(source.length() + 32);
+        while (m.find()) {
+            String key = m.group(1);
+            Object v = values.get(key);
+            String replacement = v == null ? m.group(0) : htmlEscape(v.toString());
+            m.appendReplacement(out, Matcher.quoteReplacement(replacement));
+        }
+        m.appendTail(out);
+        return out.toString();
+    }
+
+    public static String renderHtmlEscaped(String template, Map<String, ?> values) {
+        return new EmailTemplate(template).renderHtmlEscaped(values);
+    }
+
+    private static String htmlEscape(String s) {
+        StringBuilder sb = new StringBuilder(s.length() + 16);
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            switch (c) {
+                case '&':  sb.append("&amp;");  break;
+                case '<':  sb.append("&lt;");   break;
+                case '>':  sb.append("&gt;");   break;
+                case '"':  sb.append("&quot;"); break;
+                case '\'': sb.append("&#39;");  break;
+                default:   sb.append(c);
+            }
+        }
+        return sb.toString();
+    }
 }

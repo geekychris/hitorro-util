@@ -45,7 +45,15 @@ public interface Cache<K, V> {
      */
     void put(K key, V value, Duration ttl);
 
-    /** Returns cached value if present, otherwise computes, stores and returns it. */
+    /**
+     * Returns cached value if present, otherwise computes, stores and returns it.
+     *
+     * <p><b>Not atomic.</b> The get/load/put sequence is composed of three separate operations —
+     * concurrent callers racing on the same key may all miss, invoke {@code loader}, and race on
+     * the final {@code put}. That is acceptable for idempotent loaders where duplicate work is
+     * wasteful but harmless. For strictly single-flight behaviour, guard the call site yourself
+     * (e.g. per-key mutex) or use a cache implementation that offers atomic compute-if-absent.
+     */
     default V computeIfAbsent(K key, Function<K, V> loader) {
         V hit = get(key);
         if (hit != null) return hit;

@@ -45,8 +45,23 @@ public final class CorrelationId {
     }
 
     public static void set(String id) {
-        if (id == null) MDC.remove(MDC_KEY);
-        else MDC.put(MDC_KEY, id);
+        if (id == null) {
+            MDC.remove(MDC_KEY);
+            return;
+        }
+        if (id.isEmpty()) {
+            throw new IllegalArgumentException("correlation id must not be empty");
+        }
+        if (id.length() > 128) {
+            throw new IllegalArgumentException("correlation id exceeds max length of 128");
+        }
+        for (int i = 0; i < id.length(); i++) {
+            char c = id.charAt(i);
+            if (c < 0x20 || c == 0x7F) {
+                throw new IllegalArgumentException("correlation id contains control character");
+            }
+        }
+        MDC.put(MDC_KEY, id);
     }
 
     public static void clear() {

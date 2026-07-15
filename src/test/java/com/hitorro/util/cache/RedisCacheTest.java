@@ -25,7 +25,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+/**
+ * Unit tests for {@link RedisCache}. Only pure/package-visible helpers and the constructor
+ * contract are covered here — exercising get/put/SCAN behavior would require a mock Lettuce
+ * client (Mockito is not a dependency of this module) or an embedded Redis, both out of
+ * scope for a util-module test.
+ */
 @DisplayName("RedisCache")
 class RedisCacheTest {
 
@@ -53,5 +60,23 @@ class RedisCacheTest {
     @DisplayName("escapeGlob handles empty string")
     void escapeGlobEmpty() {
         assertThat(RedisCache.escapeGlob("")).isEmpty();
+    }
+
+    @Test
+    @DisplayName("constructor rejects null keyPrefix")
+    void constructorRejectsNullPrefix() {
+        assertThatThrownBy(() -> new RedisCache<String, String>(null, null,
+                Object::toString, Object::toString, s -> s))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("keyPrefix");
+    }
+
+    @Test
+    @DisplayName("constructor rejects empty keyPrefix")
+    void constructorRejectsEmptyPrefix() {
+        assertThatThrownBy(() -> new RedisCache<String, String>(null, "",
+                Object::toString, Object::toString, s -> s))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("keyPrefix");
     }
 }

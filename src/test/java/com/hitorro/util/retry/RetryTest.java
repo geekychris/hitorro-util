@@ -38,10 +38,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @DisplayName("Retry")
 class RetryTest {
 
-    private List<Long> recordedSleeps() {
-        return new ArrayList<>();
-    }
-
     @Nested
     @DisplayName("Success paths")
     class Success {
@@ -186,6 +182,11 @@ class RetryTest {
             assertThatThrownBy(() -> Retry.of("x").jitter(2.0))
                     .isInstanceOf(IllegalArgumentException.class);
             assertThatThrownBy(() -> Retry.of("x").initialDelay(Duration.ofMillis(-1)))
+                    .isInstanceOf(IllegalArgumentException.class);
+            // maxDelay setter: null and negative both rejected (regression for prior missing checks).
+            assertThatThrownBy(() -> Retry.of("x").maxDelay(null))
+                    .isInstanceOf(IllegalArgumentException.class);
+            assertThatThrownBy(() -> Retry.of("x").maxDelay(Duration.ofMillis(-1)))
                     .isInstanceOf(IllegalArgumentException.class);
         }
 

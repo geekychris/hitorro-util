@@ -134,4 +134,60 @@ class EmailBuilderTest {
         String out = EmailTemplate.render("{{ name }}", Map.of("name", "C"));
         assertThat(out).isEqualTo("C");
     }
+
+    @Test
+    @DisplayName("build() rejects null subject")
+    void nullSubjectRejected() {
+        assertThatThrownBy(() -> EmailBuilder.newMessage().to("a@x.com").subject(null).build())
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("subject");
+    }
+
+    @Test
+    @DisplayName("text(null) fails fast with IllegalArgumentException")
+    void nullTextBodyRejected() {
+        assertThatThrownBy(() -> EmailBuilder.newMessage().text(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("body");
+    }
+
+    @Test
+    @DisplayName("html(null) fails fast with IllegalArgumentException")
+    void nullHtmlBodyRejected() {
+        assertThatThrownBy(() -> EmailBuilder.newMessage().html(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("body");
+    }
+
+    @Test
+    @DisplayName("EmailTemplate.renderHtmlEscaped escapes substituted values")
+    void templateHtmlEscapesSubstitution() {
+        String out = EmailTemplate.renderHtmlEscaped("Hi {{name}}",
+                Map.of("name", "<script>alert(1)</script>"));
+        assertThat(out).isEqualTo("Hi &lt;script&gt;alert(1)&lt;/script&gt;");
+    }
+
+    @Test
+    @DisplayName("EmailTemplate.renderHtmlEscaped leaves surrounding template characters alone")
+    void templateHtmlLeavesSurroundingAlone() {
+        String out = EmailTemplate.renderHtmlEscaped("<b>Hi {{name}}</b> & welcome",
+                Map.of("name", "Chris"));
+        assertThat(out).isEqualTo("<b>Hi Chris</b> & welcome");
+    }
+
+    @Test
+    @DisplayName("EmailTemplate.renderHtmlEscaped leaves unresolved placeholders raw and un-escaped")
+    void templateHtmlMissingKeyStaysRaw() {
+        String out = EmailTemplate.renderHtmlEscaped("Hi {{name}} — {{missing}}",
+                Map.of("name", "C"));
+        assertThat(out).isEqualTo("Hi C — {{missing}}");
+    }
+
+    @Test
+    @DisplayName("EmailTemplate.renderHtmlEscaped escapes ampersand, quote, and apostrophe")
+    void templateHtmlEscapesAllChars() {
+        String out = EmailTemplate.renderHtmlEscaped("{{v}}",
+                Map.of("v", "a&b<c>d\"e'f"));
+        assertThat(out).isEqualTo("a&amp;b&lt;c&gt;d&quot;e&#39;f");
+    }
 }
