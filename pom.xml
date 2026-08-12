@@ -43,6 +43,16 @@
             <artifactId>hitorro-core</artifactId>
             <version>3.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>com.hitorro</groupId>
+            <artifactId>hitorro-basefile</artifactId>
+            <version>3.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>com.hitorro</groupId>
+            <artifactId>hitorro-streams</artifactId>
+            <version>3.0.1</version>
+        </dependency>
         <!-- HiTorro JSON Type System -->
         <dependency>
             <groupId>com.hitorro</groupId>

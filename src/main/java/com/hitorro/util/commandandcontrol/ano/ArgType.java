@@ -22,6 +22,7 @@
 package com.hitorro.util.commandandcontrol.ano;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hitorro.util.core.iterator.helpers.FileMappers;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.DebugCommandArg;
 import com.hitorro.util.commandandcontrol.RestOperations;
@@ -107,7 +108,7 @@ public enum ArgType {
                 return null;
             }
             try {
-                AbstractIterator<JsonNode> iter = FileUtil.inputstream2JacksonjsonReader.apply(response.getHttpRequest().getInputStream());
+                AbstractIterator<JsonNode> iter = FileMappers.inputstream2JacksonjsonReader.apply(response.getHttpRequest().getInputStream());
                 return iter;
             } catch (IOException e) {
                 return null;
