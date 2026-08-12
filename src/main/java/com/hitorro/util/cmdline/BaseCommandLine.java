@@ -22,6 +22,7 @@
 package com.hitorro.util.cmdline;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.hitorro.util.core.iterator.helpers.FileMappers;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.hitorro.util.commandandcontrol.CommandSession;
@@ -257,7 +258,7 @@ public abstract class BaseCommandLine<T> {
     public void startupDebugTerminal() {
         try {
             Properties props = new Properties();
-            props.load(FileUtil.fsInputStream
+            props.load(FileMappers.fsInputStream
                     .apply(new File(com.hitorro.util.core.Env.getConfigDir(), "telnetd.properties")));
             props.put("std.port", Integer.toString(TerminalListener.PortNumber.apply()));
             myTD = TelnetD.createTelnetD(props);
