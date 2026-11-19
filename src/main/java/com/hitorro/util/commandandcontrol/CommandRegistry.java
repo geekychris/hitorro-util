@@ -107,15 +107,7 @@ public class CommandRegistry {
                         // This handles classes (like hitorro-core StringProperty) that can't
                         // have a DebugArgAno constructor due to module dependency direction
                         try {
-                            BaseMappingProperty prop = null;
-                            try {
-                                Constructor cons = c.getDeclaredConstructor(String.class, String.class, String.class);
-                                prop = (BaseMappingProperty) cons.newInstance(daa.keyName(), daa.description(), daa.defaultValue());
-                            } catch (NoSuchMethodException e2) {
-                                // Try (String, String, Boolean) for BooleanProperty etc.
-                                Constructor cons = c.getDeclaredConstructor(String.class, String.class, Boolean.class);
-                                prop = (BaseMappingProperty) cons.newInstance(daa.keyName(), daa.description(), Boolean.valueOf(daa.defaultValue()));
-                            }
+                            BaseMappingProperty prop = fallbackProperty(c, daa);
                             pkeys[i] = new DebugCommandArg(daa.mustExist(), prop, daa.argType());
                         } catch (Exception fallbackEx) {
                             Log.commands.fatal("Unable to initialize FunctionCommand %s %e", e, e);
@@ -314,5 +306,41 @@ public class CommandRegistry {
         add(new com.hitorro.util.commandandcontrol.basiccommands.ExecuteInterpreterScript());
         add(new com.hitorro.util.commandandcontrol.basiccommands.SetConfigEntry());
         this.addAllFromClass(com.hitorro.util.commandandcontrol.basiccommands.BasicCommands.class);
+    }
+
+    /**
+     * Builds a debug-command argument's property from its annotation when the
+     * property class has no DebugArgAno constructor (hitorro-core classes can't
+     * depend on DebugArgAno): tries the (path, description, default)
+     * constructors for String, Boolean, Integer and Long defaults in turn.
+     * Without the Integer and Long ones, any command with an IntegerProperty
+     * argument failed here, which logged FATAL and shut every service down.
+     */
+    static BaseMappingProperty fallbackProperty(Class c, DebugArgAno daa) throws Exception {
+        String def = daa.defaultValue();
+        boolean blank = def == null || def.trim().isEmpty();
+        Class[] types = {String.class, Boolean.class, Integer.class, Long.class};
+        NoSuchMethodException last = null;
+        for (Class t : types) {
+            Constructor cons;
+            try {
+                cons = c.getDeclaredConstructor(String.class, String.class, t);
+            } catch (NoSuchMethodException e) {
+                last = e;
+                continue;
+            }
+            Object value;
+            if (t == String.class) {
+                value = def;
+            } else if (t == Boolean.class) {
+                value = Boolean.valueOf(def);
+            } else if (t == Integer.class) {
+                value = blank ? null : Integer.valueOf(def.trim());
+            } else {
+                value = blank ? null : Long.valueOf(def.trim());
+            }
+            return (BaseMappingProperty) cons.newInstance(daa.keyName(), daa.description(), value);
+        }
+        throw last;
     }
 }
