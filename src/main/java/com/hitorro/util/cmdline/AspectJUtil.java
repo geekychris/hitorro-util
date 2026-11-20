@@ -67,7 +67,7 @@ public class AspectJUtil {
         return null;
     }
 
-    public static boolean dynamicallyLoadAspectJAgent ()
+    /*public static boolean dynamicallyLoadAspectJAgent ()
     {
         String nameOfRunningVM = ManagementFactory.getRuntimeMXBean().getName();
         int p = nameOfRunningVM.indexOf('@');
@@ -95,5 +95,5 @@ public class AspectJUtil {
     {
         ClassPathShallowIterator iter = new ClassPathShallowIterator();
         return iter.filter(new StringContainsOperator("aspectjweaver-1", true)).getFirstItem();
-    }
+    }*/
 }
