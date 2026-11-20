@@ -57,7 +57,7 @@ public class ActionRequest implements HTSerializable {
     public void serialize(HTObjectOutputStream os) throws IOException, StoreException {
         os.writeInt(SerializationVersion);
         os.writeString(getMethod());
-        os.writeString(getArgs().toString());
+        os.writeString(com.hitorro.util.json.JsonMappers.json().writeValueAsString(getArgs())); // JsonMappers, not JsonNode.toString(): on Jackson 3 that throws past 500 nesting levels (Jackson 2 and JsonMappers: 1000).
         os.writeInt(rows.size());
         for (InfoRow row : rows) {
             os.writeVersionedObject(row);

@@ -35,6 +35,6 @@ public class JsonPayload {
     }
 
     public void setJsonNode(JsonNode node) {
-        message = node.toString();
+        message = com.hitorro.util.json.JsonMappers.json().writeValueAsString(node); // JsonMappers, not JsonNode.toString(): on Jackson 3 that throws past 500 nesting levels (Jackson 2 and JsonMappers: 1000).
     }
 }

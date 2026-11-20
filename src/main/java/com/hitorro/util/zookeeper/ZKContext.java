@@ -139,6 +139,14 @@ public class ZKContext {
         }
     }
 
+    /**
+     * The znode payload: the node's compact JSON in the platform charset, as in 3.x. Written with
+     * JsonMappers, not JsonNode.toString(): on Jackson 3 that throws past 500 nesting levels (Jackson 2 and JsonMappers: 1000).
+     */
+    static byte[] nodeBytes(JsonNode contents) {
+        return com.hitorro.util.json.JsonMappers.json().writeValueAsString(contents).getBytes();
+    }
+
     public void create(String path, JsonNode contents) throws HTException {
         try {
             ZooKeeper zooKeeper = getCuratorClient().getZookeeperClient().getZooKeeper();
@@ -146,7 +154,7 @@ public class ZKContext {
 
             Stat stat = new Stat();
             zooKeeper.getData(path, false, stat);
-            zooKeeper.setData(path, contents.toString().getBytes(), stat.getVersion());
+            zooKeeper.setData(path, nodeBytes(contents), stat.getVersion());
         } catch (Exception e) {
             throw new HTException("%s %e", e, e);
         }
