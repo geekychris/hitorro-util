@@ -11,21 +11,25 @@
       "type": "object",
       "properties": {
         "author": {
-          "$ref": "core_string.schema.json"
+          "$ref": "core_string.schema.json",
+          "x-hitorro-groups": [{"name": "index", "method": "identifier"}]
         },
         "publication": {
-          "$ref": "core_string.schema.json"
+          "$ref": "core_string.schema.json",
+          "x-hitorro-groups": [{"name": "index", "method": "identifier"}]
         },
         "published_date": {
           "$ref": "core_date.schema.json"
         },
         "category": {
           "type": "array",
-          "items": {"$ref": "core_string.schema.json"}
+          "items": {"$ref": "core_string.schema.json"},
+          "x-hitorro-groups": [{"name": "index", "method": "identifier", "tags": ["basic"]}]
         },
         "tags": {
           "type": "array",
-          "items": {"$ref": "core_string.schema.json"}
+          "items": {"$ref": "core_string.schema.json"},
+          "x-hitorro-groups": [{"name": "index", "method": "identifier", "tags": ["basic"]}]
         },
         "content": {
           "$ref": "core_mls.schema.json"
