@@ -21,8 +21,9 @@
  */
 package com.hitorro.util.commandandcontrol;
 
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 import com.hitorro.util.cmdline.BaseCommandLine;
 import com.hitorro.util.commandandcontrol.ano.ArgType;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
@@ -477,7 +478,7 @@ public class CommandSession implements Runnable {
         StringBuilder builder = new StringBuilder();
         try {
             processTerminal(builder, this);
-        } catch (IOException e) {
+        } catch (IOException | JacksonException e) {
             com.hitorro.util.core.Log.commands.error("The following exception occured %s %e", e, e);
         } catch (PropaccessError e) {
             com.hitorro.util.core.Log.commands.error("The following exception occured %s %e", e, e);

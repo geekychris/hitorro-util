@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.log;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.commandandcontrol.Response;
 import com.hitorro.util.commandandcontrol.ResponseShape;

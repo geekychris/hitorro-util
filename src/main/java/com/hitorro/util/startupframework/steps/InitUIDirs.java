@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.startupframework.steps;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.ArrayUtil;
 import com.hitorro.util.core.Env;
@@ -120,8 +120,8 @@ public class InitUIDirs implements ServiceStep {
             File uiResource = new File(Env.getHome(), Fmt.S("uiresource/%s", serverId));
             File buildDir = new File(Env.getBin(), "build");
             JsonNode props = GlobalProperties.getProperties();
-            if (props instanceof com.fasterxml.jackson.databind.node.ObjectNode) {
-                ((com.fasterxml.jackson.databind.node.ObjectNode) props).put("ht_resource", uiResource.getAbsolutePath());
+            if (props instanceof tools.jackson.databind.node.ObjectNode) {
+                ((tools.jackson.databind.node.ObjectNode) props).put("ht_resource", uiResource.getAbsolutePath());
             }
             FileUtil.ensureDirectoryExists(uiResource);
             ensureCorrectUIResource(buildNumber, uiResource);

@@ -21,14 +21,15 @@
  */
 package com.hitorro.util.versioning;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
 import com.hitorro.util.core.Log;
 import com.hitorro.util.io.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import com.hitorro.util.json.JsonValues;
 
 /**
  * <p/>
@@ -41,10 +42,10 @@ public class PlatformVersionNode<T extends ConfigTag> extends DirectoryVersionNo
     public PlatformVersionNode(JsonNode manifest,
                                File directory) {
         super(manifest, directory,
-                manifest.has("major") ? manifest.get("major").asLong() : 0,
-                manifest.has("minor") ? manifest.get("minor").asLong() : 0,
-                manifest.has("patch") ? manifest.get("patch").asLong() : 0,
-                manifest.has("number") ? manifest.get("number").asLong() : 0);
+                manifest.has("major") ? JsonValues.asLong(manifest.get("major")) : 0,
+                manifest.has("minor") ? JsonValues.asLong(manifest.get("minor")) : 0,
+                manifest.has("patch") ? JsonValues.asLong(manifest.get("patch")) : 0,
+                manifest.has("number") ? JsonValues.asLong(manifest.get("number")) : 0);
     }
 
     public PlatformVersionNode(File directory) {

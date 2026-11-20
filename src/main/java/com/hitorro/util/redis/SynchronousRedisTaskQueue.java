@@ -21,9 +21,9 @@
  */
 package com.hitorro.util.redis;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.json.String2JsonMapper;
 import com.hitorro.util.json.keys.propaccess.PAContext;

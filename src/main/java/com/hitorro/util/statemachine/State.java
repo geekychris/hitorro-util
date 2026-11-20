@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.statemachine;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.ObjectNode;
 import com.hitorro.util.core.CommandArgs;
 import com.hitorro.util.core.classes.ClassUtil;
 import com.hitorro.util.core.string.StringUtil;

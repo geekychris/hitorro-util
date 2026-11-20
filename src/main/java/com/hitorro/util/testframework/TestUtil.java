@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.testframework;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.JUnitListener;
 import com.hitorro.util.commandandcontrol.Response;
 import com.hitorro.util.core.ListUtil;

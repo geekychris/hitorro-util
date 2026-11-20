@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.zookeeper;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.json.String2JsonMapper;
 
 public class JsonPayload {
