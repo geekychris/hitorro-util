@@ -21,9 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol.json;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonGenerator;
 import com.hitorro.util.commandandcontrol.InfoLevel;
 import com.hitorro.util.commandandcontrol.MultiRowResponse;
 import com.hitorro.util.commandandcontrol.Response;
@@ -34,6 +32,8 @@ import com.hitorro.util.core.string.StringUtil;
 import com.hitorro.util.json.JSONMap;
 import com.hitorro.util.json.JSONNumber;
 import com.hitorro.util.json.JSONString;
+import com.hitorro.util.json.JsonMappers;
+import tools.jackson.core.JacksonException;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,11 +50,9 @@ public class JSONResponse extends Response {
     protected String transaction;
     protected boolean ended = false;
     JsonGenerator jsonGenerator;
-    private JsonFactory jsonFactory;
 
     public JSONResponse(String trans, OutputStream os) throws IOException {
-        jsonFactory = new JsonFactory();
-        jsonGenerator = jsonFactory.createGenerator(new PrintWriter(os));
+        jsonGenerator = JsonMappers.json().createGenerator(new PrintWriter(os));
         transaction = trans;
     }
 
@@ -82,11 +80,9 @@ public class JSONResponse extends Response {
     public void addBannerRow(String row) {
         try {
             jsonGenerator.writeStartObject();
-            jsonGenerator.writeStringField(BannerKey, row);
+            jsonGenerator.writeStringProperty(BannerKey, row);
             jsonGenerator.writeEndObject();
-        } catch (JsonGenerationException e) {
-            Log.util.error("%s %e", e, e);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             Log.util.error("%s %e", e, e);
         }
     }
@@ -122,9 +118,7 @@ public class JSONResponse extends Response {
                 }
             }
             map.writeJSONGraph(jsonGenerator);
-        } catch (JsonGenerationException e) {
-            Log.util.error("%s %e", e, e);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             Log.util.error("%s %e", e, e);
         }
     }
@@ -134,9 +128,7 @@ public class JSONResponse extends Response {
             JSONMap map = new JSONMap();
             map.put(key, new JSONString(message));
             map.writeJSONGraph(jsonGenerator);
-        } catch (JsonGenerationException e) {
-            Log.util.error("%s %e", e, e);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             Log.util.error("%s %e", e, e);
         }
     }
@@ -169,7 +161,7 @@ public class JSONResponse extends Response {
         }
         try {
             jsonGenerator.close();
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             Log.commands.error("%s %e", e, e);
         }
     }

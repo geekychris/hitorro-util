@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.propertykeys.complex;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 
 

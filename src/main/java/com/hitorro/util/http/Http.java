@@ -21,8 +21,9 @@
  */
 package com.hitorro.util.http;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.DeserializationFeature;
+import com.hitorro.util.json.JsonMappers;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
@@ -40,6 +41,7 @@ import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.net.URIBuilder;
 import org.apache.hc.core5.util.Timeout;
+import tools.jackson.core.JacksonException;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -71,8 +73,9 @@ import java.util.TreeMap;
  */
 public final class Http {
 
-    private static final ObjectMapper JSON = new ObjectMapper()
-            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+    private static final ObjectMapper JSON = JsonMappers.builder()
+            .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            .build();
 
     public enum Method { GET, POST, PUT, DELETE, PATCH, HEAD }
 
@@ -136,8 +139,9 @@ public final class Http {
         public Request bodyJson(Object o) {
             try {
                 return body(JSON.writeValueAsString(o), ContentType.APPLICATION_JSON);
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
+            } catch (JacksonException e) {
+                // 3.x: JsonProcessingException was an IOException, wrapped the same way.
+                throw new UncheckedIOException(new IOException(e.getMessage(), e));
             }
         }
 
@@ -201,6 +205,9 @@ public final class Http {
                 return out;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
+            } catch (JacksonException e) {
+                // 3.x: a malformed body (JsonProcessingException) was an IOException.
+                throw new UncheckedIOException(new IOException(e.getMessage(), e));
             } catch (org.apache.hc.core5.http.ParseException e) {
                 throw new RuntimeException("failed to parse response entity", e);
             }

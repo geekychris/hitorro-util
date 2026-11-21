@@ -21,8 +21,9 @@
  */
 package com.hitorro.util.commandandcontrol;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;
 import com.hitorro.util.json.JSONUtil;
 import com.hitorro.util.commandandcontrol.ano.DebugArgAno;
@@ -275,7 +276,7 @@ public class CommandRegistry {
             boolean result = command.execute(rawArgs, map, response, session, RestOperations.Get);
             response.end();
             return result;
-        } catch (IOException e) {
+        } catch (IOException | JacksonException e) {
             response.addInfo(InfoLevel.Error, Fmt.S("Exception occured executing %s, %s %e",
                     command.getCommand(), e, e));
             response.end();

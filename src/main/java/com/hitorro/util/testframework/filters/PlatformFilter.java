@@ -22,7 +22,7 @@
 
 package com.hitorro.util.testframework.filters;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.core.ArrayUtil;
 import com.hitorro.util.core.HTAssert;
 import com.hitorro.util.core.Platform;

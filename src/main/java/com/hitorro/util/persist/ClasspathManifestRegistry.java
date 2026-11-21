@@ -3,7 +3,9 @@
  */
 package com.hitorro.util.persist;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
+import com.hitorro.util.json.JsonMappers;
+import tools.jackson.core.JacksonException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,7 +45,7 @@ import java.util.function.Function;
  */
 public final class ClasspathManifestRegistry<T> {
 
-    private static final ObjectMapper JSON = new ObjectMapper();
+    private static final ObjectMapper JSON = JsonMappers.json();
 
     private final Map<String, T> byId;
 
@@ -111,7 +113,7 @@ public final class ClasspathManifestRegistry<T> {
                 bodyInliner.accept(entry, body);
                 out.put(id, entry);
             }
-        } catch (IOException e) {
+        } catch (IOException | JacksonException e) {
             System.err.println("[ClasspathManifestRegistry] load failed: " + e.getMessage());
         }
         return out;

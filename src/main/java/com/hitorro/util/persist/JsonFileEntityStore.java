@@ -3,9 +3,11 @@
  */
 package com.hitorro.util.persist;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.cfg.DateTimeFeature;
+import com.hitorro.util.json.JsonMappers;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -45,10 +47,11 @@ import java.util.function.Function;
  */
 public class JsonFileEntityStore<T> {
 
-    private static final ObjectMapper JSON = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            .enable(SerializationFeature.INDENT_OUTPUT);
+    // 3.x: JavaTimeModule, WRITE_DATES_AS_TIMESTAMPS off (ISO strings), INDENT_OUTPUT.
+    private static final ObjectMapper JSON = JsonMappers.builder()
+            .disable(DateTimeFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .enable(SerializationFeature.INDENT_OUTPUT)
+            .build();
 
     private final Path file;
     private final Class<T> type;
@@ -128,7 +131,13 @@ public class JsonFileEntityStore<T> {
     @SuppressWarnings("unchecked")
     private void load() throws IOException {
         if (!Files.exists(file)) return;
-        T[] arr = (T[]) JSON.readValue(Files.readAllBytes(file), Array.newInstance(type, 0).getClass());
+        T[] arr;
+        try {
+            arr = (T[]) JSON.readValue(Files.readAllBytes(file), Array.newInstance(type, 0).getClass());
+        } catch (JacksonException e) {
+            // 3.x: a malformed file was a JsonProcessingException, an IOException.
+            throw new IOException(e.getMessage(), e);
+        }
         for (T e : arr) {
             String id = idOf.apply(e);
             if (id != null && !id.isBlank()) byId.put(id, e);
@@ -139,7 +148,14 @@ public class JsonFileEntityStore<T> {
     private void persist() throws IOException {
         Path tmp = file.resolveSibling(file.getFileName() + ".tmp");
         T[] arr = byId.values().toArray((T[]) Array.newInstance(type, 0));
-        Files.write(tmp, JSON.writeValueAsBytes(arr));
+        byte[] bytes;
+        try {
+            bytes = JSON.writeValueAsBytes(arr);
+        } catch (JacksonException e) {
+            // 3.x: a serialization failure was a JsonProcessingException, an IOException.
+            throw new IOException(e.getMessage(), e);
+        }
+        Files.write(tmp, bytes);
         Files.move(tmp, file, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
     }
 }

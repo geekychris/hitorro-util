@@ -21,9 +21,9 @@
  */
 package com.hitorro.util.redis;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.json.String2JsonMapper;
 import com.hitorro.util.json.keys.propaccess.PAContext;
@@ -49,6 +49,11 @@ public class SynchronousRedisTaskQueue {
         this.timeoutSeconds = timeoutSeconds;
     }
 
+    /** The job as pushed to Redis: compact JSON. JsonMappers, not JsonNode.toString(): on Jackson 3 that throws past 500 nesting levels (Jackson 2 and JsonMappers: 1000). */
+    static String jobText(JsonNode jobNode) {
+        return com.hitorro.util.json.JsonMappers.json().writeValueAsString(jobNode);
+    }
+
     public JsonNode execute(JsonNode in) {
         ObjectNode jobNode = JsonNodeFactory.instance.objectNode();
         payload.set(null, jobNode, PAContext.AlwaysCreate, in);
@@ -56,7 +61,7 @@ public class SynchronousRedisTaskQueue {
         UUID uuid = UUID.randomUUID();
         String returnChannel = Fmt.S("%s-return-%s", taskQueueName, uuid.toString());
         returnChannelKey.set(null, jobNode, PAContext.AlwaysCreate, com.hitorro.util.json.JSONUtil.ensureJsonNode(returnChannel));
-        RedisFuture<Long> out = qBase.connection.async().rpush(taskQueueName, jobNode.toString());
+        RedisFuture<Long> out = qBase.connection.async().rpush(taskQueueName, jobText(jobNode));
 
         KeyValue keyValue = qBase.connection.sync().blpop(timeoutSeconds, returnChannel);
         JsonNode retNode = new String2JsonMapper().apply(keyValue.getValue().toString());
@@ -74,7 +79,7 @@ public class SynchronousRedisTaskQueue {
         UUID uuid = UUID.randomUUID();
         String returnChannel = Fmt.S("%s-return-%s", taskQueueName, uuid.toString());
         returnChannelKey.set(null, jobNode, PAContext.AlwaysCreate, com.hitorro.util.json.JSONUtil.ensureJsonNode(returnChannel));
-        RedisFuture<Long> out = qBase.connection.async().rpush(taskQueueName, jobNode.toString());
+        RedisFuture<Long> out = qBase.connection.async().rpush(taskQueueName, jobText(jobNode));
 
 
         //String s = qBase.connection.sync().lpop(returnChannel);

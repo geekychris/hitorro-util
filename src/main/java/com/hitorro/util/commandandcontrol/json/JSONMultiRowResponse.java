@@ -29,7 +29,7 @@ import com.hitorro.util.core.Log;
 import com.hitorro.util.json.JSONList;
 import com.hitorro.util.json.JSONMap;
 
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
 
 
 public class JSONMultiRowResponse extends MultiRowResponse {
@@ -100,7 +100,7 @@ public class JSONMultiRowResponse extends MultiRowResponse {
     public void addToResponse(Response response) {
         try {
             map.writeJSONGraph(resp.jsonGenerator);
-        } catch (IOException e) {
+        } catch (JacksonException e) {
             Log.util.error("%s %e", e, e);
         }
         map = new JSONMap();

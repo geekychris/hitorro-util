@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.propertykeys.complex;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.string.Fmt;
 import com.hitorro.util.core.string.StringUtil;
@@ -44,7 +44,7 @@ public class ComplexPropertyContext {
     public static <T extends Object> List<T> getList(String path, String defaultType) throws ComplexPropertiesException, PropaccessError {
         JsonNode keys = GlobalProperties.getProperties().get(path);
         List<T> list = new ArrayList<T>();
-        Iterator<Map.Entry<String, JsonNode>> iter = keys.fields();
+        Iterator<Map.Entry<String, JsonNode>> iter = keys.properties().iterator();
         while (iter.hasNext()) {
             Map.Entry<String, JsonNode> km = iter.next();
             T t = get(km.getValue(), defaultType, km.getKey());

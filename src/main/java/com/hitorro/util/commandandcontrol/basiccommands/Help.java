@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.commandandcontrol.basiccommands;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.commandandcontrol.*;
 import com.hitorro.util.commandandcontrol.ano.CommandArgument;
 import com.hitorro.util.commandandcontrol.ano.CommandDef;

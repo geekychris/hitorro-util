@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.startupframework;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.core.params.GlobalProperties;
 import com.hitorro.util.core.Log;
 import com.hitorro.util.core.classes.ClassUtil;
@@ -33,6 +33,7 @@ import com.hitorro.util.startupframework.phases.ServiceDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.hitorro.util.json.JsonValues;
 
 @ServiceDefinition(dependentService = {},
         shortName = "server",
@@ -59,7 +60,7 @@ public class HTServer extends RunnableService {
         if (serverProps != null) {
             List<Class> dependencies = new ArrayList<Class>();
             for (JsonNode e : serverProps) {
-                String s = e.textValue();
+                String s = JsonValues.textValue(e);
                 Class clazz = ClassUtil.getClassForName(s, null);
                 if (clazz != null) {
                     dependencies.add(clazz);

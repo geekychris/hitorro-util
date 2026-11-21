@@ -1,0 +1,68 @@
+store.file.2=[ {\n  "id" : "b",\n  "n" : 7,\n  "big" : 12345678901,\n  "d" : 1.1,\n  "flag" : true,\n  "boxed" : null,\n  "at" : "2026-11-20T10:15:30.123Z",\n  "date" : "2025-11-20T10:15:30.123+00:00",\n  "day" : "2026-11-20",\n  "ldt" : "2026-11-20T10:15:30.5",\n  "dur" : 90.000005000,\n  "tags" : [ "x", "y/z", "é " ],\n  "meta" : {\n    "z" : 1,\n    "a" : [ 1, "b" ],\n    "m" : { }\n  },\n  "nul" : null,\n  "child" : null,\n  "secret" : "s3"\n}, {\n  "id" : "a",\n  "n" : 0,\n  "big" : 12345678901,\n  "d" : -0.0,\n  "flag" : true,\n  "boxed" : null,\n  "at" : "1970-01-01T00:00:00Z",\n  "date" : "2025-11-20T10:15:30.123+00:00",\n  "day" : "2026-11-20",\n  "ldt" : "2026-11-20T10:15:30.5",\n  "dur" : 90.000005000,\n  "tags" : [ ],\n  "meta" : {\n    "z" : 1,\n    "a" : [ 1, "b" ],\n    "m" : { }\n  },\n  "nul" : null,\n  "child" : {\n    "id" : "c",\n    "n" : 7,\n    "big" : 12345678901,\n    "d" : 1.1,\n    "flag" : true,\n    "boxed" : null,\n    "at" : "2026-11-20T10:15:30.123Z",\n    "date" : "2025-11-20T10:15:30.123+00:00",\n    "day" : "2026-11-20",\n    "ldt" : "2026-11-20T10:15:30.5",\n    "dur" : 90.000005000,\n    "tags" : [ "x", "y/z", "é " ],\n    "meta" : {\n      "z" : 1,\n      "a" : [ 1, "b" ],\n      "m" : { }\n    },\n    "nul" : null,\n    "child" : null,\n    "secret" : "s3"\n  },\n  "secret" : "s3"\n} ]
+store.file.updated=[ {\n  "id" : "b",\n  "n" : 7,\n  "big" : 12345678901,\n  "d" : 1.1,\n  "flag" : true,\n  "boxed" : 42,\n  "at" : "2026-11-20T10:15:30.123Z",\n  "date" : "2025-11-20T10:15:30.123+00:00",\n  "day" : "2026-11-20",\n  "ldt" : "2026-11-20T10:15:30.5",\n  "dur" : 90.000005000,\n  "tags" : [ "x", "y/z", "é " ],\n  "meta" : {\n    "z" : 1,\n    "a" : [ 1, "b" ],\n    "m" : { }\n  },\n  "nul" : null,\n  "child" : null,\n  "secret" : "s3"\n}, {\n  "id" : "a",\n  "n" : 0,\n  "big" : 12345678901,\n  "d" : -0.0,\n  "flag" : true,\n  "boxed" : null,\n  "at" : "1970-01-01T00:00:00Z",\n  "date" : "2025-11-20T10:15:30.123+00:00",\n  "day" : "2026-11-20",\n  "ldt" : "2026-11-20T10:15:30.5",\n  "dur" : 90.000005000,\n  "tags" : [ ],\n  "meta" : {\n    "z" : 1,\n    "a" : [ 1, "b" ],\n    "m" : { }\n  },\n  "nul" : null,\n  "child" : {\n    "id" : "c",\n    "n" : 7,\n    "big" : 12345678901,\n    "d" : 1.1,\n    "flag" : true,\n    "boxed" : null,\n    "at" : "2026-11-20T10:15:30.123Z",\n    "date" : "2025-11-20T10:15:30.123+00:00",\n    "day" : "2026-11-20",\n    "ldt" : "2026-11-20T10:15:30.5",\n    "dur" : 90.000005000,\n    "tags" : [ "x", "y/z", "é " ],\n    "meta" : {\n      "z" : 1,\n      "a" : [ 1, "b" ],\n      "m" : { }\n    },\n    "nul" : null,\n    "child" : null,\n    "secret" : "s3"\n  },\n  "secret" : "s3"\n} ]
+store.reload=[Item[id=b,n=7,big=12345678901,d=1.1,flag=true,boxed=42,at=2026-11-20T10:15:30.123Z,date=1763633730123,day=2026-11-20,ldt=2026-11-20T10:15:30.500,dur=PT1M30.000005S,tags=[x, y/z, é ],meta={a=[1, b], m={}, z=1},nul=null,secret=s3,child=null], Item[id=a,n=0,big=12345678901,d=-0.0,flag=true,boxed=null,at=1970-01-01T00:00:00Z,date=1763633730123,day=2026-11-20,ldt=2026-11-20T10:15:30.500,dur=PT1M30.000005S,tags=[],meta={a=[1, b], m={}, z=1},nul=null,secret=s3,child=Item[id=c,n=7,big=12345678901,d=1.1,flag=true,boxed=null,at=2026-11-20T10:15:30.123Z,date=1763633730123,day=2026-11-20,ldt=2026-11-20T10:15:30.500,dur=PT1M30.000005S,tags=[x, y/z, é ],meta={a=[1, b], m={}, z=1},nul=null,secret=s3,child=null]]]
+store.file.empty=[ ]
+store.read.ok=[Item[id=q,n=3,big=0,d=0.0,flag=false,boxed=null,at=2026-01-02T03:04:05Z,date=1767323045000,day=2026-01-02,ldt=null,dur=PT2.5S,tags=null,meta=null,nul=null,secret=k,child=null]]
+store.read.numericDates=[Item[id=q,n=0,big=0,d=0.0,flag=false,boxed=null,at=2023-11-14T22:13:20.500Z,date=1700000000123,day=2026-01-02,ldt=2026-01-02T03:04:05,dur=null,tags=null,meta=null,nul=null,secret=null,child=null]]
+store.read.unknownProp=!IOE:jackson
+store.read.nullPrimitive=[Item[id=q,n=0,big=0,d=0.0,flag=false,boxed=null,at=null,date=null,day=null,ldt=null,dur=null,tags=null,meta=null,nul=null,secret=null,child=null]]
+store.read.stringNumber=[Item[id=q,n=12,big=12,d=2.5,flag=false,boxed=null,at=null,date=null,day=null,ldt=null,dur=null,tags=null,meta=null,nul=null,secret=null,child=null]]
+store.read.trailing=[Item[id=q,n=0,big=0,d=0.0,flag=false,boxed=null,at=null,date=null,day=null,ldt=null,dur=null,tags=null,meta=null,nul=null,secret=null,child=null]]
+store.read.malformed=!IOE:jackson
+store.read.emptyFile=!IOE:jackson
+store.read.notArray=!IOE:jackson
+store.read.singleQuoted=!IOE:jackson
+store.read.noId=[Item[id=r,n=0,big=0,d=0.0,flag=false,boxed=null,at=null,date=null,day=null,ldt=null,dur=null,tags=null,meta=null,nul=null,secret=null,child=null]]
+store.read.dupId=[Item[id=r,n=2,big=0,d=0.0,flag=false,boxed=null,at=null,date=null,day=null,ldt=null,dur=null,tags=null,meta=null,nul=null,secret=null,child=null]]
+manifest.ok=[Entry[id=one,title=T,bodyRes=one.txt,body=body one\n], Entry[id=two,title=null,bodyRes=null,body=null]]
+manifest.ok.stderrLines=2:[ClasspathManifestRegistry] skipping entry with no id\n[ClasspathManifestRegistry] tpl/missing.txt not found — skipping three\n
+manifest.unknownProp=[]
+manifest.unknownProp.stderrLines=2:[ClasspathManifestRegistry] load failed: <msg>
+manifest.malformed=[]
+manifest.malformed.stderrLines=2:[ClasspathManifestRegistry] load failed: <msg>
+manifest.trailing=[Entry[id=one,title=null,bodyRes=null,body=null]]
+manifest.trailing.stderrLines=1:
+manifest.object=[]
+manifest.object.stderrLines=2:[ClasspathManifestRegistry] load failed: <msg>
+http.bodyJson.hitem={"id":"a","n":7,"big":12345678901,"d":1.1,"f":0.1,"flag":true,"boxed":null,"bytes":"AQL/","tags":["x","y/z","é "],"meta":{"z":1,"a":[1,"b",2.5],"m":{}},"nul":null,"child":{"id":"c","n":7,"big":12345678901,"d":1.1,"f":0.1,"flag":true,"boxed":null,"bytes":null,"tags":["x","y/z","é "],"meta":{"z":1,"a":[1,"b",2.5],"m":{}},"nul":null,"child":null,"secret":"s3"},"secret":"s3"}
+http.bodyJson.list=[{"id":"l","n":7,"big":12345678901,"d":1.1,"f":0.1,"flag":true,"boxed":null,"bytes":"AQL/","tags":["x","y/z","é "],"meta":{"z":1,"a":[1,"b",2.5],"m":{}},"nul":null,"child":null,"secret":"s3"},null,"s",1,2.0]
+http.javatime.bodyJson.item=!RTE:UncheckedIOException<jackson>
+http.javatime.bodyJson.map=!RTE:UncheckedIOException<jackson>
+http.bodyJson.emptyBean=!RTE:UncheckedIOException<jackson>
+http.bodyJson.record={"k":"v"}
+http.asJson.hitem/item=HItem[id=h,n=5,big=0,d=0.0,f=0.0,flag=false,boxed=null,bytes=null,tags=[a],meta=null,nul=null,secret=null,child=null]
+http.javatime.asJson.item/item=!RTE:UncheckedIOException<jackson>
+http.asJson.node/item=ObjectNode {"id":"h","n":5,"extra":{"x":1},"at":"2026-01-02T03:04:05Z","date":1700000000123,"tags":["a"]} id:TextNode,n:IntNode,extra:ObjectNode,at:TextNode,date:LongNode,tags:ArrayNode,
+http.asJson.map/item={id=h, n=5, extra={x=1}, at=2026-01-02T03:04:05Z, date=1700000000123, tags=[a]}
+http.asJson.hitem/nulls=HItem[id=null,n=0,big=0,d=0.0,f=0.0,flag=false,boxed=null,bytes=null,tags=null,meta=null,nul=null,secret=null,child=null]
+http.asJson.item/nulls=Item[id=null,n=0,big=0,d=0.0,flag=false,boxed=null,at=null,date=null,day=null,ldt=null,dur=null,tags=null,meta=null,nul=null,secret=null,child=null]
+http.asJson.node/nulls=ObjectNode {"id":null,"n":null,"boxed":null} id:NullNode,n:NullNode,boxed:NullNode,
+http.asJson.map/nulls={id=null, n=null, boxed=null}
+http.asJson.hitem/bad=!RTE:UncheckedIOException<jackson>
+http.asJson.item/bad=!RTE:UncheckedIOException<jackson>
+http.asJson.node/bad=!RTE:UncheckedIOException<jackson>
+http.asJson.map/bad=!RTE:UncheckedIOException<jackson>
+http.asJson.hitem/trailing=HItem[id=t,n=0,big=0,d=0.0,f=0.0,flag=false,boxed=null,bytes=null,tags=null,meta=null,nul=null,secret=null,child=null]
+http.asJson.item/trailing=Item[id=t,n=0,big=0,d=0.0,flag=false,boxed=null,at=null,date=null,day=null,ldt=null,dur=null,tags=null,meta=null,nul=null,secret=null,child=null]
+http.asJson.node/trailing=ObjectNode {"id":"t"} id:TextNode,
+http.asJson.map/trailing={id=t}
+http.asJson.hitem/hitem=HItem[id=h,n=5,big=0,d=0.0,f=1.25,flag=false,boxed=null,bytes=[1, 2, -1],tags=[a, null],meta={k=[1, 1.5, 12345678901, true]},nul=null,secret=null,child=HItem[id=c,n=0,big=0,d=0.0,f=0.0,flag=false,boxed=null,bytes=null,tags=null,meta=null,nul=null,secret=q,child=null]]
+http.asJson.item/hitem=Item[id=h,n=5,big=0,d=0.0,flag=false,boxed=null,at=null,date=null,day=null,ldt=null,dur=null,tags=[a, null],meta={k=[1, 1.5, 12345678901, true]},nul=null,secret=null,child=Item[id=c,n=0,big=0,d=0.0,flag=false,boxed=null,at=null,date=null,day=null,ldt=null,dur=null,tags=null,meta=null,nul=null,secret=q,child=null]]
+http.asJson.node/hitem=ObjectNode {"id":"h","n":5,"f":1.25,"bytes":"AQL/","extra":{"x":1},"child":{"id":"c","secret":"q"},"tags":["a",null],"meta":{"k":[1,1.5,12345678901,true]}} id:TextNode,n:IntNode,f:DoubleNode,bytes:TextNode,extra:ObjectNode,child:ObjectNode,tags:ArrayNode,meta:ObjectNode,
+http.asJson.map/hitem={id=h, n=5, f=1.25, bytes=AQL/, extra={x=1}, child={id=c, secret=q}, tags=[a, null], meta={k=[1, 1.5, 12345678901, true]}}
+http.asJson.hitem/array=!RTE:UncheckedIOException<jackson>
+http.asJson.item/array=!RTE:UncheckedIOException<jackson>
+http.asJson.node/array=ArrayNode [1,2] 
+http.asJson.map/array=!RTE:UncheckedIOException<jackson>
+http.asJson.hitem/empty=null
+http.asJson.item/empty=null
+http.asJson.node/empty=null
+http.asJson.map/empty=null
+http.asJson.hitem/wrongType=!RTE:UncheckedIOException<jackson>
+http.asJson.item/wrongType=!RTE:UncheckedIOException<jackson>
+http.asJson.node/wrongType=ObjectNode {"n":"abc"} n:TextNode,
+http.asJson.map/wrongType={n=abc}
+jsonResponse={"Banner":"banner é /   \\"q\\""} {"big":12345678901,"name":"a/b","count":5,"ratio":2.5} \n {"big":-3,"ratio":1.0E30} \n {"big":0,"name":"x\\ty","count":0,"ratio":-0.0} \n {"Info":"info"} \n {"Warning":"warn"} \n {"Error":"err </script>"} \n
+jsonPayload.message={"b":1.1,"a":[1,{"x":null}],"s":"é/","big":12345678901234567890}
+jsonPayload.node={"b":1.1,"a":[1,{"x":null}],"s":"é/","big":-350287150} b:DoubleNode,a:ArrayNode,s:TextNode,big:IntNode,
+jsonPayload.bad=!RTE:JSONParseException<jackson>

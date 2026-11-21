@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.statemachine.scoreboard.constraints;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.core.HTAssert;
 import com.hitorro.util.core.opers.HTPredicate;
 import com.hitorro.util.statemachine.Group;

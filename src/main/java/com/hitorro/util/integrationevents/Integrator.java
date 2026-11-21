@@ -21,7 +21,7 @@
  */
 package com.hitorro.util.integrationevents;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 /**
  * Integration interface implemented by those who wish to be invoked to load some events.

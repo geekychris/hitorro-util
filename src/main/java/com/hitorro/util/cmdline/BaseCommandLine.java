@@ -21,10 +21,10 @@
  */
 package com.hitorro.util.cmdline;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import com.hitorro.util.core.iterator.helpers.FileMappers;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import tools.jackson.databind.node.JsonNodeFactory;
+import tools.jackson.databind.node.ObjectNode;
 import com.hitorro.util.commandandcontrol.CommandSession;
 import com.hitorro.util.commandandcontrol.SshListener;
 import com.hitorro.util.commandandcontrol.TerminalListener;
@@ -42,6 +42,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.Properties;
+import com.hitorro.util.json.JsonValues;
 
 //import com.hitorro.util.swig.SwigUtils;
 
@@ -164,7 +165,7 @@ public abstract class BaseCommandLine<T> {
             com.hitorro.util.core.CommandArgs.parseArgs(parameterLine, true, true, commandLineArguments);
             if (StringUtil.nullOrEmptyOrBlankString(command)) {
                 JsonNode cmdNode = commandLineArguments.get(CommandKey);
-                command = (cmdNode != null && !cmdNode.isNull()) ? cmdNode.asText() : null;
+                command = (cmdNode != null && !cmdNode.isNull()) ? JsonValues.asText(cmdNode) : null;
             }
 
         } catch (ParseException e) {
